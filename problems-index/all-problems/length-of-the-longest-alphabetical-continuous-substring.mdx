@@ -1,5 +1,5 @@
 ---
-title: '🧀 Length of the Longest Alphabetical Continuous Substring'
+title: "🧀 Length of the Longest Alphabetical Continuous Substring"
 description: '[leetcode link](https://leetcode.com/problems/length-of-the-longest-alphabetical-continuous-substring/description/)'
 mode: 'wide'
 ---
@@ -12,7 +12,7 @@ mode: 'wide'
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
       Just convert to numbers, and check longest length where num[i]==num[i-1]+1. Start with a counter which increments when num(i) == num(i-1)+1, and resets to 1 when this condition is not satisfied. Whenever we reset to 1, we track len in max_len.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Length of the Longest Alphabetical Continuous Substring" lines

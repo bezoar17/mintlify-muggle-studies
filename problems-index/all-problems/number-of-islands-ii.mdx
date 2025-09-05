@@ -1,5 +1,5 @@
 ---
-title: '❗️ Number of Islands II'
+title: "❗️ Number of Islands II"
 description: '[leetcode link](https://leetcode.com/problems/number-of-islands-ii/description/)'
 mode: 'wide'
 ---
@@ -20,17 +20,11 @@ Within union-find DS, when new node is added always increase component size by 1
 Following is not needed, we can keep node as [i,j], but 1 more optimization is as follows.
 Representing a cell (i,j) as a node in union-find. For that, we can do a conversion of cell to an integer value. This is done as follows. For a matrix mxn.
 
-r_pos = { i* n + j } # row_idx * col_size + col_idx;
+r_pos = &lbrace; i* n + j &rbrace; # row_idx * col_size + col_idx;
 To get i,j back from r_pos we can then do (r_pos/col_size, r_pos % col_size)
 
 Here m,n are 10^4 at max, so the converted single integer values wont be large, will fit within int.
-
-
-
-
-
-
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Number of Islands II" lines

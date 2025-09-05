@@ -1,5 +1,5 @@
 ---
-title: '🧀 Count the Number of Good Subarrays'
+title: "🧀 Count the Number of Good Subarrays"
 description: '[leetcode link](https://leetcode.com/problems/count-the-number-of-good-subarrays/description/)'
 mode: 'wide'
 ---
@@ -12,7 +12,7 @@ mode: 'wide'
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
       Two pointer sliding window. When we extend r pointer, if nums[r] has appeared x times before, x pairs can be formed with this num value. We then extend l pointer to a point ensuring no. of pairs is still &gt;=k. When window is at l, any idx before this l value can be chosen with r pointer, so we add l+1 to the result. Then do this until we process all idxs as r.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Count the Number of Good Subarrays" lines

@@ -1,5 +1,5 @@
 ---
-title: '🧀 Two-Letter Card Game'
+title: "🧀 Two-Letter Card Game"
 description: '[leetcode link](https://leetcode.com/problems/two-letter-card-game/description/)'
 mode: 'wide'
 ---
@@ -21,10 +21,7 @@ Type 3 only has 1 unique card value, so just keep count. For type1 and type2, ea
 Since type3 can be paired with both, that should always become 0 after all pairings have been done. Within type1, and type2, if we have counts like [a,b,c,d,e,f], the max pairings we can get from within a type is [sum/2, sum-max].min
 
 We can first pair within the 2 types, whatever count is remaining from both these types, all can be paired with type3. If even now type3 count is non-zero. We can break the exisitng pairs from types 1,2 to form them with type3, ensuring type3 is always utilized to max.
-
-
-
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Two-Letter Card Game" lines

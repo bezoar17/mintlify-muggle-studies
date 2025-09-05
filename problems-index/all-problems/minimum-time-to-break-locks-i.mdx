@@ -1,5 +1,5 @@
 ---
-title: '🧀 Minimum Time to Break Locks I'
+title: "🧀 Minimum Time to Break Locks I"
 description: '[leetcode link](https://leetcode.com/problems/minimum-time-to-break-locks-i/description/)'
 mode: 'wide'
 ---
@@ -14,7 +14,7 @@ mode: 'wide'
       Constraints are in a way that all permutations can be checked. But to check all permutations, use bitmask and DP. Represent state by bitmask, and then move to next possible state, and update time required. Result would be min value for mask of 8 1s, representing all locks have been broken.
 
 Start from 0, then add 1 bit at each of the 8 options, from there add 1 more to the 8 states, here we'll have 7 options, and so on. Total 8! options are present. When a lock gets broken(position or rank) decides how much time it would take, which is strength/ 1 + (r-1)* k, ceil of this, where r is rank, 1 for the first lock, and so on.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Minimum Time to Break Locks I" lines

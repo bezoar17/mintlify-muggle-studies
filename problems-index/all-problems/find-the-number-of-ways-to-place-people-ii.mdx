@@ -1,5 +1,5 @@
 ---
-title: '❗️ Find the Number of Ways to Place People II'
+title: "❗️ Find the Number of Ways to Place People II"
 description: '[leetcode link](https://leetcode.com/problems/find-the-number-of-ways-to-place-people-ii/description/)'
 mode: 'wide'
 ---
@@ -15,9 +15,7 @@ mode: 'wide'
 For each xi,yi we find points to its right, such that y for a point is &lt;=yi and &gt; max-y seen while going L-&gt;R
 since we take max y, we can also additional break ties with sorting points y by descending. 
 If y is &gt; yi, we skip this point, and go to next. If we see y that is equal to yi, we can exit early.
- 
- 
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Find the Number of Ways to Place People II" lines

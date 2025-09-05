@@ -1,5 +1,5 @@
 ---
-title: '❗️ Minimum Cost to Make at Least One Valid Path in a Grid'
+title: "❗️ Minimum Cost to Make at Least One Valid Path in a Grid"
 description: '[leetcode link](https://leetcode.com/problems/minimum-cost-to-make-at-least-one-valid-path-in-a-grid/description/)'
 mode: 'wide'
 ---
@@ -14,7 +14,7 @@ mode: 'wide'
       bfs from (0,0), each cell has 4 edges, with only 1 edge having 0 weight,rest having 1.
 
 Do Shortest path, allowing visiting more than once, and update minimum distance. Also process 0 edges first, so Djikstra, but here only 2 values are possible for edges. So use a deque, put 0s first and 1s last, and pick from first always.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Minimum Cost to Make at Least One Valid Path in a Grid" lines

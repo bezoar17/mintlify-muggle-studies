@@ -1,5 +1,5 @@
 ---
-title: '❗️ Largest Color Value in a Directed Graph'
+title: "❗️ Largest Color Value in a Directed Graph"
 description: '[leetcode link](https://leetcode.com/problems/largest-color-value-in-a-directed-graph/description/)'
 mode: 'wide'
 ---
@@ -12,7 +12,7 @@ mode: 'wide'
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
       DAG is a requirement. Start from nodes with in-degree=0, and process all nodes. This traversal will satisfy requirement of valid path. For each node, there will be some paths ending at this node, keep the char count for all chars in all the paths that end at this node. For each char's count, pick max count. Finally, for each node you will have max_char_count for each char. Pick the maximum value amongst these.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Largest Color Value in a Directed Graph" lines

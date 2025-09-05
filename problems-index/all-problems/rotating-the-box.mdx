@@ -1,5 +1,5 @@
 ---
-title: '🧀 Rotating the Box'
+title: "🧀 Rotating the Box"
 description: '[leetcode link](https://leetcode.com/problems/rotating-the-box/description/)'
 mode: 'wide'
 ---
@@ -12,8 +12,8 @@ mode: 'wide'
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
       Transpose the matrix and reverse each row to get initial state of 90 degree rotation without gravity. Now process each column for effect of gravity. Start from bottom, and maintain the current platform/bottom value.
-When you see a stone push it to the current bottom, and increment bottom height by 1(or decrease row value by 1). When you see an obstacle, update the platform height to current obstacle height+1. 
-    </Card>
+When you see a stone push it to the current bottom, and increment bottom height by 1(or decrease row value by 1). When you see an obstacle, update the platform height to current obstacle height+1.
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Rotating the Box" lines

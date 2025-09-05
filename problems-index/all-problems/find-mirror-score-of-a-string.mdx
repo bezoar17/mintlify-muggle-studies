@@ -1,5 +1,5 @@
 ---
-title: '🧀 Find Mirror Score of a String'
+title: "🧀 Find Mirror Score of a String"
 description: '[leetcode link](https://leetcode.com/problems/find-mirror-score-of-a-string/description/)'
 mode: 'wide'
 ---
@@ -12,8 +12,8 @@ mode: 'wide'
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
       Can be done one pass with storage. Store all idxs for each char in a hash. So a hash of char to idxs array.
-For each char, if its complement has an unused idx, calculate score, and make both idxs unused by deleting them. To get closest j for each char, keep the array of idxs and use the last one while calculating the score, 
-    </Card>
+For each char, if its complement has an unused idx, calculate score, and make both idxs unused by deleting them. To get closest j for each char, keep the array of idxs and use the last one while calculating the score,
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Find Mirror Score of a String" lines

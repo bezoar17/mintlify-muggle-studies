@@ -1,5 +1,5 @@
 ---
-title: '🧀 Number of Sub-arrays With Odd Sum'
+title: "🧀 Number of Sub-arrays With Odd Sum"
 description: '[leetcode link](https://leetcode.com/problems/number-of-sub-arrays-with-odd-sum/description/)'
 mode: 'wide'
 ---
@@ -12,7 +12,7 @@ mode: 'wide'
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
       Calculate running prefix_sum for each i. And also no. of previous idxs where we had even sums and odd sums. If at an i, we have current_sum is odd, all previous even sum ending values can be starting points with i as end, so we add that. And vice versa.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Number of Sub-arrays With Odd Sum" lines

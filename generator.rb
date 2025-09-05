@@ -8,17 +8,20 @@ def write_problems
   difficulty_level = {"Medium"=>1, "Easy"=>0, "Hard"=>2}
   base_path = "problems-index/all-problems"
 
-  def update_question_content(str)
+  def filter_question_content(str)
     str.gsub('<strong>Output:</strong>', '<br/> <strong>Output:</strong>')
     .gsub('<strong>Explanation:</strong>', '<br/> <strong>Explanation:</strong>')
     .gsub('<pre>', '').gsub('</pre>', '')
     .gsub('<p>&nbsp;</p>','')
+    .gsub(/<!-- .*? -->/, '') # Example of removed tag: <!-- notionvc: e5d6f4e2-d20a-4fbd-9c7f-22fbe52ef730 -->
+    .gsub('{', '&lbrace;').gsub('}', '&rbrace;')
+    # .gsub('<code>', '`').gsub('</code>', '`')
   end
 
   def update_question_note(str)
     return "No notes for this problem" if str.nil? || str.empty?
     # for mdx, handle < and > to replace them
-    str.gsub('<', '&lt;').gsub('>', '&gt;')
+    str.gsub('<', '&lt;').gsub('>', '&gt;').gsub('{', '&lbrace;').gsub('}', '&rbrace;').strip
   end
 
   problem_keys = data.first.keys - ['questionId', 'question_content', 'question_difficulty', 'question_topics', 'question_note']
@@ -26,7 +29,7 @@ def write_problems
   data.each do |problem|
     output_md = template_md.dup
     problem_keys.each { |key| output_md.gsub!("{${#{key}}$}", problem[key])}
-    output_md.gsub!("{${question_content}$}", update_question_content(problem['question_content']))
+    output_md.gsub!("{${question_content}$}", filter_question_content(problem['question_content']))
     output_md.gsub!("{${question_note}$}", update_question_note(problem['question_note']))
     output_md.gsub!("{${difficulty_emoji}$}", difficulty_emoji[problem['question_difficulty']])
     slug = problem['url'][/problems\/(.*?)\/description/, 1]

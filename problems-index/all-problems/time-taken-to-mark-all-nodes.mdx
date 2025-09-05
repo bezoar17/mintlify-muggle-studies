@@ -1,5 +1,5 @@
 ---
-title: '❗️ Time Taken to Mark All Nodes'
+title: "❗️ Time Taken to Mark All Nodes"
 description: '[leetcode link](https://leetcode.com/problems/time-taken-to-mark-all-nodes/description/)'
 mode: 'wide'
 ---
@@ -34,9 +34,8 @@ This way we have the dist(i,a) and dist(i,b) calculated, and answer is max of th
 **Note**: To get diameter nodes, start from any node , do bfs and mark last node(furthest) as start_node. Do bfs from start_node, the furthest point from start_node will be other end of diameter. This technique is also using the fact that for every node c, largest dist is to either a or b. So when we start from random node, last node in bfs is furthest and this is either a or b, and now repeat this to find other end b.
 
 Resources: https://www.youtube.com/watch?v=wGrOPSBPpyk
-https://codeforces.com/blog/entry/101271 
-	
-    </Card>
+https://codeforces.com/blog/entry/101271
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Time Taken to Mark All Nodes" lines

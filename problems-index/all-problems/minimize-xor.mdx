@@ -1,5 +1,5 @@
 ---
-title: '🧀 Minimize XOR'
+title: "🧀 Minimize XOR"
 description: '[leetcode link](https://leetcode.com/problems/minimize-xor/description/)'
 mode: 'wide'
 ---
@@ -12,7 +12,7 @@ mode: 'wide'
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
       We have x bits from num2 we can match with y bits in nums1 to minimize xor. If x==y, our result is nums1, and minimum xor is 0. If x &lt; y, we can match at max x bits, so match the MSBs in nums1, go from left to right in binary representation. When x&gt;y, we can obviously make all y bits in nums1 0. But we will remain with x-y bits which have to be paired up with 0s in nums1. To minimize the resulting xor, this should be done first on the LSBs, so go from right to left. For every 0 you have, put one bit from rem = x-y. If the num1 is completely traversed, and we still have some 1s remaining, those will have to be just added to the construction. When this case happens, the construction already has all 1s, as any 0 in nums1 would have been converted to 1. So, we just add the remaining 1s to start or end to get the new binary representation, and get the final answer.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Minimize XOR" lines

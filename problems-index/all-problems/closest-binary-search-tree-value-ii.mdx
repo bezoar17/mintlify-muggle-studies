@@ -1,5 +1,5 @@
 ---
-title: '❗️ Closest Binary Search Tree Value II'
+title: "❗️ Closest Binary Search Tree Value II"
 description: '[leetcode link](https://leetcode.com/problems/closest-binary-search-tree-value-ii/description/)'
 mode: 'wide'
 ---
@@ -19,7 +19,7 @@ Method1: Sort array by dist to target, and return first k elements
 Method2: Get to element closest to target, now the k elements would form a sub-array around this element. So initialize a l,r pointer, and keep including the element from left/right which ever is closest to target, until we have k elements.
 
 Method 1 implemented with a min-heap. Use bfs, and put distances into min heap, return first k.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Closest Binary Search Tree Value II" lines

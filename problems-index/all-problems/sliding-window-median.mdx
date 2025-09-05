@@ -1,5 +1,5 @@
 ---
-title: '❗️ Sliding Window Median'
+title: "❗️ Sliding Window Median"
 description: '[leetcode link](https://leetcode.com/problems/sliding-window-median/description/)'
 mode: 'wide'
 ---
@@ -19,7 +19,7 @@ Then before we move to the next element, we remove the leftmost element from the
 When size of left max heap is less than right min, left one should get 1 element, so we put the element in right, and move the top of right which is a min value to the left heap. 
 
 In both cases, the one with more size gets a push and pop operation, so size remains same, while the one with lesser size gets a push op, increasing its size and maintaing the balance of heaps.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Sliding Window Median" lines

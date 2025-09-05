@@ -1,5 +1,5 @@
 ---
-title: '❗️ Maximize the Number of Target Nodes After Connecting Trees II'
+title: "❗️ Maximize the Number of Target Nodes After Connecting Trees II"
 description: '[leetcode link](https://leetcode.com/problems/maximize-the-number-of-target-nodes-after-connecting-trees-ii/description/)'
 mode: 'wide'
 ---
@@ -12,7 +12,7 @@ mode: 'wide'
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
       Level Order Traversal using BFS. Starting node is 0, and level is also 0. All nodes within odd levels and all nodes within even levels have even edges between them. So, if we bisect all nodes into them being part of even or odd level. We can calculate count of odd nodes, and even nodes for each node which would depend on nodes level. Only 1 bfs gives us this. Now our answer is even_node_count_t1[i] + odd_max_t2.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Maximize the Number of Target Nodes After Connecting Trees II" lines

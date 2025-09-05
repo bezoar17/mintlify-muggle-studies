@@ -1,5 +1,5 @@
 ---
-title: '🧀 Maximum Subarray Sum With Length Divisible by K'
+title: "🧀 Maximum Subarray Sum With Length Divisible by K"
 description: '[leetcode link](https://leetcode.com/problems/maximum-subarray-sum-with-length-divisible-by-k/description/)'
 mode: 'wide'
 ---
@@ -21,8 +21,7 @@ this part now is same as kadane's maximum subarray sum.
 so instead of num, we here have sum of subarray of k as nums, and kadane can be applied.
 
 dp[i] = (sum of last k elements excluding i) + [0, dp[i-k]].max
-
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Maximum Subarray Sum With Length Divisible by K" lines

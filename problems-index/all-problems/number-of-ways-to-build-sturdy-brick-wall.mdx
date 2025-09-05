@@ -1,5 +1,5 @@
 ---
-title: '🧀 Number of Ways to Build Sturdy Brick Wall'
+title: "🧀 Number of Ways to Build Sturdy Brick Wall"
 description: '[leetcode link](https://leetcode.com/problems/number-of-ways-to-build-sturdy-brick-wall/description/)'
 mode: 'wide'
 ---
@@ -46,10 +46,8 @@ Also, instead of calculating the sum everytime using complements. We can also st
 
 Now a note on how to generate valid masks, first of all, a mask is joins in between(excluding ends), so it can be represented by width-1 bits. So, we can simply
 iterate over all the masks, and check if each mask is a valid config. For that, we need to check the brick sizes being formed between 1s and bounds(start/end).
-If we encounter a brick size which is not present in our supply, its an invalid config. 
-
-
-    </Card>
+If we encounter a brick size which is not present in our supply, its an invalid config.
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Number of Ways to Build Sturdy Brick Wall" lines

@@ -1,5 +1,5 @@
 ---
-title: '❗️ Select Cells in Grid With Maximum Score'
+title: "❗️ Select Cells in Grid With Maximum Score"
 description: '[leetcode link](https://leetcode.com/problems/select-cells-in-grid-with-maximum-score/description/)'
 mode: 'wide'
 ---
@@ -19,7 +19,7 @@ We can do dp, for each  for a distinct_num, if it appears in r rows, we try r+1 
 Let's see why we can start with max element. Whatever is the maximum out of all distinct elements, will be picked always. If it was present in multiple rows, we try all possibilities, but we will never have maximum possible score without the max_val. To prove this, suppose we have a valid selection which does not have max_value, and max_value was present in row i, whatever was selected in row i(0 for nothing selected) can be replaced with max_value, and score will improve, without violating validity.
 
 So, max element from remaining rows is always selected to get max score of the elements collection.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Select Cells in Grid With Maximum Score" lines

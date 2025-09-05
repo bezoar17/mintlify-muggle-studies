@@ -1,5 +1,5 @@
 ---
-title: '❗️ XOR After Range Multiplication Queries II'
+title: "❗️ XOR After Range Multiplication Queries II"
 description: '[leetcode link](https://leetcode.com/problems/xor-after-range-multiplication-queries-ii/description/)'
 mode: 'wide'
 ---
@@ -24,9 +24,7 @@ But, even if k=2, we can do the same thing, storing the ops in a map would be on
 Effectively, we would make 1 pass of n, for each k.
 
 Also, amongst the original queries, we might see a case where for a same (l,r,k) we have multiple values, v1, v2, v3. In this case, all of the queries are essentially (l,r,k, v1*v2*v3). This is also a clear compression of queries. As it turns out, this grouping by key is enough for the test cases to pass.
-
-
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```csharp title="XOR After Range Multiplication Queries II" lines

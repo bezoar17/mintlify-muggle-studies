@@ -1,5 +1,5 @@
 ---
-title: '🧀 Grid Game'
+title: "🧀 Grid Game"
 description: '[leetcode link](https://leetcode.com/problems/grid-game/description/)'
 mode: 'wide'
 ---
@@ -11,11 +11,11 @@ mode: 'wide'
   </Tab>
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
-       path can be identified by when you choose to go down, say i
+      path can be identified by when you choose to go down, say i
   prefix sum will be used to calc options for robot1 and robot2
   If, robot1 makes switch at i; it takes [0,i] from row1, and [i,n] from row 2.
-  robot2 can only take one of the remaining subarrays, [0,i-1] in row2 or [i+1, n] in row1, it will choose the max. we have to minimize this value. 
-    </Card>
+  robot2 can only take one of the remaining subarrays, [0,i-1] in row2 or [i+1, n] in row1, it will choose the max. we have to minimize this value.
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Grid Game" lines

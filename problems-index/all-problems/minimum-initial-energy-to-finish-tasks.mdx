@@ -1,5 +1,5 @@
 ---
-title: '❗️ Minimum Initial Energy to Finish Tasks'
+title: "❗️ Minimum Initial Energy to Finish Tasks"
 description: '[leetcode link](https://leetcode.com/problems/minimum-initial-energy-to-finish-tasks/description/)'
 mode: 'wide'
 ---
@@ -12,9 +12,7 @@ mode: 'wide'
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
       Doing all tasks if no min was required, then answer would be sum of all energy values. You can never gain energy, so minimum energy required is also max(min req at a task). We can never gain energy, but M-E is the energy saved at a task. Not gained, but effectively saved, we want to maximize this value, to perform other tasks, this way is the most optimal, now find the min energy to start for this order.
-
-
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Minimum Initial Energy to Finish Tasks" lines

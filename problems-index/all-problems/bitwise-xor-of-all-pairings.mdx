@@ -1,5 +1,5 @@
 ---
-title: '🧀 Bitwise XOR of All Pairings'
+title: "🧀 Bitwise XOR of All Pairings"
 description: '[leetcode link](https://leetcode.com/problems/bitwise-xor-of-all-pairings/description/)'
 mode: 'wide'
 ---
@@ -12,7 +12,7 @@ mode: 'wide'
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
       Suppose nums1 is [a,b] and nums2 is [c,d,e]. In the output, we will have a^c, a^d, a^e, b^c,b^d, b^e. And all these values will be xor'd together. So, the final xor will have a and b will occur 3 times, and c,d,e will occur 2 times each. Each number occurs n times, where n is size of the other array. Maintain a hash for all distinct numbers in nums1 and nums2 to get count of appearance in final xor. For a number, if it appears even times, it cancels out in the resulting xor, so just xor the numbers occuring odd times.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Bitwise XOR of All Pairings" lines

@@ -1,5 +1,5 @@
 ---
-title: '🧀 Equal Sum Arrays With Minimum Number of Operations'
+title: "🧀 Equal Sum Arrays With Minimum Number of Operations"
 description: '[leetcode link](https://leetcode.com/problems/equal-sum-arrays-with-minimum-number-of-operations/description/)'
 mode: 'wide'
 ---
@@ -18,7 +18,7 @@ We do what is better and discard this element from consideration for the next op
 
 We can do this with pq, or simply just sort the nums1 in increasing, and nums2 in decreasing order. 
 Now, if we precalculate the max inc and max dec we can get from these elements, we have max inc/dec value for all no.s in both arrays. We sort these options in decreasing order, and just keep taking these values until diff becomes 0, if we cant reach 0, we return -1.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Equal Sum Arrays With Minimum Number of Operations" lines

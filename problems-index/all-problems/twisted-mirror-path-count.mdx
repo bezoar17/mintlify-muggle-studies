@@ -1,5 +1,5 @@
 ---
-title: '🧀 Twisted Mirror Path Count'
+title: "🧀 Twisted Mirror Path Count"
 description: '[leetcode link](https://leetcode.com/problems/twisted-mirror-path-count/description/)'
 mode: 'wide'
 ---
@@ -17,11 +17,7 @@ https://leetcode.com/problems/twisted-mirror-path-count/solutions/7144114/simple
 
 If there were no mirrors, the way you calculate the result for each cell is adding ways of reaching from left and from top. This will remain same for cases where there is no mirror around. But for cases where there is a mirror, for example,
 if there is a mirror to the left of a cell, ways to reach from left to this cell becomes 0, but ways to reach from top remains as is. Similarly, if theres a mirror on top of this cell, ways to reach from top becomes 0. So, we essentially have to track the ways to reach from left or top separately, and use them in the calculations. In simple cases, to get total, we just sum it up, but to handle mirrors, we need to know the counts of top and left of the other cells separately.
-
-
-
-
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Twisted Mirror Path Count" lines

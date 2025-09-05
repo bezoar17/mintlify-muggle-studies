@@ -1,5 +1,5 @@
 ---
-title: '🧀 Push Dominoes'
+title: "🧀 Push Dominoes"
 description: '[leetcode link](https://leetcode.com/problems/push-dominoes/description/)'
 mode: 'wide'
 ---
@@ -14,7 +14,7 @@ mode: 'wide'
       When going from left to right, actionable to be done only when we get a push( L or R). Once we get L or R, action to be done on previous occurence of push to this occurence. If its LR, nothing to be done. If its LL, just update all in between to L. If its RR, update to R. If its RL, then 2 cases, if dots in between are even, half of them would be R and half would be L. If its odd, the middle dot will remain a dot. But in both cases dot_count/2 values will be R and L. When dot_count is odd, for e.g 5, the fallen values will be 2 each, and middle one will remain. So process all these cases. 
 
 2 extra cases are when we find the first push value, and its an L, all from 0 to i, will become L. And if the last push value is an R, all to the right will become R. Handle these cases too.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Push Dominoes" lines

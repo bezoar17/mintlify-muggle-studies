@@ -1,5 +1,5 @@
 ---
-title: '❗️ Maximum Students Taking Exam'
+title: "❗️ Maximum Students Taking Exam"
 description: '[leetcode link](https://leetcode.com/problems/maximum-students-taking-exam/description/)'
 mode: 'wide'
 ---
@@ -31,7 +31,7 @@ For implementation, we first need to find valid_within_row masks for each row in
 For all valid seats within same row, we can represent empty seats as 1, so our initial mask is empty mask, em. Now we generate all sub-masks of this mask, and pick only those who dont have consecutive 1s(right shift to see no overlap). Finally we also include 0 as a valid mask.
 
 For checking cheating across, we left shift and right shift by 1 and check if there is no overlap
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Maximum Students Taking Exam" lines

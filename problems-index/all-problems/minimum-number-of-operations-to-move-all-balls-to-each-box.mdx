@@ -1,5 +1,5 @@
 ---
-title: '🧀 Minimum Number of Operations to Move All Balls to Each Box'
+title: "🧀 Minimum Number of Operations to Move All Balls to Each Box"
 description: '[leetcode link](https://leetcode.com/problems/minimum-number-of-operations-to-move-all-balls-to-each-box/description/)'
 mode: 'wide'
 ---
@@ -13,7 +13,7 @@ mode: 'wide'
     <Card>
       Do 2 runs, L-&gt;R and R-&gt;L, to update ops needed to move all 1s to left of idx and all 1s right to idx. Sum these 2 op counts. For calculating ops needed, it is j_1, j_2 to left of i. i-j1 + i-j2.
 So, no. of 1s * i - sum of idx of 1 to the left. So keep count and idx sums to calculate ops.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Minimum Number of Operations to Move All Balls to Each Box" lines

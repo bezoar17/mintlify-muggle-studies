@@ -1,5 +1,5 @@
 ---
-title: '❗️ Sum of Beautiful Subsequences'
+title: "❗️ Sum of Beautiful Subsequences"
 description: '[leetcode link](https://leetcode.com/problems/sum-of-beautiful-subsequences/description/)'
 mode: 'wide'
 ---
@@ -47,16 +47,8 @@ Formally,  after processing i, sb_count[r]+= 1 + sb_count[1...r].sum. And then t
 But, if we look at the update which happens here, sb_count[r]+= 1 + sb_count[1...r].sum.
 In RHS, we are basically calculating prefix_sum till r-1. And then updating r. So, for the next iteration, the prefix sum value might change. If we were using a seg_tree, this would be always querying sum of (0,r-1), and updating r. But Fenwick trees can also be used which are specialized for prefix_sums, and store lesser space. Using a fenwick tree fo k elements would make the operation log k. Hence total time complexity becomes nlogK.
 
-Now, for the original problem original multiples is our array for which this has to be calculated, with each multiple of g, going from g to 2g and so on, the size of multiples will decrease and hence the nlogK metric. 
-
-
-
-
-
-
-
-
-    </Card>
+Now, for the original problem original multiples is our array for which this has to be calculated, with each multiple of g, going from g to 2g and so on, the size of multiples will decrease and hence the nlogK metric.
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```csharp title="Sum of Beautiful Subsequences" lines

@@ -1,5 +1,5 @@
 ---
-title: '🧀 Zero Array Transformation I'
+title: "🧀 Zero Array Transformation I"
 description: '[leetcode link](https://leetcode.com/problems/zero-array-transformation-i/description/)'
 mode: 'wide'
 ---
@@ -17,7 +17,7 @@ Mark the queries onto transformations array, for each query l,r, mark l as +1, a
 Suppose only 1 query was there, then go from left to right in transformations array, and accumulate the transformations for each index, if only 1 query was there, only l index would have +1, which will remain till r index, and after r it will become 0.
 
 We are essentially capturing the transformations, instead of applying it for each query, we just store the affected range by mapping the start and end points of the query.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Zero Array Transformation I" lines

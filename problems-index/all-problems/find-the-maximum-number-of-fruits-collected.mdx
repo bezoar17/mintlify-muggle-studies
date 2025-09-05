@@ -1,5 +1,5 @@
 ---
-title: '❗️ Find the Maximum Number of Fruits Collected'
+title: "❗️ Find the Maximum Number of Fruits Collected"
 description: '[leetcode link](https://leetcode.com/problems/find-the-maximum-number-of-fruits-collected/description/)'
 mode: 'wide'
 ---
@@ -16,7 +16,7 @@ mode: 'wide'
 * as that diagonal will have 0 values, child 2 and 3, cant reach the top_left - down_right diagonal, doesnt make sense, because once you are at diagonal, thats the only path, and now has only 0s, maybe if we have negative values, we can try reaching diagonal for 0 value and avoid negatives.
 * And for child 2 & 3, cells with i+j &lt; n-1 are unreachable(if they reach this area, they wont make end in time).
 * child 2 and child 3 have different triangular areas they can collect from, calculate these separately and sum it up
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Find the Maximum Number of Fruits Collected" lines

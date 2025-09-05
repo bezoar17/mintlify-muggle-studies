@@ -1,5 +1,5 @@
 ---
-title: '❗️ Checking Existence of Edge Length Limited Paths'
+title: "❗️ Checking Existence of Edge Length Limited Paths"
 description: '[leetcode link](https://leetcode.com/problems/checking-existence-of-edge-length-limited-paths/description/)'
 mode: 'wide'
 ---
@@ -17,19 +17,18 @@ We process all edges which have dist &lt;= min_dist_val, and add nodes reachable
 
 Now, we process the next dist_val, and now component state has changed, it might have new elements, and for this dist_2, all nodes are within dist_2. We are simulating storing snapshots of component state after each dist value. And we can check the component at a particular state value &lt;= query dist. 
 
-Suppose, dist=2, component = {a,b,c}
-dist=5, component = {a,b,c,z}
-dist=7, component = {a,b,c,z}  {x,y}
-dist= 8, component = {a,b,c,x,y,z} and so on.
+Suppose, dist=2, component = &lbrace;a,b,c&rbrace;
+dist=5, component = &lbrace;a,b,c,z&rbrace;
+dist=7, component = &lbrace;a,b,c,z&rbrace;  &lbrace;x,y&rbrace;
+dist= 8, component = &lbrace;a,b,c,x,y,z&rbrace; and so on.
 
 x got connected with a at 8. Before that, they were not, so storing snapshots is required to store root of each different component that might only get merged later.
 
 But how do we actually store the snapshots and query them effectively ?
 We dont really need to if we process queries in order of dist too.
 
-As given in hint, we can reorder the queries based on dist, for the first query, process all edges till that dist, and maintain the component. Check if both are part of component, then for the next dist in query, process next set of edges. 
-
-    </Card>
+As given in hint, we can reorder the queries based on dist, for the first query, process all edges till that dist, and maintain the component. Check if both are part of component, then for the next dist in query, process next set of edges.
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Checking Existence of Edge Length Limited Paths" lines

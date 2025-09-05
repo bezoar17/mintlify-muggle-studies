@@ -1,5 +1,5 @@
 ---
-title: '🧀 Max Sum of a Pair With Equal Sum of Digits'
+title: "🧀 Max Sum of a Pair With Equal Sum of Digits"
 description: '[leetcode link](https://leetcode.com/problems/max-sum-of-a-pair-with-equal-sum-of-digits/description/)'
 mode: 'wide'
 ---
@@ -14,7 +14,7 @@ mode: 'wide'
       Sorting nums in desc and checking from start doesnt work, because M1, might combine with m22, and still be greater than M3+M4, so we cant exit when we get 2 matching in desc nums. We need to check all the values, and keep max and second max for each digit_sum.
 
 Or, store pair of [num, digit_sum], sort by digit_sum, and then num. For 2 consecutive nums if digit_sum is same, calc their sum and keep track of max.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Max Sum of a Pair With Equal Sum of Digits" lines

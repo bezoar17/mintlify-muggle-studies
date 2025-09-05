@@ -1,5 +1,5 @@
 ---
-title: '🧀 Assign Elements to Groups with Constraints'
+title: "🧀 Assign Elements to Groups with Constraints"
 description: '[leetcode link](https://leetcode.com/problems/assign-elements-to-groups-with-constraints/description/)'
 mode: 'wide'
 ---
@@ -11,8 +11,8 @@ mode: 'wide'
   </Tab>
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
-      Start processing elements from the left, this way smallest index condition is handled. For the first elements, start from elem, and go to its multiples, for all these values of **elem * i**, answer is idx for all the groups. Then go to next elements, and set these values if not set already. This way we have a map of earliest divisors for each of the multiples of elements in the order we want. For each group, just add this value if present. If not present, no element's multiple equaled this group value. 
-    </Card>
+      Start processing elements from the left, this way smallest index condition is handled. For the first elements, start from elem, and go to its multiples, for all these values of **elem * i**, answer is idx for all the groups. Then go to next elements, and set these values if not set already. This way we have a map of earliest divisors for each of the multiples of elements in the order we want. For each group, just add this value if present. If not present, no element's multiple equaled this group value.
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Assign Elements to Groups with Constraints" lines

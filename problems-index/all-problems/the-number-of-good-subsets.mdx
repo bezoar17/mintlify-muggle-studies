@@ -1,5 +1,5 @@
 ---
-title: '❗️ The Number of Good Subsets'
+title: "❗️ The Number of Good Subsets"
 description: '[leetcode link](https://leetcode.com/problems/the-number-of-good-subsets/description/)'
 mode: 'wide'
 ---
@@ -15,7 +15,7 @@ mode: 'wide'
 First of all, we only have 10 primes within this. So, we represent all numbers as bitmask of its prime-factorization.
 Here, some numbers have to be ignored, no.s like 4, 9, 25, which can never be in a good subset, we can also ignore 1, the effect 1 has is whatever no. of good-subsets we have, say x. If we have one 1 in the nums array, our answer becomes 2x. If we have another 1, it becomes 2(2x) as it can attach with each existing good subset.
 
-1 more thing is, suppose you have a good-subset with {2,3}, if 3 appears x times, and 2 appears y times, we actually have xy no. of total subsets here. So, we should also track counts of each num in nums, and use that, instead of traversing the whole of nums.
+1 more thing is, suppose you have a good-subset with &lbrace;2,3&rbrace;, if 3 appears x times, and 2 appears y times, we actually have xy no. of total subsets here. So, we should also track counts of each num in nums, and use that, instead of traversing the whole of nums.
 
 How do we actually get the good-subsets ?
 2 no.s can be part of a subset if they dont share a common prime factor, so 15 and 5 cant be together, but 15 and 2 can.
@@ -25,14 +25,7 @@ There are 1024 possible good-subsets, out of all 10 primes, 2^10 options. Each g
 For each num, n, and each previous subset mask value, we can combine the num n and previous mask to get the next subset value. This will only be done if n & previous mask dont share a prime, i.e dont have a common 1.
 
 So, we keep doing this for all nums and subset-mask values.
-
-
-
-
-
-
-
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="The Number of Good Subsets" lines

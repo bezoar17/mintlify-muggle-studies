@@ -1,5 +1,5 @@
 ---
-title: '❗️ Minimum Number of K Consecutive Bit Flips'
+title: "❗️ Minimum Number of K Consecutive Bit Flips"
 description: '[leetcode link](https://leetcode.com/problems/minimum-number-of-k-consecutive-bit-flips/description/)'
 mode: 'wide'
 ---
@@ -29,12 +29,7 @@ How do we efficiently track it, is tricky.
 To mark the first idx of a required flip, we can make it 2. So, we can have more than 1 2 marks within the first window itself, and current flip state might be affected by all these, the final state  effectively being odd or even.
 
 But as soon as first window ends, and we leave the window, the effect of the first window flip has to be removed from the current flip state, so whenever i-k is 2, i.e, flip window ended, we update flip state again.
-
-
-
-
-
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Minimum Number of K Consecutive Bit Flips" lines

@@ -1,5 +1,5 @@
 ---
-title: '❗️ Find the Number of Subarrays Where Boundary Elements Are Maximum'
+title: "❗️ Find the Number of Subarrays Where Boundary Elements Are Maximum"
 description: '[leetcode link](https://leetcode.com/problems/find-the-number-of-subarrays-where-boundary-elements-are-maximum/description/)'
 mode: 'wide'
 ---
@@ -17,8 +17,8 @@ when a number repeats, at an index R, R can be the end of a valid subarray, for 
 So, from going left to right, if we maintain prev_gr_idx for num_i. And maintain leftmost valid_idx for num_i. And valid_count. Then we can calculate this in one go. 
 If we see a repeat of num_i, if prev_gr_idx is less than leftmost_valid_idx, then we can add valid_count to the answer. If prev_gr_idx is greater than leftmost_valid_idx, then leftmost_valid_idx should be updated to idx, and count will be reset, because no earlier index can be the start of subarray where num_i is max.
 
-Also, min value of subarray_count is n. 
-    </Card>
+Also, min value of subarray_count is n.
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Find the Number of Subarrays Where Boundary Elements Are Maximum" lines

@@ -1,5 +1,5 @@
 ---
-title: '🧀 Distribute Coins in Binary Tree'
+title: "🧀 Distribute Coins in Binary Tree"
 description: '[leetcode link](https://leetcode.com/problems/distribute-coins-in-binary-tree/description/)'
 mode: 'wide'
 ---
@@ -19,7 +19,7 @@ We return the offset of current_node. To calculate, we calculate offset.abs for 
 
 Leaf has offset of (coin-1), for its parent, l+r moves would be required. 
 And resulting offset would be (coin -1 + left_reserve + right_reserve), reserve can be negative. Moves would be left_reserve.abs + right_reserve.abs
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Distribute Coins in Binary Tree" lines

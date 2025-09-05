@@ -1,5 +1,5 @@
 ---
-title: '🧀 Min Cost to Connect All Points'
+title: "🧀 Min Cost to Connect All Points"
 description: '[leetcode link](https://leetcode.com/problems/min-cost-to-connect-all-points/description/)'
 mode: 'wide'
 ---
@@ -14,9 +14,9 @@ mode: 'wide'
       Kruskal's MST using union find. 
 First initialize all edge values as distances between all nodes.
 
-Ruby gives tle if only edges.sort! is used, instead, use edges.sort_by! {|x| x[0]}
+Ruby gives tle if only edges.sort! is used, instead, use edges.sort_by! &lbrace;|x| x[0]&rbrace;
 explicit gives faster sorting, and no tle.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Min Cost to Connect All Points" lines

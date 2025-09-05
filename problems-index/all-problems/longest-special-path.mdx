@@ -1,5 +1,5 @@
 ---
-title: '❗️ Longest Special Path'
+title: "❗️ Longest Special Path"
 description: '[leetcode link](https://leetcode.com/problems/longest-special-path/description/)'
 mode: 'wide'
 ---
@@ -14,8 +14,7 @@ mode: 'wide'
       DFS with maintaining at which prev_node of current path was the value of current_node seen. For this we need to know the rightmost prev_node value if there are multiple occurences of value in the path. We need the path information and the value last seen at which node info while doing the dfs and calculating current path length. 
 
 If we are at a node x, consider path to node x as a and array of, and node_0, node_a, node_b ... node_x. Path length of a sub-array [i..x] is path_length of x- path length of i. We have to find subarray [i..x] such that there is no repeating element within this. And record path length of this subarray. So while going from left-right in this subarray(which is dfs from root to node), we keep updating the left_idx or start_idx by keeping track of previously seen values and their idx. Now, this path is built during the dfs from root to a node, so we have to keep the dfs_path, along with the idx at which a value was seen.
-
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Longest Special Path" lines

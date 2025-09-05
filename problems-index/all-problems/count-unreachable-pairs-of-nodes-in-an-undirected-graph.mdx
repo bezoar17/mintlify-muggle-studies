@@ -1,5 +1,5 @@
 ---
-title: '🧀 Count Unreachable Pairs of Nodes in an Undirected Graph'
+title: "🧀 Count Unreachable Pairs of Nodes in an Undirected Graph"
 description: '[leetcode link](https://leetcode.com/problems/count-unreachable-pairs-of-nodes-in-an-undirected-graph/description/)'
 mode: 'wide'
 ---
@@ -12,7 +12,7 @@ mode: 'wide'
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
       UnionFind is clear. Find different components which are unreachable to each other. Now instead of finding pairs of components and calculating unreachable nodes between these components( this will be n^2 where n is no. of components). We can subtract reachable node pairs from total pairs for each component, this is n, where n is no. of components.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Count Unreachable Pairs of Nodes in an Undirected Graph" lines

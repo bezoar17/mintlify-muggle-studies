@@ -1,5 +1,5 @@
 ---
-title: '🧀 Longest Univalue Path'
+title: "🧀 Longest Univalue Path"
 description: '[leetcode link](https://leetcode.com/problems/longest-univalue-path/description/)'
 mode: 'wide'
 ---
@@ -15,8 +15,8 @@ mode: 'wide'
 
 Dfs, and start updating from leaf nodes, in reverse. For this, call dfs first and calculate things for children first, and while returning, return whatever is to be used by parents. 
 
-At any node, l+r subtrees can be combined if they are equal. For parent nodes, only 1 can be extended, so return only max of l and r. 
-    </Card>
+At any node, l+r subtrees can be combined if they are equal. For parent nodes, only 1 can be extended, so return only max of l and r.
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Longest Univalue Path" lines

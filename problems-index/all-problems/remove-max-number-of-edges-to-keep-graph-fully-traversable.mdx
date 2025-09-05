@@ -1,5 +1,5 @@
 ---
-title: '❗️ Remove Max Number of Edges to Keep Graph Fully Traversable'
+title: "❗️ Remove Max Number of Edges to Keep Graph Fully Traversable"
 description: '[leetcode link](https://leetcode.com/problems/remove-max-number-of-edges-to-keep-graph-fully-traversable/description/)'
 mode: 'wide'
 ---
@@ -12,7 +12,7 @@ mode: 'wide'
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
       All type 3 will remain as is, and will become starting reachable set/connected component for both alice and bob. Then process each alice edge and then each bob edge set, and see if they can reach all with given edges, also stopping required_edge count when their set has all nodes. All edges appearing after this are redundant, and can be removed. So just get count of required edges.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Remove Max Number of Edges to Keep Graph Fully Traversable" lines

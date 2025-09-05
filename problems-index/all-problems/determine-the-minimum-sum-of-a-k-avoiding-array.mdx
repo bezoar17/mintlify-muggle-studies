@@ -1,5 +1,5 @@
 ---
-title: '🧀 Determine the Minimum Sum of a k-avoiding Array'
+title: "🧀 Determine the Minimum Sum of a k-avoiding Array"
 description: '[leetcode link](https://leetcode.com/problems/determine-the-minimum-sum-of-a-k-avoiding-array/description/)'
 mode: 'wide'
 ---
@@ -17,7 +17,7 @@ We have to make changes to this to ensure it is k-avoiding. last_num is n for su
 While going left to right if we find a num and cntpt which sums to k. We have to delete any of num, cnpt. To add a value, the least no. we can add is last_num+1. Now, to minimize the addition value, we will choose maximum of num and cnpt, and delete this one.
 
 Keep track of deleted to avoid dual deletions.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Determine the Minimum Sum of a k-avoiding Array" lines

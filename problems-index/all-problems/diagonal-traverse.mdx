@@ -1,5 +1,5 @@
 ---
-title: '🧀 Diagonal Traverse'
+title: "🧀 Diagonal Traverse"
 description: '[leetcode link](https://leetcode.com/problems/diagonal-traverse/description/)'
 mode: 'wide'
 ---
@@ -14,8 +14,7 @@ mode: 'wide'
       Elements on same diagonal have same i+j value. Then, diagonals with i+j being odd have normal direction, ones with even value have to be sent in reverse. Simply store and push out accordingly.
 
 If O(1) space is required, we have to use direction to indicate current diagonal being processed. Up or down, based on that next element is decided, then if its out of range, we have to flip direction, and choose the next element, that calculation is again dependent on next element being in range, dry run it, and it can be solved.
-
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Diagonal Traverse" lines

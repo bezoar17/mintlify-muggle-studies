@@ -1,5 +1,5 @@
 ---
-title: '❗️ Kth Smallest Instructions'
+title: "❗️ Kth Smallest Instructions"
 description: '[leetcode link](https://leetcode.com/problems/kth-smallest-instructions/description/)'
 mode: 'wide'
 ---
@@ -14,8 +14,8 @@ mode: 'wide'
       Similar https://leetcode.com/problems/the-k-th-lexicographical-string-of-all-happy-strings-of-length-n/
 
 Try building the string, we know the total no. of H and V instructions. Which one comes where is what makes the order. For k = 1, all H are at start, and all V are at the end. If we fix H at first position, and rest of the possibilites are X, then first X ranks have H at first position. If K is less than X, we use H at first position, and continue, else we fix V at first position, and update K-=X.
-To get rank within remaining with offset. Here no. of possibilites of right chars is not simple as the similar problem mentioned above, but is dependent on NCR values, i.e factorials. 
-    </Card>
+To get rank within remaining with offset. Here no. of possibilites of right chars is not simple as the similar problem mentioned above, but is dependent on NCR values, i.e factorials.
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Kth Smallest Instructions" lines

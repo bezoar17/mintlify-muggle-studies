@@ -1,5 +1,5 @@
 ---
-title: '🧀 Find a Safe Walk Through a Grid'
+title: "🧀 Find a Safe Walk Through a Grid"
 description: '[leetcode link](https://leetcode.com/problems/find-a-safe-walk-through-a-grid/description/)'
 mode: 'wide'
 ---
@@ -32,7 +32,7 @@ Only after exhausting all 0-weight paths do we consider paths that include 1-wei
 When we process a node, we've already found all shorter possible paths to it (since any path with more 0s would have been processed earlier)
 
 This "0-1 BFS" is more efficient than Dijkstra's algorithm for this special case, while still guaranteeing optimal paths. It's a perfect example of how understanding the constraints of a problem (in this case, edges being only 0 or 1) can lead to simpler and more efficient solutions than general algorithms.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Find a Safe Walk Through a Grid" lines

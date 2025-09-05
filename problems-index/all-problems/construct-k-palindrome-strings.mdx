@@ -1,5 +1,5 @@
 ---
-title: '🧀 Construct K Palindrome Strings'
+title: "🧀 Construct K Palindrome Strings"
 description: '[leetcode link](https://leetcode.com/problems/construct-k-palindrome-strings/description/)'
 mode: 'wide'
 ---
@@ -12,7 +12,7 @@ mode: 'wide'
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
       Imagine this as sending each char to a string out of the k strings. We can always ensure to send the even counts in any of the strings such that palindrome constraint is true. For the 1 extra char for the odd freq chars, only 1 such extra char can be sent to one of the palindrome strings. For k output strings, if we have less than k such extra chars, palindrome constraint can be maintained, if we have more such chars, they will break palindrome constraint wherever they go.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Construct K Palindrome Strings" lines

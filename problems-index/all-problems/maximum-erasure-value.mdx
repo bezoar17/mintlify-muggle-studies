@@ -1,5 +1,5 @@
 ---
-title: '🧀 Maximum Erasure Value'
+title: "🧀 Maximum Erasure Value"
 description: '[leetcode link](https://leetcode.com/problems/maximum-erasure-value/description/)'
 mode: 'wide'
 ---
@@ -11,8 +11,8 @@ mode: 'wide'
   </Tab>
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
-      2 pointer maintaining valid array. Store hash of each num, start l,r both from 0. Increment right idx, if value was not seen, keep adding to subarray sum, else remove from sub-array, bring left idx to seen position+1, to make the array valid. During this shrink, also update seen hash and reduce sub-array sum. 
-    </Card>
+      2 pointer maintaining valid array. Store hash of each num, start l,r both from 0. Increment right idx, if value was not seen, keep adding to subarray sum, else remove from sub-array, bring left idx to seen position+1, to make the array valid. During this shrink, also update seen hash and reduce sub-array sum.
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Maximum Erasure Value" lines

@@ -1,5 +1,5 @@
 ---
-title: '❗️ Shortest Distance After Road Addition Queries II'
+title: "❗️ Shortest Distance After Road Addition Queries II"
 description: '[leetcode link](https://leetcode.com/problems/shortest-distance-after-road-addition-queries-ii/description/)'
 mode: 'wide'
 ---
@@ -22,7 +22,7 @@ If we simulate deleting nodes, size of set can give us distance to last node, as
 But, when deleting nodes, if we go from start to end, this can be huge, and we might not delete anything if everything in between has been deleted. 
 
 So, this has to be done in sorted array, where we start from start+1, and deleting until we reach end-1, if nodes were deleted before, we will have fewer iterations.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```python3 title="Shortest Distance After Road Addition Queries II" lines

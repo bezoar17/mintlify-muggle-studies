@@ -1,5 +1,5 @@
 ---
-title: '❗️ Maximum Walls Destroyed by Robots'
+title: "❗️ Maximum Walls Destroyed by Robots"
 description: '[leetcode link](https://leetcode.com/problems/maximum-walls-destroyed-by-robots/description/)'
 mode: 'wide'
 ---
@@ -25,8 +25,8 @@ For i-1 going right, dp[i-1][1] + we take the left coverage for i, but we have t
 
 To get no. of walls in a range, we can use binary search. With the same point of avoiding duplication, we have to be careful about the intervals to avoid overlap, when calculating the intervals. Because, in case 2 robots are present at say 25, and 30, with range of both being 5 and there is 1 wall at 30. Ranges are [25,30)  [30,). 
 
-Then we need to ensure the wall is not counted for both the robots, hence we keep the intervals accordingly. Rule we can follow is 
-    </Card>
+Then we need to ensure the wall is not counted for both the robots, hence we keep the intervals accordingly. Rule we can follow is
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Maximum Walls Destroyed by Robots" lines

@@ -1,5 +1,5 @@
 ---
-title: '🧀 Construct Binary Tree from Preorder and Postorder Traversal'
+title: "🧀 Construct Binary Tree from Preorder and Postorder Traversal"
 description: '[leetcode link](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-postorder-traversal/description/)'
 mode: 'wide'
 ---
@@ -11,8 +11,8 @@ mode: 'wide'
   </Tab>
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
-      Preoder is Root LR, PostOrder is LR Root. First element of pre and last element of post is always root. Second element of pre is left, second last element of post is right value. If both are same, we have only 1 node. Else, we know the left and right values of root node. We can get the pre and post arrays for both left and right nodes by slicing original pre and post arrays, and call the function recursively. 
-    </Card>
+      Preoder is Root LR, PostOrder is LR Root. First element of pre and last element of post is always root. Second element of pre is left, second last element of post is right value. If both are same, we have only 1 node. Else, we know the left and right values of root node. We can get the pre and post arrays for both left and right nodes by slicing original pre and post arrays, and call the function recursively.
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Construct Binary Tree from Preorder and Postorder Traversal" lines

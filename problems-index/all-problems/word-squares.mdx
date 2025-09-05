@@ -1,5 +1,5 @@
 ---
-title: '❗️ Word Squares'
+title: "❗️ Word Squares"
 description: '[leetcode link](https://leetcode.com/problems/word-squares/description/)'
 mode: 'wide'
 ---
@@ -14,8 +14,8 @@ mode: 'wide'
       Max word len is 4, so max matrix of 4x4. Total words are also 1k max. Once, we fix the first word, say ball
 2nd word should start from a, i.e 1st idx char of first word, third from le, ie 2nd from first and second word, and 4th from lad, ie. 3rd char from first, second and third words. The prefix for next word has a pattern, and will limit our selection for next word.
 
-Our possible keeps decreasing, based on prefix, after each selection. If we just traverse all possibilities, the max depth is less, only 4, and pruning ,ie, rejecting invalid entries is also fast. For faster look ups, we can keep words in a Trie or Hash, since len is only 4, we can use hash of set. 
-    </Card>
+Our possible keeps decreasing, based on prefix, after each selection. If we just traverse all possibilities, the max depth is less, only 4, and pruning ,ie, rejecting invalid entries is also fast. For faster look ups, we can keep words in a Trie or Hash, since len is only 4, we can use hash of set.
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Word Squares" lines

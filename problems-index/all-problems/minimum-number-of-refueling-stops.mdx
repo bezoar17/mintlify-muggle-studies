@@ -1,5 +1,5 @@
 ---
-title: '❗️ Minimum Number of Refueling Stops'
+title: "❗️ Minimum Number of Refueling Stops"
 description: '[leetcode link](https://leetcode.com/problems/minimum-number-of-refueling-stops/description/)'
 mode: 'wide'
 ---
@@ -14,7 +14,7 @@ mode: 'wide'
       If start_fuel &gt; target, 0 rf required. If start_fuel + sum of all fuels &lt; target, answer is -1. In other cases, start_fuel &lt; target && start_fuel + some_station_fuels &gt;= target. So, for each station_fuel we take it should be the max one we can take. Imagine a car starting with start_fuel, and reaches that position. Suppose we *saw* 3 stations, we take note of fuel in each. Now, as we havent reached target but out fuel is empty. We should've refilled atleast once from the 3 stations, which one we should have chosen ? the max one. Now we do the refill, and go ahead. Now that we stop, if we saw 2 more stations, we wouldv'e seen 4 unused stations, and again we would be at the choice of which one to choose to extend. So, we pick max out of these, and again go ahead. 
 
 So, each time, we drive to max we can, and then from seen stations, choose the max to refuel.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Minimum Number of Refueling Stops" lines

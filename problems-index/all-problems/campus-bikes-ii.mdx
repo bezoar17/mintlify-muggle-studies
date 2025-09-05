@@ -1,5 +1,5 @@
 ---
-title: '🧀 Campus Bikes II'
+title: "🧀 Campus Bikes II"
 description: '[leetcode link](https://leetcode.com/problems/campus-bikes-ii/description/)'
 mode: 'wide'
 ---
@@ -16,9 +16,7 @@ If we try all possibilites, mCn, then, n! is total possibilities, n can be 10. S
 
 We can represent workers as mask, with 1 meaning they have a bike, 0 meaning they dont have a bike.
 Instead of bikes as a mask, because m is &lt;=n. Now, if we calculate say 00010, bike assignment to 2nd worker, and store minimum we can get. We'll also have to store which bike it was. And, this local minimum, might not give us global minimum. So, we process all bikes, and for each bike, we process all masks, we can improve the dp, if this bikes assignment to any of the available workers will improve the score.
-
-
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Campus Bikes II" lines

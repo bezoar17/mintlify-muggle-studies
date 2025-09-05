@@ -1,5 +1,5 @@
 ---
-title: '❗️ Maximum Employees to Be Invited to a Meeting'
+title: "❗️ Maximum Employees to Be Invited to a Meeting"
 description: '[leetcode link](https://leetcode.com/problems/maximum-employees-to-be-invited-to-a-meeting/description/)'
 mode: 'wide'
 ---
@@ -30,7 +30,7 @@ Cycle of X cant accomodate anyone else. So if we have n cycles, we can pick one 
 In case of besties, i.e, cycle of 2 elements. Imagine a cycle where we need to make people sit. If we have 3 pairs of besties, we can ensure pairs are adjacent, but order of these pairs can be anything. Suppose 3 pairs are [a1,a2] [b1,b2] [c1,c2], people sitting are 6, but final order of these is not 1. This is not the case with cycle of size &gt; 2, we have only 1 order of size cycle_length.
   
 &lt;a1 a2&gt; order is fixed, but what comes before of after this pair is not limited by anything.
-So, we can take advantage of this to seat more people on their either side. But if there are 2 acyclic chains, 1 ending at a1, say AC1{ wb1-&gt;wb2-&gt;a1 } and 1 ending at a2 say, AC2{ wb3-&gt;wb4-&gt;a2 }
+So, we can take advantage of this to seat more people on their either side. But if there are 2 acyclic chains, 1 ending at a1, say AC1&lbrace; wb1-&gt;wb2-&gt;a1 &rbrace; and 1 ending at a2 say, AC2&lbrace; wb3-&gt;wb4-&gt;a2 &rbrace;
 For these 2 chains, 1 end is fixed(a1 or a2), and we can combine them with &lt;a1 a2&gt; pair to form a longer chain of people which can be seated together. If we do this, we will still have freedom of movement of the 3 original bestie pair, but here &lt;a1 a2&gt; just brought more people with them.
 Pairs &lt;b1 b2&gt; and &lt;c1 c2&gt;, are still independent, and can be seated, final chain can be [wb1 wb2 a1 a2 wb3 wb4] [b1 b2] [c1 c2]. The boundaries [] can be reordered still.
  Because of this,  all cycles of 2 can bring chains of people from either end of the pair.
@@ -60,11 +60,7 @@ In Kahns algorithm, we start processing the acyclic chains first, and end before
 If there was another chain x1-&gt;x2-&gt;x3-&gt;x4-&gt;w2-&gt;w3-&gt;a1. Depth of a1 should be 6. Which will be updated when due to the x1 traversal. So once we completed Kahns algorithm, we have processed all non-cycle nodes and we have the max_depth of each node, which is max wannabees a bestie can bring. We dont have to recalculate that. 
 
 Now, for the remaining nodes/persons, all of them are part of some cycle, we just process those.
-
-
-
-
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Maximum Employees to Be Invited to a Meeting" lines

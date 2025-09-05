@@ -1,5 +1,5 @@
 ---
-title: '❗️ First Missing Positive'
+title: "❗️ First Missing Positive"
 description: '[leetcode link](https://leetcode.com/problems/first-missing-positive/description/)'
 mode: 'wide'
 ---
@@ -13,8 +13,8 @@ mode: 'wide'
     <Card>
       If we could do it with extra space, we can mark presence of 1..n in an array. Here as we cant use extra space, reuse original nums as presence indicator. First of all, if we dont have 1, return 1 as answer. Now, any element that is outside the range of 1..n does not affect the answer, we can change all these values to 1. Now, for each number that is present, we mark its presence on the index of nums, just as we would in the presence array. To indicate presence, we make the num present at that location as negative. And while processing nums we only look at the absolute value, since some element might have updated the current num to negative. Once we have marked all the elements, the first non-negative number &gt;1(at index 1..n) we see, is our answer, if there is no such element, we have all the nums from 1..n, our answer is n+1.
 
-While marking something as negative, we multiply it by -1,  and we dont switch the state back if duplicate is found. 
-    </Card>
+While marking something as negative, we multiply it by -1,  and we dont switch the state back if duplicate is found.
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="First Missing Positive" lines

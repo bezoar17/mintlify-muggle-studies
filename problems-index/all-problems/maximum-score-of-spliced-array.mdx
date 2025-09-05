@@ -1,5 +1,5 @@
 ---
-title: '❗️ Maximum Score Of Spliced Array'
+title: "❗️ Maximum Score Of Spliced Array"
 description: '[leetcode link](https://leetcode.com/problems/maximum-score-of-spliced-array/description/)'
 mode: 'wide'
 ---
@@ -12,7 +12,7 @@ mode: 'wide'
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
       If [L,R] is switched, reward for 1 is all elements from [L,R] are lost and from arr 2 are included. If all these values are greater in 2, then its benefit for 1. Else its benefit for 2. If we calculate difference of all elements in 2 and 1, indicating elements going from 2 to 1. The maximum sub-array sum in this difference is the max reward for arr1. Same we can find for arr2, and check which one is maximum out of these 2. Also the case where no switch should happen is checked if we check the max of original sums too.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Maximum Score Of Spliced Array" lines

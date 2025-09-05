@@ -1,5 +1,5 @@
 ---
-title: '🧀 Jump Game IX'
+title: "🧀 Jump Game IX"
 description: '[leetcode link](https://leetcode.com/problems/jump-game-ix/description/)'
 mode: 'wide'
 ---
@@ -22,8 +22,7 @@ When prefix_max(i) &gt; suffix_min(i+1..), then suppose the suffix min value was
 For any idx, in [0,i], we can jump to the prefix_max position, then jump to y, essentially increasing our window of max calculation from [0,i] to [0,y]. So, for all such i, we can increase the window of consideration, and answer for all indices would be same, i.e max in [0,y]. 
 
 Essentially, because calculation of answer for ith idx, can depend on larger range(0,y) of y idx, which is to the right, we should process the values from right to left. The prefix_max is calculated for all idxs, then while we calculate the suffix_min, going from right to left, we can update the answers for left-ward idxs, by carrying the result of prefix_max values from the right-ward idxs to the left, whenever we have  prefix_max(i) &gt; suffix_min(i+1..), and we have to consider a larger range.
-
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Jump Game IX" lines

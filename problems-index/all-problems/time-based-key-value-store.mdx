@@ -1,5 +1,5 @@
 ---
-title: '🧀 Time Based Key-Value Store'
+title: "🧀 Time Based Key-Value Store"
 description: '[leetcode link](https://leetcode.com/problems/time-based-key-value-store/description/)'
 mode: 'wide'
 ---
@@ -16,7 +16,7 @@ mode: 'wide'
 We can do, store timestamps in decreasing order.
 Then 
 
-arr.bsearch { |x| x&lt;=input_timestamp }
+arr.bsearch &lbrace; |x| x&lt;=input_timestamp &rbrace;
 
 In bsearch, it goes to left if true, else goes to right section, keeps going. This is effectively to find minimum.
 
@@ -28,7 +28,7 @@ Finds minimum value satisfying &gt;=target
 
 When decreasing array, only &lt;=target will work
 Finds max value satisfying &lt;=target
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Time Based Key-Value Store" lines

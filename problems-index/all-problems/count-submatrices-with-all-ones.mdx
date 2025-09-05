@@ -1,5 +1,5 @@
 ---
-title: '🧀 Count Submatrices With All Ones'
+title: "🧀 Count Submatrices With All Ones"
 description: '[leetcode link](https://leetcode.com/problems/count-submatrices-with-all-ones/description/)'
 mode: 'wide'
 ---
@@ -13,7 +13,7 @@ mode: 'wide'
     <Card>
       Try to calculate for each row, going left to right, considering each cell to be the bottom right corner of the rectangle. While going left to right in a row, if we have heights of consecutive 1s, think like a histogram, for each cell, consider that it is part of. Consider 2 sets of height values
 [2, 3, 1] and [1,3,2]. And calculating for the last cell, we have -&gt; 1+1+1 and 1+2+2. Based on min value of cell being calculated etc. This value is start from idx, and go to left, keep the current minimum from idx to left, upto the point it reaches 0, then we dont go left from there.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Count Submatrices With All Ones" lines

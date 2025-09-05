@@ -1,5 +1,5 @@
 ---
-title: '❗️ Sum of Distances in Tree'
+title: "❗️ Sum of Distances in Tree"
 description: '[leetcode link](https://leetcode.com/problems/sum-of-distances-in-tree/description/)'
 mode: 'wide'
 ---
@@ -18,7 +18,7 @@ For these problems, calculate one of the metrics for each sub-tree, and express 
 Here, assume the result for sub-tree is calculated, how will you express the result for root using that ?
 
 We would need 2 things for this, sub-tree dist sum, and sub-tree count of nodes.
-ans(root) =  Sum of  { dist_sum(child_sbtree) + node_count(child_sbtree) } for all child nodes as roots in their own-subtree. 
+ans(root) =  Sum of  &lbrace; dist_sum(child_sbtree) + node_count(child_sbtree) &rbrace; for all child nodes as roots in their own-subtree. 
 
 dist_sum is answer for child_node considering it as root of isolated sub-tree.
 
@@ -40,10 +40,7 @@ dist_sum(rest_of_tree from parent) = ans(parent) - (dist_sum(child_sbtree) + nod
 If we add all up, we will have ans(child) = ans(parent) + N - 2* node_count(child), where N is total node count in the tree.
 
 https://www.youtube.com/watch?v=nGhE4Ekmzbc&list=PLb3g_Z8nEv1j_BC-fmZWHFe6jmU_zv-8s&index=5
-
-
-
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Sum of Distances in Tree" lines

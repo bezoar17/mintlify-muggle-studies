@@ -1,5 +1,5 @@
 ---
-title: '❗️ Number of Ways to Wear Different Hats to Each Other'
+title: "❗️ Number of Ways to Wear Different Hats to Each Other"
 description: '[leetcode link](https://leetcode.com/problems/number-of-ways-to-wear-different-hats-to-each-other/description/)'
 mode: 'wide'
 ---
@@ -21,8 +21,7 @@ for ith hat, and a particular mask, skip + choose to assign the mask.
 dp[i][mask] = dp[i-1][mask] + Sum of dp[i-1][ mask with person bit unset -&gt; person gets ith hat] for all valid persons, i.e people who want this hat and get this hat in this iteration, and don't have it in their last iteration.
 
 Since dp(i) only depends on i-1, we can only keep states as single array of all masks. For the first hat, mask 0 and masks 1&lt;&lt; persons who have first hat have value = 1, i.e 1 way to get to those masks with first hat. Then, for the next hat, we process all masks(states), and for all persons who can wear this hat, and did not have it, we update the next state by giving them this hat.
-
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Number of Ways to Wear Different Hats to Each Other" lines

@@ -1,5 +1,5 @@
 ---
-title: '❗️ Find Longest Awesome Substring'
+title: "❗️ Find Longest Awesome Substring"
 description: '[leetcode link](https://leetcode.com/problems/find-longest-awesome-substring/description/)'
 mode: 'wide'
 ---
@@ -11,8 +11,8 @@ mode: 'wide'
   </Tab>
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
-      A string can be awesome, if it has even count of occurences except for 1 digit/char. There are 10 total chars here. At each idx, the odd even count for char can be represented by a 10 bit no. as a state mask, where a bit is 1 or 0 if that char is odd or even. Suppose at idx x, we have a state of bit_x. If the same exact state bit_x was seen before at an idx y, it means between these 2 idxs x-y, count of chars are all even. The other case we need to look for is if 1 char can have odd occurence. For this, we mutate bit_x 10 times, flipping 1 bit at a time, and check the first idx of these states, for these cases the bit that was modified has occured odd times between the 2 idxs. So, for each idx, we check 10 more neighbors for odd occurence. 
-    </Card>
+      A string can be awesome, if it has even count of occurences except for 1 digit/char. There are 10 total chars here. At each idx, the odd even count for char can be represented by a 10 bit no. as a state mask, where a bit is 1 or 0 if that char is odd or even. Suppose at idx x, we have a state of bit_x. If the same exact state bit_x was seen before at an idx y, it means between these 2 idxs x-y, count of chars are all even. The other case we need to look for is if 1 char can have odd occurence. For this, we mutate bit_x 10 times, flipping 1 bit at a time, and check the first idx of these states, for these cases the bit that was modified has occured odd times between the 2 idxs. So, for each idx, we check 10 more neighbors for odd occurence.
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Find Longest Awesome Substring" lines

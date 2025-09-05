@@ -1,5 +1,5 @@
 ---
-title: '❗️ Power of Heroes'
+title: "❗️ Power of Heroes"
 description: '[leetcode link](https://leetcode.com/problems/power-of-heroes/description/)'
 mode: 'wide'
 ---
@@ -21,12 +21,12 @@ For i=0, M=1, all_last_sub_sets = [];  current_sub_sets = [[1]], min_sum = 1
 For i=1, M=2, all_last_sub_sets = [[1]];  current_sub_sets =[[2], [1,2]], min_sum = [2 + 1]
 For i=2,M=4,  all_last_sub_sets = [[1],[1,2],[2]], current_sub_sets = [[4], [4,1],[4,1,2],[4,2]], , min_sum=[4 + 1 + 1+ 2]
 all_last_sub_sets[i+1] = all_last_sub_sets[i] + current_sub_sets[i]
-current_sub_sets[i] = [nums[i]] +  all_last_sub_sets[i].map {|arr| arr &lt;&lt; nums[i]}
+current_sub_sets[i] = [nums[i]] +  all_last_sub_sets[i].map &lbrace;|arr| arr &lt;&lt; nums[i]&rbrace;
 
 power[i] = (min_sum[i-1] + nums[i])
 min_sum[i] = 2 * min_sum[i-1] + nums[i]
 min value of subsets dont change from L-R, so min_sum keeps getting doubled
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Power of Heroes" lines

@@ -1,5 +1,5 @@
 ---
-title: '❗️ Maximum Sum of 3 Non-Overlapping Subarrays'
+title: "❗️ Maximum Sum of 3 Non-Overlapping Subarrays"
 description: '[leetcode link](https://leetcode.com/problems/maximum-sum-of-3-non-overlapping-subarrays/description/)'
 mode: 'wide'
 ---
@@ -11,7 +11,7 @@ mode: 'wide'
   </Tab>
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
-        or left[i] is max-subarray of k till i.
+      or left[i] is max-subarray of k till i.
   right[i] is max-subarray sum of k from [i+1..]
 	
 	Then we can try all mid subarray of k ending at idx where idx can be from 2k-1, and at most can be n-k-1. 
@@ -20,9 +20,7 @@ mode: 'wide'
 	We calculate all possible mid idxs, and store the max and indices for this.
 	
 	For lex smallest, for L-&gt;R movement, we update max only when greater, from R-&gt;L,  we update max when also when its equal to current sum.
-	
-	
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Maximum Sum of 3 Non-Overlapping Subarrays" lines

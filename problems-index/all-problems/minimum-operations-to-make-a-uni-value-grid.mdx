@@ -1,5 +1,5 @@
 ---
-title: '🧀 Minimum Operations to Make a Uni-Value Grid'
+title: "🧀 Minimum Operations to Make a Uni-Value Grid"
 description: '[leetcode link](https://leetcode.com/problems/minimum-operations-to-make-a-uni-value-grid/description/)'
 mode: 'wide'
 ---
@@ -12,7 +12,7 @@ mode: 'wide'
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
       Imagine the number line, if all nums have same mod with x, then only all can become same after ops of +- x any times. If mod is different, we have to return -1. Now, the minimum ops needed will be when all converge to the middle. Since all mod values are same, we just see which element is in the middle, and calculate ops needed by (num-median)/x. It will always be divisible if mods are same.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Minimum Operations to Make a Uni-Value Grid" lines

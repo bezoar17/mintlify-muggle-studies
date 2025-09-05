@@ -1,5 +1,5 @@
 ---
-title: '❗️ Minimum Time to Finish the Race'
+title: "❗️ Minimum Time to Finish the Race"
 description: '[leetcode link](https://leetcode.com/problems/minimum-time-to-finish-the-race/description/)'
 mode: 'wide'
 ---
@@ -21,9 +21,8 @@ In our case, we cant compare each tire for each numlap. But we can build up each
 
 Rest of the dp after is calculating with tire change. For this, read following.
 
-Assume change is done at some j lap in between, then with_change_dp[i] = dp[j] + changeCost + dp[i-j] ; We calculate this value for j values in between, to update the min value for dp[i]. For each i, it is only dependent on its values below it, so bottom up is also easy. 
-
-    </Card>
+Assume change is done at some j lap in between, then with_change_dp[i] = dp[j] + changeCost + dp[i-j] ; We calculate this value for j values in between, to update the min value for dp[i]. For each i, it is only dependent on its values below it, so bottom up is also easy.
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Minimum Time to Finish the Race" lines

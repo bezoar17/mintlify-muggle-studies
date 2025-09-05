@@ -1,5 +1,5 @@
 ---
-title: '❗️ Strange Printer II'
+title: "❗️ Strange Printer II"
 description: '[leetcode link](https://leetcode.com/problems/strange-printer-ii/description/)'
 mode: 'wide'
 ---
@@ -18,9 +18,8 @@ Now, each cell will be part of some operations, to get to final state. But the g
 For the last painted color, whole rectangle will have same colors, and we wont derive any relation. 
 
 Now, once we process painted areas of all the colors, we will have some dependency edges saying a depends on b. If resulting graph from these edges forms a dag with no cycle we're good else we're not. 
-In last test case, within the rectange, we have reversal, 1 cell has 1-&gt;2, other cell has 2-&gt;1. 
-
-    </Card>
+In last test case, within the rectange, we have reversal, 1 cell has 1-&gt;2, other cell has 2-&gt;1.
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Strange Printer II" lines

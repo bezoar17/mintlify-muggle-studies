@@ -1,5 +1,5 @@
 ---
-title: '❗️ Odd Even Jump'
+title: "❗️ Odd Even Jump"
 description: '[leetcode link](https://leetcode.com/problems/odd-even-jump/description/)'
 mode: 'wide'
 ---
@@ -17,8 +17,8 @@ Starting from right, base case is possible[n-1] is true for both 0-even and 1-od
 
 For n-2, we calculate if odd jump from here can get us to n-1, same for even jump, and store true/false. We keep doing this until we calculate this for all indices. Now, we just have to check which indices have true for their odd jumps, which indicates starting point. 
 
-To calculate the jump idx, when going from R-L, we keep all elements seen in order. We find current elements position in this order, and based on that get the next smallest greater or largest smaller element to the right. We jump to idx of these elements, and see carry their possibility value for the other parity. Odd jump from i to j, so we check possibility value for even j and vice versa. Going from R-L, we only keep unique elements, and update their idx as we have to pick left most idx for any number. 
-    </Card>
+To calculate the jump idx, when going from R-L, we keep all elements seen in order. We find current elements position in this order, and based on that get the next smallest greater or largest smaller element to the right. We jump to idx of these elements, and see carry their possibility value for the other parity. Odd jump from i to j, so we check possibility value for even j and vice versa. Going from R-L, we only keep unique elements, and update their idx as we have to pick left most idx for any number.
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Odd Even Jump" lines

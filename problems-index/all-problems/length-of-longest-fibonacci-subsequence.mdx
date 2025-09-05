@@ -1,5 +1,5 @@
 ---
-title: '🧀 Length of Longest Fibonacci Subsequence'
+title: "🧀 Length of Longest Fibonacci Subsequence"
 description: '[leetcode link](https://leetcode.com/problems/length-of-longest-fibonacci-subsequence/description/)'
 mode: 'wide'
 ---
@@ -12,8 +12,8 @@ mode: 'wide'
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
       Need to store 2D in dp also, not only traversal of n^2, but state storage also needs to store the last 2 idxs.
-For each num, we check all previous nums, such that the diff of num_i-num_j also exists in the array, if yes, numi, numj can be last 2 of fibonacci sequence. We store the max len of fibonacci with i and j as last 2 idxs. 
-    </Card>
+For each num, we check all previous nums, such that the diff of num_i-num_j also exists in the array, if yes, numi, numj can be last 2 of fibonacci sequence. We store the max len of fibonacci with i and j as last 2 idxs.
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Length of Longest Fibonacci Subsequence" lines

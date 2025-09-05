@@ -1,5 +1,5 @@
 ---
-title: '🧀 Minimum Number of Arrows to Burst Balloons'
+title: "🧀 Minimum Number of Arrows to Burst Balloons"
 description: '[leetcode link](https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/description/)'
 mode: 'wide'
 ---
@@ -15,7 +15,7 @@ mode: 'wide'
 
 We sort by end intervals. For first, we shoot at first intervals end, and see how many intervals, it covers. We cover all we can, and ignore these. Then go to next interval, and shoot at its end, and see how many we cover.
 Any interval which has start &gt; last_shot, will need a new shot. We shoot at end, so that the arrow can overlap with as many intervals for this shot.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Minimum Number of Arrows to Burst Balloons" lines

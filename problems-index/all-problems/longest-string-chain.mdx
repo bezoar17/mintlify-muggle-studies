@@ -1,5 +1,5 @@
 ---
-title: '🧀 Longest String Chain'
+title: "🧀 Longest String Chain"
 description: '[leetcode link](https://leetcode.com/problems/longest-string-chain/description/)'
 mode: 'wide'
 ---
@@ -12,7 +12,7 @@ mode: 'wide'
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
       Group all words by word_len. Starting from the first len going to max len. Store what is the max chain at each step. If no word of len 2 exist, for all words of size 3, max_len is reset to 1. For each word_len, store hash of all words with their max_len. And for the next iteration with say word_len+1,  check all these words by deleting each char in them, and seeing if the resulting word exits in the previous lengths hash, if it does, for this word, we are extending the chain. At each step, store the max_chain_len value from the hash values as the answer.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Longest String Chain" lines

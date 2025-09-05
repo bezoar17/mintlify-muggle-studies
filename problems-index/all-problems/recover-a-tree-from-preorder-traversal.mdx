@@ -1,5 +1,5 @@
 ---
-title: '❗️ Recover a Tree From Preorder Traversal'
+title: "❗️ Recover a Tree From Preorder Traversal"
 description: '[leetcode link](https://leetcode.com/problems/recover-a-tree-from-preorder-traversal/description/)'
 mode: 'wide'
 ---
@@ -12,7 +12,7 @@ mode: 'wide'
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
       Convert traversal into [val, depth] tvd array. Process each value tvd, push each node into the stack along with its depth. Initial state of stack has root and 0 as depth. Before pushing each node on the stack, update the left/right for previous node. For this, pop everything from stack till top of stack has &gt;=depth than current. When everything is popped, top of stack has parent node, update left/right, left first if its nil, else right pointer.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Recover a Tree From Preorder Traversal" lines

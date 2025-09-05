@@ -1,5 +1,5 @@
 ---
-title: '❗️ Find Beautiful Indices in the Given Array II'
+title: "❗️ Find Beautiful Indices in the Given Array II"
 description: '[leetcode link](https://leetcode.com/problems/find-beautiful-indices-in-the-given-array-ii/description/)'
 mode: 'wide'
 ---
@@ -22,8 +22,8 @@ Rabin-Karp has collisions, but for a small set, like 26 chars, if we choose base
 
 Rabin-Karp cant be directly used as pattern length can be huge, so numbers get huge, we have to use the mod functionality here. But with mod, we usually have collisions and need to check for it, but here testcases are such that that doesnt happen.
 
-KMP has no such issues, and algo is intuitive, but hard to layout exactly, and implement. It preprocesses pattern, so that as soon as we get a mismatch, we dont start from the next char in hay, but use the patterns characteristic to start from some further idx. 
-    </Card>
+KMP has no such issues, and algo is intuitive, but hard to layout exactly, and implement. It preprocesses pattern, so that as soon as we get a mismatch, we dont start from the next char in hay, but use the patterns characteristic to start from some further idx.
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```python3 title="Find Beautiful Indices in the Given Array II" lines

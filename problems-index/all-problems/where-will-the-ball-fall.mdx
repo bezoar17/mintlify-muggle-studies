@@ -1,5 +1,5 @@
 ---
-title: '🧀 Where Will the Ball Fall'
+title: "🧀 Where Will the Ball Fall"
 description: '[leetcode link](https://leetcode.com/problems/where-will-the-ball-fall/description/)'
 mode: 'wide'
 ---
@@ -11,7 +11,7 @@ mode: 'wide'
   </Tab>
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
-        in a row 1,-1 is a pit(both cells will capture the ball) where ball will get stuck
+      in a row 1,-1 is a pit(both cells will capture the ball) where ball will get stuck
   edge case is left and right columns of the grid, these are falls, where ball will escape
   mark the pit and falls, and then simulate for each position
 	
@@ -20,7 +20,7 @@ we can modify grid to indicate pit/fall, make the value 0 indicating it,
 information about further direction is lost, but thats okay, as any ball reaching here wont go further so no more info is needed anyway.
 
 We can also directly simulate without any markings
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Where Will the Ball Fall" lines

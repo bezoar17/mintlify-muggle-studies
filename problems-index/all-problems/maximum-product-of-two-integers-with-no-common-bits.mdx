@@ -1,5 +1,5 @@
 ---
-title: '🧀 Maximum Product of Two Integers With No Common Bits'
+title: "🧀 Maximum Product of Two Integers With No Common Bits"
 description: '[leetcode link](https://leetcode.com/problems/maximum-product-of-two-integers-with-no-common-bits/description/)'
 mode: 'wide'
 ---
@@ -30,9 +30,7 @@ The key part of the SOS DP is: for every bit i, for every mask m with the i-th b
 To do this, for each bit, say 2nd bit,  calculate results for all masks, if for a mask that bit is set, calculate result with that bit off. When we are calculating something for nth bit, all n-1 bits have been processed, so all masks where some bit less than n was set, info for them has been updated already. 
 
 Think of it like this, for 4nd bit, we are essentially updating all masks which have the 2nd bit set. For a mask, say x1xxx, the submasks x1xxx and x0xxx, are both valid. x1xxx is already the mask, we are allowing x0xxx to be part of the answer for x1xxx. Now, the bit to the left of 1 is 5th bit, that has not been processed yet. But, 3 bits to the right of the mask have been processed, and x1xxx already holds the max value uptil 1xxx, i.e till this 4th bit when it is being processed. When 0xxx is also allowed, we pick max from this also. And then go to the 5th bit, so any mask like 1xxxx, will also allow 0xxxx, and pick max from that, wherein the 4 bits to the right of xxxx, already hold the max for the mask.
-
-
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```python3 title="Maximum Product of Two Integers With No Common Bits" lines

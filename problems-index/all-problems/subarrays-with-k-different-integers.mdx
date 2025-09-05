@@ -1,5 +1,5 @@
 ---
-title: '❗️ Subarrays with K Different Integers'
+title: "❗️ Subarrays with K Different Integers"
 description: '[leetcode link](https://leetcode.com/problems/subarrays-with-k-different-integers/description/)'
 mode: 'wide'
 ---
@@ -26,9 +26,7 @@ It is possible, that for the next right idx, freq_hash size remains k, so for th
 Next time this can happen when freq_hash_size becomes &gt;k, and we shrink the window. For that time, the new valid idxs would be from x+1 to some y, so valid idxs would be y-(x+1)+1. Essentially, we will have to store the count of valid idxs instead of it always being counted from 0, it will be counted from the last left pointer. 
 
 Case 3: freq_hash &gt; k, When this happens, it means freq_hash size was k, and the next right idx introduced a new element to the window. As the last freq_hash size was k, left pointer was already at an element whose freq was 1. So, we just move that to the next pointer, and then evaluate Case 2. For the valid starting points, we reset that counter.
-
-
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Subarrays with K Different Integers" lines

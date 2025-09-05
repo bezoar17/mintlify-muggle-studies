@@ -1,5 +1,5 @@
 ---
-title: '🧀 Best Time to Buy and Sell Stock using Strategy'
+title: "🧀 Best Time to Buy and Sell Stock using Strategy"
 description: '[leetcode link](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-using-strategy/description/)'
 mode: 'wide'
 ---
@@ -14,8 +14,8 @@ mode: 'wide'
       First of all get the base_profit. This is the case where we dont use the modification of the subarray of length k.
 
 If we were doing the modification, we have n-k+1 options of (l,r). For each modification, the change happening is removal of base_profit(l,r) and addition of all prices in second half of (l,r). Both these things are sub-array sums. 
-So, if we precalculate the prefix for base_profit and prices, we can easily calculate the increase we can get from choosing a modification. We calculate max possible gain from a modification, and add that to the base profit. 
-    </Card>
+So, if we precalculate the prefix for base_profit and prices, we can easily calculate the increase we can get from choosing a modification. We calculate max possible gain from a modification, and add that to the base profit.
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Best Time to Buy and Sell Stock using Strategy" lines

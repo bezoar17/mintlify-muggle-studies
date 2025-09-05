@@ -1,5 +1,5 @@
 ---
-title: '❗️ Next Greater Element IV'
+title: "❗️ Next Greater Element IV"
 description: '[leetcode link](https://leetcode.com/problems/next-greater-element-iv/description/)'
 mode: 'wide'
 ---
@@ -22,7 +22,7 @@ Before we add to the stack, we record which numbers were discarded.
 Now that all nums have been discarded. If nothing was discarded for the top element, the next in stack is the answer.
 
 If discarded_elements[top_of_stack], has any number that is greater than current element, we use that as answer. This array is sorted, as stack is always mono-decreasing. If there is no num here, then use next in stack as answer.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Next Greater Element IV" lines

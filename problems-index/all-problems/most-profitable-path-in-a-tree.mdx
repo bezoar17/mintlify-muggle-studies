@@ -1,5 +1,5 @@
 ---
-title: '🧀 Most Profitable Path in a Tree'
+title: "🧀 Most Profitable Path in a Tree"
 description: '[leetcode link](https://leetcode.com/problems/most-profitable-path-in-a-tree/description/)'
 mode: 'wide'
 ---
@@ -16,7 +16,7 @@ mode: 'wide'
 So, calculate Bob's path and dist first. Then for Alice calculate income in all paths, taking into account updated income for nodes which are common with Bob's path.
 
 For finding bob's exact path and dist, instead of all out dfs, we cant maintain path array, memory limit exceeds, do backtracking kind of dfs, keep updating current path, and exit when path found for bob. Simple dfs is giving memory limit exceeded.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Most Profitable Path in a Tree" lines

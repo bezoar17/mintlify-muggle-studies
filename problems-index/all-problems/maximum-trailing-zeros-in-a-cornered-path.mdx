@@ -1,5 +1,5 @@
 ---
-title: '🧀 Maximum Trailing Zeros in a Cornered Path'
+title: "🧀 Maximum Trailing Zeros in a Cornered Path"
 description: '[leetcode link](https://leetcode.com/problems/maximum-trailing-zeros-in-a-cornered-path/description/)'
 mode: 'wide'
 ---
@@ -15,7 +15,7 @@ mode: 'wide'
 So, precalculate the prefix 2 and 5 counts in primefactorization of numbers, row-wise and column-wise. Once we have this, suffix value is total(last in row/col)-prefix value.
 Using these 2 prefix, and suffix options, we can check all 4 path options and take their max.
 For a path, 0s is min of (sum2_in_topleft, sum5_in_topleft)
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Maximum Trailing Zeros in a Cornered Path" lines

@@ -1,5 +1,5 @@
 ---
-title: '🧀 Best Time to Buy and Sell Stock II'
+title: "🧀 Best Time to Buy and Sell Stock II"
 description: '[leetcode link](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/description/)'
 mode: 'wide'
 ---
@@ -14,7 +14,7 @@ mode: 'wide'
       Keep 2 states, stock was 0, or stock was 1, given this, calculate current sum recursively using last index's value. In the end max profit is just the max sum you have. The recurence relation is 
     stock_0 = max ( last_stock_0,  last_stock_1 + prices[i] ) case 1 -&gt; didnt do anything, case 2 -&gt; sold last stock 1 and got money
 		stock_1 = max ( last_stock_1,  last_stock_1 + prices[i] ) case 1 -&gt; didnt do anything, case 2 -&gt; bought last stock 0 and spent money
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Best Time to Buy and Sell Stock II" lines

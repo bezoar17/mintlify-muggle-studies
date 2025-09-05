@@ -1,5 +1,5 @@
 ---
-title: '❗️ Bricks Falling When Hit'
+title: "❗️ Bricks Falling When Hit"
 description: '[leetcode link](https://leetcode.com/problems/bricks-falling-when-hit/description/)'
 mode: 'wide'
 ---
@@ -18,7 +18,7 @@ So, first duplicate grid to live grid, then apply all hits. Now, not all remaini
 Now, process hits in reverse, simulating reversing time, if last hit was not made, that hit position is now a brick. Also, if this was on the top row, it gets connected to stablility component. And also connect it with surrounding bricks, so if this is a linking brick which was hit, it can connect stable top component to some other component which was hanging in isolation. How the component size of stable component changes is how many bricks would have fallen. To be exact it is change -1, i.e if there is a change in stable component size, it was due to this brick which was hit, which will not be counted in falling bricks, as this was erased.
 
 Another clever union-find problem. https://leetcode.com/problems/last-day-where-you-can-still-cross/
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Bricks Falling When Hit" lines

@@ -1,5 +1,5 @@
 ---
-title: '🧀 Make Sum Divisible by P'
+title: "🧀 Make Sum Divisible by P"
 description: '[leetcode link](https://leetcode.com/problems/make-sum-divisible-by-p/description/)'
 mode: 'wide'
 ---
@@ -20,8 +20,8 @@ Considering j as the end of a subarray [i,j], such that M[i..j] is equal to targ
 
 As we want minimum length, we want maximum i within potential i values. So, while going from L-&gt;R, keep storing latest idx for M(idx) in a hash. So, at each j, we can find its optimal counterpart M(i) from the hash, instead of checking all i values. 
 
-Now, for the case where M(j) == target_mod, which would mean removing [0,j],  length is j+1, so initialize the hash with {0=&gt;-1}. And also this case cant happen at j==n-1, which would mean we are removing the complete array.
-    </Card>
+Now, for the case where M(j) == target_mod, which would mean removing [0,j],  length is j+1, so initialize the hash with &lbrace;0=&gt;-1&rbrace;. And also this case cant happen at j==n-1, which would mean we are removing the complete array.
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Make Sum Divisible by P" lines

@@ -1,5 +1,5 @@
 ---
-title: '🧀 Make Lexicographically Smallest Array by Swapping Elements'
+title: "🧀 Make Lexicographically Smallest Array by Swapping Elements"
 description: '[leetcode link](https://leetcode.com/problems/make-lexicographically-smallest-array-by-swapping-elements/description/)'
 mode: 'wide'
 ---
@@ -27,8 +27,7 @@ with special_sb_arrs being a, b & c. Suppose we look at special_sb_arrs a, origi
 Note, max element from special_sb_1 cant be swapped with min of special_sb_2, so these 2 groups will not see any swaps, or reordering of original idxs will only happen within idxs of each special_sb_arr.
 
 To do this, create special_sb_arrs from sorted_nums, and for each special_sb_arr, the indexes that make up that special_sb_arr. Now for each sb_arr, elements will have their new indexes. Suppose sb_arr = [a1, a2, a3]. Original idxs are [idx2, idx3, idx1] with a1 having index idx2 in original arr. In the output array a1 will have idx1, a2 will have idx2, a3 will have idx3, assuming sorted order of idxs is [idx1, idx2, idx3]. So for each subarray [num, new_i ] is sb_arr.zip(sb_arr_idxs.sort).
-
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Make Lexicographically Smallest Array by Swapping Elements" lines

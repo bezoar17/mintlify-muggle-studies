@@ -1,5 +1,5 @@
 ---
-title: '❗️ Selling Pieces of Wood'
+title: "❗️ Selling Pieces of Wood"
 description: '[leetcode link](https://leetcode.com/problems/selling-pieces-of-wood/description/)'
 mode: 'wide'
 ---
@@ -26,7 +26,7 @@ we can make a horizontal cut to split it into w * c and w * (h - c)
 So we can update dp[w][h] = max(dp[w][h], dp[w][c] + dp[w][h - c]).
 
 And also, if you have to calculate m cuts for m columns, we can evaluate till m/2, as that gives all possible cuts into 2 smaller pieces, going beyond m/2 will only repeat the calculations.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Selling Pieces of Wood" lines

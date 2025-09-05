@@ -1,5 +1,5 @@
 ---
-title: '🧀 Count the Number of Square-Free Subsets'
+title: "🧀 Count the Number of Square-Free Subsets"
 description: '[leetcode link](https://leetcode.com/problems/count-the-number-of-square-free-subsets/description/)'
 mode: 'wide'
 ---
@@ -11,15 +11,15 @@ mode: 'wide'
   </Tab>
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
-      The way to generate subsets when adding a new number, and going from left to right. The way is to add new number to all previous subsets. When we start with an empty set {}, this simulates all choices. Here, we have to do a similar thing. First of all
-a subset can only contain distinct primes, so we can represent a distinct subset with bitmask representing primes it has. Now, suppose the following subsets are present {2,3}-x, {5}-y, {3,5}-a {2,3,5}-b, where x,yz etc are counts of these subsets. Now, when the next element being added is 6 -&gt; which is essentially subset {2,3}. it can go to subset {5}, only. And the new subset becomes {2,3,5}.
+      The way to generate subsets when adding a new number, and going from left to right. The way is to add new number to all previous subsets. When we start with an empty set &lbrace;&rbrace;, this simulates all choices. Here, we have to do a similar thing. First of all
+a subset can only contain distinct primes, so we can represent a distinct subset with bitmask representing primes it has. Now, suppose the following subsets are present &lbrace;2,3&rbrace;-x, &lbrace;5&rbrace;-y, &lbrace;3,5&rbrace;-a &lbrace;2,3,5&rbrace;-b, where x,yz etc are counts of these subsets. Now, when the next element being added is 6 -&gt; which is essentially subset &lbrace;2,3&rbrace;. it can go to subset &lbrace;5&rbrace;, only. And the new subset becomes &lbrace;2,3,5&rbrace;.
 
-So, at each step, we process all masks, and for the mask representing {2,3,5}, due to this 6 element, we are merging y more subsets to the set {2,3,5}. Think of it like, this 6 element can go to all y subsets {5}, because there is no prime overlap. Hence the count for the final subset which is union of these non-overlapping, increases by y.
+So, at each step, we process all masks, and for the mask representing &lbrace;2,3,5&rbrace;, due to this 6 element, we are merging y more subsets to the set &lbrace;2,3,5&rbrace;. Think of it like, this 6 element can go to all y subsets &lbrace;5&rbrace;, because there is no prime overlap. Hence the count for the final subset which is union of these non-overlapping, increases by y.
 
-In bitmask terms, for each num_mask being processed, if an earlier subset_mask does not have an overlap, then subset_mask | num_mask, gains count[subset_mask] subsets due to this num. And also, we have to update the num_masks subset count by 1, i.e the subset {2,3}'s count increases by 1.
+In bitmask terms, for each num_mask being processed, if an earlier subset_mask does not have an overlap, then subset_mask | num_mask, gains count[subset_mask] subsets due to this num. And also, we have to update the num_masks subset count by 1, i.e the subset &lbrace;2,3&rbrace;'s count increases by 1.
 
 So, similar to subset generation, we process each element from left to right, but instead of adding it to all previous subsets, we update the counts of the relevant ones. Think of it like when processing a new element, we merge it with whatever subsets we can and increase their counts.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Count the Number of Square-Free Subsets" lines

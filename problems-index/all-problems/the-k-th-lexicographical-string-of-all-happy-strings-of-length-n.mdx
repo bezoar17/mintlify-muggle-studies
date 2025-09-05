@@ -1,5 +1,5 @@
 ---
-title: '🧀 The k-th Lexicographical String of All Happy Strings of Length n'
+title: "🧀 The k-th Lexicographical String of All Happy Strings of Length n"
 description: '[leetcode link](https://leetcode.com/problems/the-k-th-lexicographical-string-of-all-happy-strings-of-length-n/description/)'
 mode: 'wide'
 ---
@@ -14,7 +14,7 @@ mode: 'wide'
       For a string of length n, first char has 3 possibilities, rest all have 2. So, we have 3* 2^(n-1) strings in total. We first fix the first char, and offset k accordingly. Now, for each next char, if k is in left half, we take the next char, else we take next to next char, and offset k, for all remainder of the chars.
 
 https://leetcode.com/problems/kth-smallest-instructions/
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="The k-th Lexicographical String of All Happy Strings of Length n" lines

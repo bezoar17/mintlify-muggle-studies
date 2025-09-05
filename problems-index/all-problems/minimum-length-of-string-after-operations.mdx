@@ -1,5 +1,5 @@
 ---
-title: '🧀 Minimum Length of String After Operations'
+title: "🧀 Minimum Length of String After Operations"
 description: '[leetcode link](https://leetcode.com/problems/minimum-length-of-string-after-operations/description/)'
 mode: 'wide'
 ---
@@ -11,8 +11,8 @@ mode: 'wide'
   </Tab>
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
-      Think of each chars as a sequence, no matter where they are. Suppose a char x comes n times. No matter where they are, any mid char can be chosen and side chars can be deleted until we have less than 3 occurences left. Each deletion removes 2 elements. So, if n is odd, we will reach 1 as remaining char count, and if n is even, operation will stop when 2 elements remain. We only need count of each char to evaluate the remaining count and size.  
-    </Card>
+      Think of each chars as a sequence, no matter where they are. Suppose a char x comes n times. No matter where they are, any mid char can be chosen and side chars can be deleted until we have less than 3 occurences left. Each deletion removes 2 elements. So, if n is odd, we will reach 1 as remaining char count, and if n is even, operation will stop when 2 elements remain. We only need count of each char to evaluate the remaining count and size.
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Minimum Length of String After Operations" lines

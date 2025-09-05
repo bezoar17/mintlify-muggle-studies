@@ -1,5 +1,5 @@
 ---
-title: '🧀 Find Eventual Safe States'
+title: "🧀 Find Eventual Safe States"
 description: '[leetcode link](https://leetcode.com/problems/find-eventual-safe-states/description/)'
 mode: 'wide'
 ---
@@ -28,9 +28,7 @@ this is kahns algorithm, which starts with nodes of 0 indegree, and keeps updati
 kahns algorithm never enters a cycle, only nodes which are not part of a cycle are visited
 Suppose there is a cycle, 0&lt;-&gt;1, but 1 is also connected to some node outside cycle
 1&lt;-3 . Then indegree of 1 is 2, and whenever we will visit it from outside the cycle, 1s indegree will not become 0, and it will never becom a starting point in Kahns algorithm.
-
-
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Find Eventual Safe States" lines

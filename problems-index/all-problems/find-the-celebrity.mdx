@@ -1,5 +1,5 @@
 ---
-title: '🧀 Find the Celebrity'
+title: "🧀 Find the Celebrity"
 description: '[leetcode link](https://leetcode.com/problems/find-the-celebrity/description/)'
 mode: 'wide'
 ---
@@ -14,7 +14,7 @@ mode: 'wide'
       When you query knows(a,b), no matter what the answer is, one of the person is removed from candidate for a celebrity.
 If a knows b, a cant be celebrity. If a doesnt know b, b cant be a celebrity.
 Thus, you need to make at most n-1 such calls, then when you are at the last candidate, you still need to verify the part that everyone knows the person. And person doesnt know anyone to ensure this last candidate is a celebrity. In total, 3n calls to knows fn
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Find the Celebrity" lines

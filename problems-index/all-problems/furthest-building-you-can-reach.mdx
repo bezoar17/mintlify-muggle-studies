@@ -1,5 +1,5 @@
 ---
-title: '🧀 Furthest Building You Can Reach'
+title: "🧀 Furthest Building You Can Reach"
 description: '[leetcode link](https://leetcode.com/problems/furthest-building-you-can-reach/description/)'
 mode: 'wide'
 ---
@@ -14,7 +14,7 @@ mode: 'wide'
       If we just consider + jumpcosts, assume no ladder was present, we can go to right till cumulative jump_cost is &gt; bricks. At this point, we are out of bricks, we have to use a ladder, to maximize our chances, we would have used the ladder where jump cost was max, and reclaim max bricks from this 1 ladder use. We might have to use more than 1 ladder. We keep doing this until we run out of bricks and ladders both. To get max jump_cost while going L-&gt;R, we can use a pq.
 
 Use array as pq, insertion is O(N), but somehow its faster than pq container in ruby.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Furthest Building You Can Reach" lines

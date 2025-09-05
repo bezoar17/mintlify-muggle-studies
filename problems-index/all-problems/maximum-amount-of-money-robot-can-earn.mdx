@@ -1,5 +1,5 @@
 ---
-title: '🧀 Maximum Amount of Money Robot Can Earn'
+title: "🧀 Maximum Amount of Money Robot Can Earn"
 description: '[leetcode link](https://leetcode.com/problems/maximum-amount-of-money-robot-can-earn/description/)'
 mode: 'wide'
 ---
@@ -13,7 +13,7 @@ mode: 'wide'
     <Card>
       Store state dp[i][j][neutralized]. Calculate dp for all 0 values. Just simple dp problem. Then with 1 neutralization value, calculate all dp values, depends only on 0 neutralization, and 1 previous neutralization values for possible moves. 
 Overall, value is maximized in each iteration, so ans is dp[0][0][2], as its a top-down in a table calculation.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Maximum Amount of Money Robot Can Earn" lines

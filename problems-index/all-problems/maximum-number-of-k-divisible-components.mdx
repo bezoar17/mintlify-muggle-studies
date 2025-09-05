@@ -1,5 +1,5 @@
 ---
-title: '❗️ Maximum Number of K-Divisible Components'
+title: "❗️ Maximum Number of K-Divisible Components"
 description: '[leetcode link](https://leetcode.com/problems/maximum-number-of-k-divisible-components/description/)'
 mode: 'wide'
 ---
@@ -13,7 +13,7 @@ mode: 'wide'
     <Card>
       Consider a leaf node, if its value is divisble by k, we just remove it, 1 component is added. Else it will have to merge with its parent. Do this for all leaves,
 and for the current node once all leaves have been computed. Basically, calculate sub tree sum values for all nodes, and no.s of nodes where sum is divisble by k is the answer. This can be computed in dfs, simply process leaves, and then the root.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Maximum Number of K-Divisible Components" lines

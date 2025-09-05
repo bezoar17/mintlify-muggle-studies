@@ -1,5 +1,5 @@
 ---
-title: '🧀 Alternating Groups II'
+title: "🧀 Alternating Groups II"
 description: '[leetcode link](https://leetcode.com/problems/alternating-groups-ii/description/)'
 mode: 'wide'
 ---
@@ -12,7 +12,7 @@ mode: 'wide'
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
       Each position can be the starting point. To check if k length of alternating elements can be found starting from i. We can keep alt_len ending at i in an array. For starting points where next k elements are found without wrapping around the array, its easy, just get diff of alt_len at i and i+k-1, to check if next k are alternating. For the case when next k elements have to be wrapped around the array, first condition is that last and first elements should be alternating, else ans for all wrapping idxs is 0, they cant be starting position. For these idxs, all remaining nums should be alternating and first x wrapped positions should also be alternating, so check for both conditions using the alt_len array itself.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Alternating Groups II" lines

@@ -1,5 +1,5 @@
 ---
-title: '❗️ Reducing Dishes'
+title: "❗️ Reducing Dishes"
 description: '[leetcode link](https://leetcode.com/problems/reducing-dishes/description/)'
 mode: 'wide'
 ---
@@ -22,7 +22,7 @@ We go from R-&gt;L, score will be increasing, up until some point, after which i
 Going from R-L, for score of i, we add suffix_sum[i] to score[i+1]. (Dry run how coefficients change going from R-L, it will be clear, nums[i] gets 1, nums[i+1] gets 2.)
 When suffix_sum becomes negative, it wont make sense to add to score, as it wont increase it
 this is the inflexion point of i, and our answer.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Reducing Dishes" lines

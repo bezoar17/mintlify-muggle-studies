@@ -1,5 +1,5 @@
 ---
-title: '❗️ Freedom Trail'
+title: "❗️ Freedom Trail"
 description: '[leetcode link](https://leetcode.com/problems/freedom-trail/description/)'
 mode: 'wide'
 ---
@@ -13,7 +13,7 @@ mode: 'wide'
     <Card>
       Suppose the key was only 1 letter. Store steps needed for each letter in ring for that 1 letter in key in a step_count array of ring size.
 For all the letters that are not the key, value is nil, as that are out of scope. For the key char in ring, values would be their distance from 0 + 1. For the next char in key, for all positions of this char in ring. We again calculate the steps needed to reach this position in ring. We will come from any of the last char positions, and update the minimum in the new step count array. So, two 1D arrays of ring size can be used to calculate the min steps for a char in key. Only last step count is needed for the current key char evaluation.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Freedom Trail" lines

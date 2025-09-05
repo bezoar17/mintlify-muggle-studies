@@ -1,5 +1,5 @@
 ---
-title: '🧀 Maximum Number of Fish in a Grid'
+title: "🧀 Maximum Number of Fish in a Grid"
 description: '[leetcode link](https://leetcode.com/problems/maximum-number-of-fish-in-a-grid/description/)'
 mode: 'wide'
 ---
@@ -14,7 +14,7 @@ mode: 'wide'
       Grid is made up of x connected components, where 1 connected component is made up of  water cells connected together. Fisher can start at any cell within a component and get all fish within it. So, find component with max fish in the grid.
 
 We can do bfs/dfs starting from water cell. And as we traverse the watercell, we can update it to a land cell, after counting the fish from it. This way original grid can act as visited array. Visited condition is if a cell is 0, then it is visited/unreachable.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Maximum Number of Fish in a Grid" lines

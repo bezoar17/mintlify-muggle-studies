@@ -1,5 +1,5 @@
 ---
-title: '🧀 Minimum Sum After Divisible Sum Deletions'
+title: "🧀 Minimum Sum After Divisible Sum Deletions"
 description: '[leetcode link](https://leetcode.com/problems/minimum-sum-after-divisible-sum-deletions/description/)'
 mode: 'wide'
 ---
@@ -16,7 +16,7 @@ mode: 'wide'
 We can maximize the removal subarray sum, hence minimizing the required answer. For that, let's calculate the max sub-array sum that can be removed till an idx in a dp array. For this, when we see a remainder at i, say x, and we have seen x before at say p1, p2, p3 etc. We have two choices, we dont remove sub-array ending at i, so dp[i] = dp[i-1]. Else, if we remove it, dp[i] = dp[p1] + sb_sum(p1, i), similarly for all p indexes. We basically have to find the max such p value. More formally, dp[i] = dp[p]  + prefix_sum[i] - prefix_sum[p]. Here, only  dp[p] - prefix_sum[p] is variable among all p values, so we maximize this. 
 
 While moving ahead, we can store the current max value of dp[p] - prefix_sum[p] for each mod value, so that instead of x, any mod value comes for any idx we have this in the map to calculate dp[i].
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Minimum Sum After Divisible Sum Deletions" lines

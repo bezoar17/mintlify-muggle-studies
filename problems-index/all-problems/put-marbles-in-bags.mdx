@@ -1,5 +1,5 @@
 ---
-title: '❗️ Put Marbles in Bags'
+title: "❗️ Put Marbles in Bags"
 description: '[leetcode link](https://leetcode.com/problems/put-marbles-in-bags/description/)'
 mode: 'wide'
 ---
@@ -11,14 +11,14 @@ mode: 'wide'
   </Tab>
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
-      weights needs to be split in k subarrays, so k-1 split points. Each split point at i contributes i, i+1 to weights. So, in a max config, we have highest k-1 values for {i,i+1} pairs, and in min config, the lowest k-1 values.
+      weights needs to be split in k subarrays, so k-1 split points. Each split point at i contributes i, i+1 to weights. So, in a max config, we have highest k-1 values for &lbrace;i,i+1&rbrace; pairs, and in min config, the lowest k-1 values.
 
 as we cant have bag1, bag2, bag1 again, for k bags, we are basically choosing k-1 idxs for split
 for split at i in left bag, cost added is i, and i+1, for new bag
 for largest, we want sum of largest k-1 pairs, and for min, smallest k-1 pairs.
 
 Apart from edge cases of k==1, and k ==n.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Put Marbles in Bags" lines

@@ -1,5 +1,5 @@
 ---
-title: '❗️ Cherry Pickup'
+title: "❗️ Cherry Pickup"
 description: '[leetcode link](https://leetcode.com/problems/cherry-pickup/description/)'
 mode: 'wide'
 ---
@@ -26,7 +26,7 @@ A backtracking solution which tracks all paths is possible but will mostly time 
 But if we look at it a different way, for trip2 from bottom to top, if we just reverse the path, then question becomes, how can we maximize 2 people T1 and T2 walking from top to bottom at once, not in isolation, with max cherries.
 
 For any path with t steps, r+c=t. For 2 people taking t steps, r1+c1 = r2+c2 = t. Given this, to maintain state after 3 steps, we dont need all 4 values, as r2 can be calculated using r1,c1,c2. This is representation of state for 2 person trip, which give N^3 solution. Only thing to take care of is if both are at same cell after t steps, we dont double count the cherry.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Cherry Pickup" lines

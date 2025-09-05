@@ -1,5 +1,5 @@
 ---
-title: '🧀 Count Prime-Gap Balanced Subarrays'
+title: "🧀 Count Prime-Gap Balanced Subarrays"
 description: '[leetcode link](https://leetcode.com/problems/count-prime-gap-balanced-subarrays/description/)'
 mode: 'wide'
 ---
@@ -14,7 +14,7 @@ mode: 'wide'
       Max-min deque implementation, and sliding window usage.
 
 Typical sliding window, calculate result for each idx assuming it is the right boundary of the subarray. Maintain max(decreasing), and min(increasing) deques. Also ensure sub-array has 2 primes atleast. For this, we can keep track of rightmost and second-righmost primes in the active window. So, for any idx, the starting points for sub-arrary is from l to second-rightmost prime, as any idx after the second-rightmost prime if picked as starting point, will violate the 2 primes condition.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Count Prime-Gap Balanced Subarrays" lines

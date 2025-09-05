@@ -1,5 +1,5 @@
 ---
-title: '🧀 Remove Zero Sum Consecutive Nodes from Linked List'
+title: "🧀 Remove Zero Sum Consecutive Nodes from Linked List"
 description: '[leetcode link](https://leetcode.com/problems/remove-zero-sum-consecutive-nodes-from-linked-list/description/)'
 mode: 'wide'
 ---
@@ -12,7 +12,7 @@ mode: 'wide'
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
       A subarray in between of 0 to i, can have 0 sum if prefix sum of 0 to i repeats. Wherever it repeats that node is end of zero-sum-subarray, with last seen idx of this repeating sum being the start. Once you find this left and right, nodes between have to be skipped(update next for left node), and all prefix values between this range have to be deleted from map of prefix to idx.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Remove Zero Sum Consecutive Nodes from Linked List" lines

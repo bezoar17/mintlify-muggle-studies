@@ -1,5 +1,5 @@
 ---
-title: '❗️ Paths in Matrix Whose Sum Is Divisible by K'
+title: "❗️ Paths in Matrix Whose Sum Is Divisible by K"
 description: '[leetcode link](https://leetcode.com/problems/paths-in-matrix-whose-sum-is-divisible-by-k/description/)'
 mode: 'wide'
 ---
@@ -15,7 +15,7 @@ mode: 'wide'
 each position has 2 options of arrival, to the next cell also there will be 2 more options from this cell. We have to maintain all sums, but all possible sums can be mapped to sum%k, and we dont care about actual sum values , but only sum%k.
 
 Constraints is a give away of state, k is 50, m* n is 5* 10^4, total becomes 10^6. So 1 pass in 3D dp.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Paths in Matrix Whose Sum Is Divisible by K" lines

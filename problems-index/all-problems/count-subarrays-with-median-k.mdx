@@ -1,5 +1,5 @@
 ---
-title: '❗️ Count Subarrays With Median K'
+title: "❗️ Count Subarrays With Median K"
 description: '[leetcode link](https://leetcode.com/problems/count-subarrays-with-median-k/description/)'
 mode: 'wide'
 ---
@@ -23,7 +23,7 @@ There can be 3 cases, we consider,
 Now, we want sub-array sum to be 0 or 1. Expanding from center, case 1, and 2 are really simple, the total sum should just be 0 or 1 when starting from center. For case 3, we can have sum of both directions add to 0 or 1. For this, we can store counts for each sum value when going to one of the sides, say to left. Then when going to right side, we are looking for total sum to become 0 or 1, so we are looking for -sum or sum+1.
 
 Good sub-array problem.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Count Subarrays With Median K" lines

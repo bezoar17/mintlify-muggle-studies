@@ -1,5 +1,5 @@
 ---
-title: '❗️ Last Day Where You Can Still Cross'
+title: "❗️ Last Day Where You Can Still Cross"
 description: '[leetcode link](https://leetcode.com/problems/last-day-where-you-can-still-cross/description/)'
 mode: 'wide'
 ---
@@ -16,8 +16,7 @@ mode: 'wide'
 Go in reverse, simulating reversed time, and check the first day when the top and bottom gets connected. So, it can stay connected till that day -1, basically 0 index based idx. Since we have to find the last day, after that day, it is anyways unconnected, so we can start from all water cells, and for each cell from the R-&gt;L, convert it to land, and at some point top and bottom will get connected.
 
 UnionFind - clever usage, in both ways, on land and on water cells.
-
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Last Day Where You Can Still Cross" lines

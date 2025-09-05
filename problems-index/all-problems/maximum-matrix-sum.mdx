@@ -1,5 +1,5 @@
 ---
-title: '🧀 Maximum Matrix Sum'
+title: "🧀 Maximum Matrix Sum"
 description: '[leetcode link](https://leetcode.com/problems/maximum-matrix-sum/description/)'
 mode: 'wide'
 ---
@@ -19,9 +19,7 @@ Another way to think about it is, suppose there are 2 no.s [a,b], If both positi
 Efffectively, if there is total even negatives, they can be paired up and consumed to make both positive. If there are odd negatives, 1 no. will remain negative. To maximize sum, we make the no. with lowest abs value negative. (among all no.s we can make anyone negative with 1 negative value.)
 
 Also, now for the important part, the sliding effect is not limited to x-axis, but also y axis,  2 negatives across the matrix can also be merged and both made positive by sliding the first negative to the other across rows and cols.
-
-
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Maximum Matrix Sum" lines

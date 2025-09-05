@@ -1,5 +1,5 @@
 ---
-title: '❗️ Minimum Operations to Equalize Binary String'
+title: "❗️ Minimum Operations to Equalize Binary String"
 description: '[leetcode link](https://leetcode.com/problems/minimum-operations-to-equalize-binary-string/description/)'
 mode: 'wide'
 ---
@@ -38,7 +38,7 @@ are subtracted, as they will receive 1 op less
 Simpler to understand once you really get the hang of it. What ever ops you are doing, z have to be used to set the 0s to 1s, and the remaining extra ones have to be even(distributed amongst the 0s and 1s, so that parity doesnt change by these extra ops). 
 
 Using the even requirement, and a max range for extra ops, you can get lower bound equations for no. of ops (when ops is even, and when ops is odd). Once you have the equations, just implement them to get minimum viable ops value.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Minimum Operations to Equalize Binary String" lines

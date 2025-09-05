@@ -1,5 +1,5 @@
 ---
-title: '❗️ Best Time to Buy and Sell Stock III'
+title: "❗️ Best Time to Buy and Sell Stock III"
 description: '[leetcode link](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/description/)'
 mode: 'wide'
 ---
@@ -11,7 +11,7 @@ mode: 'wide'
   </Tab>
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
-        Similar to 1 txn question, we do the same thing, but keep track of 2 txns, and cost of second txn is the most important calculation.
+      Similar to 1 txn question, we do the same thing, but keep track of 2 txns, and cost of second txn is the most important calculation.
   Cost of second txn is the crucial definition.
 	
 	For first txn, cost was calculated as buy price (cost that will eventually get deducted). 
@@ -39,8 +39,8 @@ mode: 'wide'
 		# as explained above, t2_cost accounts for the profit from the first transaction and
 		# is the *true cost* of the second transaction, so the *true profit* of the second 
 		# transaction would be the current price (p) minus t2_cost
-        t2_profit = [t2_profit, p - t2_cost].max 
-    </Card>
+        t2_profit = [t2_profit, p - t2_cost].max
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Best Time to Buy and Sell Stock III" lines

@@ -1,5 +1,5 @@
 ---
-title: '🧀 Unique Length-3 Palindromic Subsequences'
+title: "🧀 Unique Length-3 Palindromic Subsequences"
 description: '[leetcode link](https://leetcode.com/problems/unique-length-3-palindromic-subsequences/description/)'
 mode: 'wide'
 ---
@@ -12,7 +12,7 @@ mode: 'wide'
   <Tab title="Solution" icon="lightbulb" iconType="regular" >
     <Card>
       Possible subsequence is limited by no. of chars(26^2). Each subsequence is composed of side and mid char with the format side-mid-side. Store first and last idxs for each char. Now for each char, assuming it is the side char, take all distinct occurences between first and last idx of side char, all these chars can be mid. possible side chars are 26, and even if we do complete left to right for each char, its O(26 * N) max.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Unique Length-3 Palindromic Subsequences" lines

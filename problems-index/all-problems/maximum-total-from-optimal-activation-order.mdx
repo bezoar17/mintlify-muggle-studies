@@ -1,5 +1,5 @@
 ---
-title: '🧀 Maximum Total from Optimal Activation Order'
+title: "🧀 Maximum Total from Optimal Activation Order"
 description: '[leetcode link](https://leetcode.com/problems/maximum-total-from-optimal-activation-order/description/)'
 mode: 'wide'
 ---
@@ -14,7 +14,7 @@ mode: 'wide'
       Active count increases from 0 to some x, then resets to 0, then increases again and comes back to 0 again. The x till which active count can increase is basically the limit values. We start from 0 go to a particular limit value by activating elements, then when it resets to 0, all the lower limit values are rendered useless. So, we will go to lowest limit first, then the next, then the next and so on. But with each limit's group, we can choose only till limit or total items whichever is lower, so you would choose the top items from there. We can calculate this for all limit groups separately, and sum it up. 
 
 Actual order of execution would be lowest limit, then next one, then the next one and so on. But for calculation order doesnt matter just sum it up.
-    </Card>
+</Card>
   <Expandable title="code">
     <CodeGroup dropdown>
 ```ruby title="Maximum Total from Optimal Activation Order" lines
