@@ -1,44 +1,31 @@
-# Mintlify Starter Kit
+# mintlify-muggle-studies
+Solved Problems of leetcode, for reference
 
-Use the starter kit to get your docs deployed and ready to customize.
+Steps To Update the Gitbook leetcode section.
+1. Run the index js to fetch leetcode submissions along with other metadata
+2. Copy the file to this repo, and run `ruby generator.rb` command to update the mintlify
+3. Copy list of problems from PROBLEM_SUMMARY.md and update it in docs.json under leetcode-problems file in mintlify
+4. Append the TOPIC_SECTIONS.md into docs.json under mintlify folder
 
-Click the green **Use this template** button at the top of this repo to copy the Mintlify starter kit. The starter kit contains examples with
 
-- Guide pages
-- Navigation
-- Customizations
-- API reference pages
-- Use of popular components
+TODO
++ Update script to prepare it for mintlify docs
++ Add scripts to get list info and update it correctly in mintlify docs.json
 
-**[Follow the full quickstart guide](https://starter.mintlify.com/quickstart)**
+The following repo has an index.js file which builds a json file that is used as data to build the solution pages in gitbook.
+Follow the steps mentioned in the repo's readme, the index.js script has been updated to be consumed for this gitbook task,
+Hence has multiple changes from the original repository it was derived from.
+https://github.com/bezoar17/fetch-leetcode-submission
 
-## Development
 
-Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview your documentation changes locally. To install, use the following command:
+Reference links
 
-```
-npm i -g mint
-```
+https://rahulravindran0108.gitbooks.io/leetcode-gitbook/content/
 
-Run the following command at the root of your documentation, where your `docs.json` is located:
+https://wentao-shao.gitbook.io/leetcode
 
-```
-mint dev
-```
+https://just4once.gitbooks.io/leetcode-notes/content/
 
-View your local preview at `http://localhost:3000`.
+https://gitbook.sshiling.com/flg-preparation/algorithms/dynamic-programming/tasks
 
-## Publishing changes
-
-Install our GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app) to propagate changes from your repo to your deployment. Changes are deployed to production automatically after pushing to the default branch.
-
-## Need help?
-
-### Troubleshooting
-
-- If your dev environment isn't running: Run `mint update` to ensure you have the most recent version of the CLI.
-- If a page loads as a 404: Make sure you are running in a folder with a valid `docs.json`.
-
-### Resources
-- [Mintlify documentation](https://mintlify.com/docs)
-- [Mintlify community](https://mintlify.com/community)
+https://labuladong.gitbook.io/algo-en/iii.-algorithmic-thinking/detailsaboutbacktracking
