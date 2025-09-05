@@ -1,7 +1,7 @@
 require 'json'
 
 def write_problems
-  data = JSON.parse(File.read('LEETCODE.json'))[0,2]
+  data = JSON.parse(File.read('LEETCODE.json'))
   template_md = File.read('mintlify-problemtemplate.mdx')
   problem_summary_metadata = []
   difficulty_emoji = {"Medium"=>"🧀", "Easy"=>"🧩", "Hard"=>"❗️"}
