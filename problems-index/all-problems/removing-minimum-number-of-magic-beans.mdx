@@ -1,0 +1,55 @@
+---
+title: '🧀 Removing Minimum Number of Magic Beans'
+description: '[leetcode link](https://leetcode.com/problems/removing-minimum-number-of-magic-beans/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an array of <strong>positive</strong> integers <code>beans</code>, where each integer represents the number of magic beans found in a particular magic bag.</p>  <p><strong>Remove</strong> any number of beans (<strong>possibly none</strong>) from each bag such that the number of beans in each remaining <strong>non-empty</strong> bag (still containing <strong>at least one</strong> bean) is <strong>equal</strong>. Once a bean has been removed from a bag, you are <strong>not</strong> allowed to return it to any of the bags.</p>  <p>Return <em>the <strong>minimum</strong> number of magic beans that you have to remove</em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> beans = [4,1,6,5] <br/> <strong>Output:</strong> 4 <br/> <strong>Explanation:</strong>  - We remove 1 bean from the bag with only 1 bean.   This results in the remaining bags: [4,<strong><u>0</u></strong>,6,5] - Then we remove 2 beans from the bag with 6 beans.   This results in the remaining bags: [4,0,<strong><u>4</u></strong>,5] - Then we remove 1 bean from the bag with 5 beans.   This results in the remaining bags: [4,0,4,<strong><u>4</u></strong>] We removed a total of 1 + 2 + 1 = 4 beans to make the remaining non-empty bags have an equal number of beans. There are no other solutions that remove 4 beans or fewer.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> beans = [2,10,3,2] <br/> <strong>Output:</strong> 7 <br/> <strong>Explanation:</strong> - We remove 2 beans from one of the bags with 2 beans.   This results in the remaining bags: [<u><strong>0</strong></u>,10,3,2] - Then we remove 2 beans from the other bag with 2 beans.   This results in the remaining bags: [0,10,3,<u><strong>0</strong></u>] - Then we remove 3 beans from the bag with 3 beans.    This results in the remaining bags: [0,10,<u><strong>0</strong></u>,0] We removed a total of 2 + 2 + 3 = 7 beans to make the remaining non-empty bags have an equal number of beans. There are no other solutions that removes 7 beans or fewer.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= beans.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= beans[i] &lt;= 10<sup>5</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Sort the beans
+
+Calculate cost to reduce all elments to an bean at index i, bean_i, 
+for all the left   beans, they have to go to zero (as beans can only reduce in a bag)
+for all the right beans, remaining sum to right - bean_i * remaining items
+
+..... bean_i .....
+left_sum == left_cost bean_i right_cost
+
+right_cost = total_sum - left_sum - bean_i * remaining items
+total_cost = left_sum + total_sum - left_sum - bean_i * remaining items
+
+total_cost = total_sum - bean_i * remaining items
+
+so, prefix sum calculation is also not needed as left_sum cancels out
+
+take the overall minimum cost
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Removing Minimum Number of Magic Beans" lines
+# @param {Integer[]} beans
+# @return {Integer}
+def minimum_removal(beans)
+  # beans.sort!
+  # total_sum = beans.sum
+  # n = beans.size
+
+  # beans.each_with_index.map do |bean, idx|
+  #   total_sum - (bean * (n-idx))
+  # end.min
+
+  # as we calculate min of total - x, we can calculate this as total - max of x, x in this cases is bean *(n-idx)
+  # so following 1 liner can also work
+  beans.sum - beans.sort.each_with_index.map {|b,i| b * (beans.length - i) }.max
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

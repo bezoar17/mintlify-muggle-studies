@@ -1,0 +1,54 @@
+---
+title: '❗️ Maximum Frequency of an Element After Performing Operations II'
+description: '[leetcode link](https://leetcode.com/problems/maximum-frequency-of-an-element-after-performing-operations-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer array <code>nums</code> and two integers <code>k</code> and <code>numOperations</code>.</p>  <p>You must perform an <strong>operation</strong> <code>numOperations</code> times on <code>nums</code>, where in each operation you:</p>  <ul>  <li>Select an index <code>i</code> that was <strong>not</strong> selected in any previous operations.</li>  <li>Add an integer in the range <code>[-k, k]</code> to <code>nums[i]</code>.</li> </ul>  <p>Return the <strong>maximum</strong> possible <span data-keyword="frequency-array">frequency</span> of any element in <code>nums</code> after performing the <strong>operations</strong>.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [1,4,5], k = 1, numOperations = 2</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">2</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>We can achieve a maximum frequency of two by:</p>  <ul>  <li>Adding 0 to <code>nums[1]</code>, after which <code>nums</code> becomes <code>[1, 4, 5]</code>.</li>  <li>Adding -1 to <code>nums[2]</code>, after which <code>nums</code> becomes <code>[1, 4, 4]</code>.</li> </ul> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [5,11,20,20], k = 5, numOperations = 1</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">2</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>We can achieve a maximum frequency of two by:</p>  <ul>  <li>Adding 0 to <code>nums[1]</code>.</li> </ul> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>  <li><code>0 &lt;= k &lt;= 10<sup>9</sup></code></li>  <li><code>0 &lt;= numOperations &lt;= nums.length</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      https://leetcode.com/problems/maximum-frequency-of-an-element-after-performing-operations-ii/solutions/6047202/python3-c-java-sweep-line-detail-explanation 
+
+This explains properly
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Maximum Frequency of an Element After Performing Operations II" lines
+# @param {Integer[]} nums
+# @param {Integer} k
+# @param {Integer} num_operations
+# @return {Integer}
+def max_frequency(nums, k, num_operations)
+  points = Set.new
+  points_marker = Hash.new(0)
+  point_counts = Hash.new(0)
+
+  nums.each do |num|
+    point_counts[num]+=1
+    points_marker[num-k]+=1
+    points_marker[num+k+1]-=1
+    points.merge([num, num-k, num+k+1])
+  end
+
+  res = points_covered_till_i = 0
+  sorted_points = points.to_a.sort
+
+  sorted_points.each do |point|
+    points_covered_till_i += points_marker[point]
+    overlaps_without_point_itself = points_covered_till_i - point_counts[point]
+    # self + overlaps limited to numOp
+    points_for_this_i = point_counts[point] + [num_operations, overlaps_without_point_itself].min
+    res = [res, points_for_this_i].max
+  end
+
+  res
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

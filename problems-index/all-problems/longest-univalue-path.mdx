@@ -1,0 +1,58 @@
+---
+title: '🧀 Longest Univalue Path'
+description: '[leetcode link](https://leetcode.com/problems/longest-univalue-path/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given the <code>root</code> of a binary tree, return <em>the length of the longest path, where each node in the path has the same value</em>. This path may or may not pass through the root.</p>  <p><strong>The length of the path</strong> between two nodes is represented by the number of edges between them.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/10/13/ex1.jpg" style="width: 450px; height: 238px;" />  <strong>Input:</strong> root = [5,4,5,1,1,null,5] <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> The shown image shows that the longest path of the same value (i.e. 5).   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/10/13/ex2.jpg" style="width: 450px; height: 238px;" />  <strong>Input:</strong> root = [1,4,5,4,4,null,5] <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> The shown image shows that the longest path of the same value (i.e. 4).    <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in the tree is in the range <code>[0, 10<sup>4</sup>]</code>.</li>  <li><code>-1000 &lt;= Node.val &lt;= 1000</code></li>  <li>The depth of the tree will not exceed <code>1000</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      https://leetcode.com/problems/distribute-coins-in-binary-tree/ Reverse DFS
+
+Dfs, and start updating from leaf nodes, in reverse. For this, call dfs first and calculate things for children first, and while returning, return whatever is to be used by parents. 
+
+At any node, l+r subtrees can be combined if they are equal. For parent nodes, only 1 can be extended, so return only max of l and r. 
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Longest Univalue Path" lines
+# Definition for a binary tree node.
+# class TreeNode
+#     attr_accessor :val, :left, :right
+#     def initialize(val = 0, left = nil, right = nil)
+#         @val = val
+#         @left = left
+#         @right = right
+#     end
+# end
+# @param {TreeNode} root
+# @return {Integer}
+def longest_univalue_path(root)
+  max_len = 0
+  dfs=->(node) {
+    return 0 if node.nil?
+    l = node.left.nil? ? 0 : dfs.call(node.left)
+    r = node.right.nil? ? 0 : dfs.call(node.right)
+    l_count = 0
+    r_count = 0
+    
+    l_count = l+1 if !node.left.nil? && node.left.val == node.val
+    r_count = r+1 if !node.right.nil? && node.right.val == node.val
+
+    total = l_count + r_count
+    max_len = [max_len, total].max
+
+    [l_count, r_count].max # not total, but one of the choices
+  }
+  dfs.call(root)
+  max_len  
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

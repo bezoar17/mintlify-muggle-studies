@@ -1,0 +1,42 @@
+---
+title: '🧀 Longest Subarray of 1's After Deleting One Element'
+description: '[leetcode link](https://leetcode.com/problems/longest-subarray-of-1s-after-deleting-one-element/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a binary array <code>nums</code>, you should delete one element from it.</p>  <p>Return <em>the size of the longest non-empty subarray containing only </em><code>1</code><em>&#39;s in the resulting array</em>. Return <code>0</code> if there is no such subarray.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [1,1,0,1] <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> After deleting the number in position 2, [1,1,1] contains 3 numbers with value of 1&#39;s.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [0,1,1,1,0,1,1,0,1] <br/> <strong>Output:</strong> 5 <br/> <strong>Explanation:</strong> After deleting the number in position 4, [0,1,1,1,1,1,0,1] longest subarray with value of 1&#39;s is [1,1,1,1,1].   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> nums = [1,1,1] <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> You must delete one element.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>nums[i]</code> is either <code>0</code> or <code>1</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      If no 1s, return 0, if 1 or 0 zeroes in nums, then return n-1. For all other cases, we basically have to find longest sub-arr which has only 1 zero, and we delete it to get longest string of 1s. 
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Longest Subarray of 1's After Deleting One Element" lines
+# @param {Integer[]} nums
+# @return {Integer}
+def longest_subarray(nums)
+  zero_count = nums.count {|x| x==0}
+  n = nums.size
+  return 0 if zero_count == n
+  return n-1 if zero_count == 0 || zero_count == 1
+
+  l = max_len = 0
+  last_0 = -1 # kept -1 so that for the first 0, l becomes 0 even after addition
+
+  (0...n).each do |r|
+    (l = last_0+1; last_0 = r) if nums[r] == 0
+    max_len = [max_len, r-l+1].max
+  end
+  
+  # max_len stores longest sb_arr with 1 zero, result is -1 of that
+  max_len-1
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

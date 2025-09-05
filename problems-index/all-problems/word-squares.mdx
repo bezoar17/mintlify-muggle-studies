@@ -1,0 +1,47 @@
+---
+title: '❗️ Word Squares'
+description: '[leetcode link](https://leetcode.com/problems/word-squares/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an array of <strong>unique</strong> strings <code>words</code>, return <em>all the </em><strong><a href="https://en.wikipedia.org/wiki/Word_square" target="_blank">word squares</a></strong><em> you can build from </em><code>words</code>. The same word from <code>words</code> can be used <strong>multiple times</strong>. You can return the answer in <strong>any order</strong>.</p>  <p>A sequence of strings forms a valid <strong>word square</strong> if the <code>k<sup>th</sup></code> row and column read the same string, where <code>0 &lt;= k &lt; max(numRows, numColumns)</code>.</p>  <ul>  <li>For example, the word sequence <code>[&quot;ball&quot;,&quot;area&quot;,&quot;lead&quot;,&quot;lady&quot;]</code> forms a word square because each word reads the same both horizontally and vertically.</li> </ul>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> words = [&quot;area&quot;,&quot;lead&quot;,&quot;wall&quot;,&quot;lady&quot;,&quot;ball&quot;] <br/> <strong>Output:</strong> [[&quot;ball&quot;,&quot;area&quot;,&quot;lead&quot;,&quot;lady&quot;],[&quot;wall&quot;,&quot;area&quot;,&quot;lead&quot;,&quot;lady&quot;]] <br/> <strong>Explanation:</strong> The output consists of two word squares. The order of output does not matter (just the order of words in each word square matters).   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> words = [&quot;abat&quot;,&quot;baba&quot;,&quot;atan&quot;,&quot;atal&quot;] <br/> <strong>Output:</strong> [[&quot;baba&quot;,&quot;abat&quot;,&quot;baba&quot;,&quot;atal&quot;],[&quot;baba&quot;,&quot;abat&quot;,&quot;baba&quot;,&quot;atan&quot;]] <br/> <strong>Explanation:</strong> The output consists of two word squares. The order of output does not matter (just the order of words in each word square matters).    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= words.length &lt;= 1000</code></li>  <li><code>1 &lt;= words[i].length &lt;= 4</code></li>  <li>All <code>words[i]</code> have the same length.</li>  <li><code>words[i]</code> consists of only lowercase English letters.</li>  <li>All <code>words[i]</code> are <strong>unique</strong>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Max word len is 4, so max matrix of 4x4. Total words are also 1k max. Once, we fix the first word, say ball
+2nd word should start from a, i.e 1st idx char of first word, third from le, ie 2nd from first and second word, and 4th from lad, ie. 3rd char from first, second and third words. The prefix for next word has a pattern, and will limit our selection for next word.
+
+Our possible keeps decreasing, based on prefix, after each selection. If we just traverse all possibilities, the max depth is less, only 4, and pruning ,ie, rejecting invalid entries is also fast. For faster look ups, we can keep words in a Trie or Hash, since len is only 4, we can use hash of set. 
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Word Squares" lines
+# @param {String[]} words
+# @return {String[][]}
+def word_squares(words)
+  len = words[0].size
+  all_word_squares = []
+  prefix_h = Hash.new {|h,k| h[k]=Set.new}
+  words.each { |w| (1...len).each {|l| prefix_h[w[0,l]].add(w) } }
+  
+  recurse=->(word_squares){
+    # solution words, with w_idx(0 to 3)
+    return all_word_squares << word_squares if word_squares.size == len
+    
+    prefix = word_squares.map {|w| w[word_squares.size] }.join # prefix for next word
+    
+    prefix_h[prefix].each { |next_w| recurse.call(word_squares + [next_w]) }
+  }
+
+  words.each { |w| recurse.call([w]) } # start each starting word
+  
+  all_word_squares
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,56 @@
+---
+title: '❗️ Alien Dictionary'
+description: '[leetcode link](https://leetcode.com/problems/alien-dictionary/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>There is a new alien language that uses the English alphabet. However, the order of the letters is unknown to you.</p>  <p>You are given a list of strings <code>words</code> from the alien language&#39;s dictionary. Now it is claimed that the strings in <code>words</code> are <span data-keyword="lexicographically-smaller-string-alien"><strong>sorted lexicographically</strong></span> by the rules of this new language.</p>  <p>If this claim is incorrect, and the given arrangement of string in&nbsp;<code>words</code>&nbsp;cannot correspond to any order of letters,&nbsp;return&nbsp;<code>&quot;&quot;.</code></p>  <p>Otherwise, return <em>a string of the unique letters in the new alien language sorted in <strong>lexicographically increasing order</strong> by the new language&#39;s rules</em><em>. </em>If there are multiple solutions, return<em> <strong>any of them</strong></em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> words = [&quot;wrt&quot;,&quot;wrf&quot;,&quot;er&quot;,&quot;ett&quot;,&quot;rftt&quot;] <br/> <strong>Output:</strong> &quot;wertf&quot;   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> words = [&quot;z&quot;,&quot;x&quot;] <br/> <strong>Output:</strong> &quot;zx&quot;   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> words = [&quot;z&quot;,&quot;x&quot;,&quot;z&quot;] <br/> <strong>Output:</strong> &quot;&quot; <br/> <strong>Explanation:</strong> The order is invalid, so return <code>&quot;&quot;</code>.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= words.length &lt;= 100</code></li>  <li><code>1 &lt;= words[i].length &lt;= 100</code></li>  <li><code>words[i]</code> consists of only lowercase English letters.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      make edges, ensure result is a DAG
+for making edges, compare each pair of words with each other
+starting from left, for the first diff char, str1[0] &lt; str2[0]
+for the same char, move to next char to derive relation, as soon as relation is done
+
+Handle the edge case, where between w1, w2, w1 starts with w2, and w1 size is greater. That should never happen
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Alien Dictionary" lines
+# @param {String[]} words
+# @return {String}
+def alien_order(words)
+  graph = Hash.new {|h,k| h[k]=[]}
+  in_deg = words.flat_map(&:chars).uniq.map {|x| [x,0]}.to_h
+
+  (1...words.size).each do |i|
+    w1, w2 = words[i-1], words[i]
+    
+    return "" if w1.size > w2.size && w1.start_with?(w2)
+    
+    (0...[w1.size, w2.size].min).each do |idx|
+      (graph[w1[idx]] << w2[idx]; in_deg[w2[idx]]+=1; break) if w1[idx] != w2[idx]
+    end
+  end
+
+  # process dag
+  queue = in_deg.select {|k,v| v==0 }.map(&:first)
+  result = ""
+
+  until queue.empty?
+    node = queue.shift
+    result += node
+    graph[node].each { |n_node| in_deg[n_node]-=1; queue << n_node if in_deg[n_node]==0}
+  end
+
+  result.size < in_deg.size ? "" : result
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

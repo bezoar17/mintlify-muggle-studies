@@ -1,0 +1,36 @@
+---
+title: '🧀 Longest Increasing Subsequence'
+description: '[leetcode link](https://leetcode.com/problems/longest-increasing-subsequence/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an integer array <code>nums</code>, return <em>the length of the longest <strong>strictly increasing </strong></em><span data-keyword="subsequence-array"><em><strong>subsequence</strong></em></span>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [10,9,2,5,3,7,101,18] <br/> <strong>Output:</strong> 4 <br/> <strong>Explanation:</strong> The longest increasing subsequence is [2,3,7,101], therefore the length is 4.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [0,1,0,3,2,3] <br/> <strong>Output:</strong> 4   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> nums = [7,7,7,7,7,7,7] <br/> <strong>Output:</strong> 1    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 2500</code></li>  <li><code>-10<sup>4</sup> &lt;= nums[i] &lt;= 10<sup>4</sup></code></li> </ul>   <p><b>Follow up:</b>&nbsp;Can you come up with an algorithm that runs in&nbsp;<code>O(n log(n))</code> time complexity?</p> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Classic dp, O(n^2).
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Longest Increasing Subsequence" lines
+# @param {Integer[]} nums
+# @return {Integer}
+def length_of_lis(nums)
+    dp = Array.new(nums.length,1)
+    nums.each_with_index do| elm, i|
+        for x in 0..i-1
+            if nums[x] < elm && dp[i] < dp[x]+1
+                dp[i] = dp[x] + 1
+            end
+        end
+    end
+    dp.max
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,60 @@
+---
+title: '❗️ Odd Even Jump'
+description: '[leetcode link](https://leetcode.com/problems/odd-even-jump/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer array <code>arr</code>. From some starting index, you can make a series of jumps. The (1<sup>st</sup>, 3<sup>rd</sup>, 5<sup>th</sup>, ...) jumps in the series are called <strong>odd-numbered jumps</strong>, and the (2<sup>nd</sup>, 4<sup>th</sup>, 6<sup>th</sup>, ...) jumps in the series are called <strong>even-numbered jumps</strong>. Note that the <strong>jumps</strong> are numbered, not the indices.</p>  <p>You may jump forward from index <code>i</code> to index <code>j</code> (with <code>i &lt; j</code>) in the following way:</p>  <ul>  <li>During <strong>odd-numbered jumps</strong> (i.e., jumps 1, 3, 5, ...), you jump to the index <code>j</code> such that <code>arr[i] &lt;= arr[j]</code> and <code>arr[j]</code> is the smallest possible value. If there are multiple such indices <code>j</code>, you can only jump to the <strong>smallest</strong> such index <code>j</code>.</li>  <li>During <strong>even-numbered jumps</strong> (i.e., jumps 2, 4, 6, ...), you jump to the index <code>j</code> such that <code>arr[i] &gt;= arr[j]</code> and <code>arr[j]</code> is the largest possible value. If there are multiple such indices <code>j</code>, you can only jump to the <strong>smallest</strong> such index <code>j</code>.</li>  <li>It may be the case that for some index <code>i</code>, there are no legal jumps.</li> </ul>  <p>A starting index is <strong>good</strong> if, starting from that index, you can reach the end of the array (index <code>arr.length - 1</code>) by jumping some number of times (possibly 0 or more than once).</p>  <p>Return <em>the number of <strong>good</strong> starting indices</em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> arr = [10,13,12,14,15] <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong>  From starting index i = 0, we can make our 1st jump to i = 2 (since arr[2] is the smallest among arr[1], arr[2], arr[3], arr[4] that is greater or equal to arr[0]), then we cannot jump any more. From starting index i = 1 and i = 2, we can make our 1st jump to i = 3, then we cannot jump any more. From starting index i = 3, we can make our 1st jump to i = 4, so we have reached the end. From starting index i = 4, we have reached the end already. In total, there are 2 different starting indices i = 3 and i = 4, where we can reach the end with some number of jumps.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> arr = [2,3,1,1,4] <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong>  From starting index i = 0, we make jumps to i = 1, i = 2, i = 3: During our 1st jump (odd-numbered), we first jump to i = 1 because arr[1] is the smallest value in [arr[1], arr[2], arr[3], arr[4]] that is greater than or equal to arr[0]. During our 2nd jump (even-numbered), we jump from i = 1 to i = 2 because arr[2] is the largest value in [arr[2], arr[3], arr[4]] that is less than or equal to arr[1]. arr[3] is also the largest value, but 2 is a smaller index, so we can only jump to i = 2 and not i = 3 During our 3rd jump (odd-numbered), we jump from i = 2 to i = 3 because arr[3] is the smallest value in [arr[3], arr[4]] that is greater than or equal to arr[2]. We can&#39;t jump from i = 3 to i = 4, so the starting index i = 0 is not good. In a similar manner, we can deduce that: From starting index i = 1, we jump to i = 4, so we reach the end. From starting index i = 2, we jump to i = 3, and then we can&#39;t jump anymore. From starting index i = 3, we jump to i = 4, so we reach the end. From starting index i = 4, we are already at the end. In total, there are 3 different starting indices i = 1, i = 3, and i = 4, where we can reach the end with some number of jumps.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> arr = [5,1,3,4,2] <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> We can reach the end from starting indices 1, 2, and 4.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= arr.length &lt;= 2 * 10<sup>4</sup></code></li>  <li><code>0 &lt;= arr[i] &lt; 10<sup>5</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      For every idx, its odd jump and even jump destinations are fixed indexes to the right. So, we go from right to left, and calculate its jump destination idx for each jump. If for any i, its odd jump takes to n-1, or even jump takes to n-1 or any other valid idx from where we can reach n-1, we set it as true, indicating its possible. 
+
+Starting from right, base case is possible[n-1] is true for both 0-even and 1-odd jumps. 
+
+For n-2, we calculate if odd jump from here can get us to n-1, same for even jump, and store true/false. We keep doing this until we calculate this for all indices. Now, we just have to check which indices have true for their odd jumps, which indicates starting point. 
+
+To calculate the jump idx, when going from R-L, we keep all elements seen in order. We find current elements position in this order, and based on that get the next smallest greater or largest smaller element to the right. We jump to idx of these elements, and see carry their possibility value for the other parity. Odd jump from i to j, so we check possibility value for even j and vice versa. Going from R-L, we only keep unique elements, and update their idx as we have to pick left most idx for any number. 
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Odd Even Jump" lines
+# @param {Integer[]} arr
+# @return {Integer}
+def odd_even_jumps(arr)
+  # go from Right to left, maintaining sorted order of elements to the right of current idx
+  # here, odd_idx jump and even_idx jump can be calculated for current idx, if we jump to true, it remains true, else becomes false
+  n = arr.size
+  possible = Array.new(n) { Array.new(2, false) } # possible[i][j], stores if j=0, even jump from i can reach end, j=1, odd jump from i can reach end
+  right_elements = [arr[-1]]; possible[n-1][0]=true; possible[n-1][1]=true # initialize last cell, and right_elements
+  idx_hash = {} # running idx store for unique elements in right_elements, stores leftmost idx of an element, as we go from R->L
+  idx_hash[arr[-1]]=n-1
+  
+  (n-2).downto(0).each do |idx|
+    elem = arr[idx]; r_e_s = right_elements.size;
+    insert_idx = right_elements.bsearch_index { |y| (y <=> elem) >= 0 } || r_e_s # ascending order of right elements
+    element_present = insert_idx!=r_e_s && right_elements[insert_idx] == elem
+    
+    s_g_idx = insert_idx || -1 # smallest g_eq element
+    l_s_idx = element_present ? insert_idx : insert_idx-1 # largest s_eq element
+
+    odd_jump_idx = s_g_idx.between?(0,r_e_s-1) ? idx_hash[right_elements[s_g_idx]] : nil
+    even_jump_idx = l_s_idx.between?(0,r_e_s-1) ? idx_hash[right_elements[l_s_idx]] : nil
+    
+    possible[idx][1] = !odd_jump_idx.nil? && possible[odd_jump_idx][0]
+    possible[idx][0] = !even_jump_idx.nil? && possible[even_jump_idx][1]
+    
+    right_elements.insert(insert_idx, elem) unless element_present # insert elem, and keep unique
+    idx_hash[elem]=idx # update idx for elem
+  end
+
+  possible.count {|x| x[1]} # idxs from where odd jump start is possible
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

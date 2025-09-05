@@ -1,0 +1,41 @@
+---
+title: '🧀 Maximum Length of Pair Chain'
+description: '[leetcode link](https://leetcode.com/problems/maximum-length-of-pair-chain/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an array of <code>n</code> pairs <code>pairs</code> where <code>pairs[i] = [left<sub>i</sub>, right<sub>i</sub>]</code> and <code>left<sub>i</sub> &lt; right<sub>i</sub></code>.</p>  <p>A pair <code>p2 = [c, d]</code> <strong>follows</strong> a pair <code>p1 = [a, b]</code> if <code>b &lt; c</code>. A <strong>chain</strong> of pairs can be formed in this fashion.</p>  <p>Return <em>the length longest chain which can be formed</em>.</p>  <p>You do not need to use up all the given intervals. You can select pairs in any order.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> pairs = [[1,2],[2,3],[3,4]] <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> The longest chain is [1,2] -&gt; [3,4].   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> pairs = [[1,2],[7,8],[4,5]] <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> The longest chain is [1,2] -&gt; [4,5] -&gt; [7,8].    <p><strong>Constraints:</strong></p>  <ul>  <li><code>n == pairs.length</code></li>  <li><code>1 &lt;= n &lt;= 1000</code></li>  <li><code>-1000 &lt;= left<sub>i</sub> &lt; right<sub>i</sub> &lt;= 1000</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Same as https://leetcode.com/problems/non-overlapping-intervals/
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Maximum Length of Pair Chain" lines
+def find_longest_chain(pairs)
+  sorted_pairs = pairs.sort
+  count = 1
+  last = sorted_pairs.shift[1]
+  
+  until sorted_pairs.empty?
+    a,b = sorted_pairs.shift
+    if a > last # interval doesnt overlap, update count and last
+      count += 1
+      last = b
+    else
+      # overlaps, so take the minimum last from current status 
+      last = [last,b].min
+    end
+  end
+
+  count
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

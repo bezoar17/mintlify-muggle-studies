@@ -1,0 +1,66 @@
+---
+title: '🧀 Partition List'
+description: '[leetcode link](https://leetcode.com/problems/partition-list/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given the <code>head</code> of a linked list and a value <code>x</code>, partition it such that all nodes <strong>less than</strong> <code>x</code> come before nodes <strong>greater than or equal</strong> to <code>x</code>.</p>  <p>You should <strong>preserve</strong> the original relative order of the nodes in each of the two partitions.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/01/04/partition.jpg" style="width: 662px; height: 222px;" />  <strong>Input:</strong> head = [1,4,3,2,5,2], x = 3 <br/> <strong>Output:</strong> [1,2,2,4,3,5]   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> head = [2,1], x = 2 <br/> <strong>Output:</strong> [1,2]    <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in the list is in the range <code>[0, 200]</code>.</li>  <li><code>-100 &lt;= Node.val &lt;= 100</code></li>  <li><code>-200 &lt;= x &lt;= 200</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Maintain 2 lists, lesser and higher. Keep appending nodes from original to split lists, and merge them in the end.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Partition List" lines
+# Definition for singly-linked list.
+# class ListNode
+#     attr_accessor :val, :next
+#     def initialize(val = 0, _next = nil)
+#         @val = val
+#         @next = _next
+#     end
+# end
+# @param {ListNode} head
+# @param {Integer} x
+# @return {ListNode}
+def partition(head, x)
+  lesser_ptr = higher_ptr = higher_start = lesser_start = nil
+
+  return nil if head.nil?
+
+  append=->(list, node) {
+    node.next = nil
+    if list.nil?
+      list = node
+    else
+      list.next = node
+    end
+    node
+  }
+
+  curr = head
+  until curr.nil?
+    next_ptr = curr.next
+    if curr.val < x
+      lesser_start = curr if lesser_ptr.nil?
+      lesser_ptr = append.call(lesser_ptr, curr)
+    else
+      higher_start = curr if higher_ptr.nil?
+      higher_ptr = append.call(higher_ptr, curr)
+    end
+
+    curr = next_ptr
+  end
+
+  lesser_ptr.next = higher_start unless lesser_ptr.nil?
+  lesser_start.nil? ? higher_start : lesser_start
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

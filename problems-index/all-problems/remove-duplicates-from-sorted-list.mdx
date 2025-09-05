@@ -1,0 +1,55 @@
+---
+title: '🧩 Remove Duplicates from Sorted List'
+description: '[leetcode link](https://leetcode.com/problems/remove-duplicates-from-sorted-list/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given the <code>head</code> of a sorted linked list, <em>delete all duplicates such that each element appears only once</em>. Return <em>the linked list <strong>sorted</strong> as well</em>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/01/04/list1.jpg" style="width: 302px; height: 242px;" />  <strong>Input:</strong> head = [1,1,2] <br/> <strong>Output:</strong> [1,2]   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/01/04/list2.jpg" style="width: 542px; height: 222px;" />  <strong>Input:</strong> head = [1,1,2,3,3] <br/> <strong>Output:</strong> [1,2,3]    <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in the list is in the range <code>[0, 300]</code>.</li>  <li><code>-100 &lt;= Node.val &lt;= 100</code></li>  <li>The list is guaranteed to be <strong>sorted</strong> in ascending order.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```cpp title="Remove Duplicates from Sorted List" lines
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    
+ListNode* deleteDuplicates(ListNode* head) {
+     if(head==NULL || head->next==NULL) return head;
+     ListNode* first=head;
+     ListNode* second=head->next;
+
+     while(second!=NULL){
+
+     	if(first->val == second->val){
+     		second=second->next;
+     	}
+     	else{
+     		first->next=second;
+     		first=second;
+     		second=first->next;
+     	}
+     }
+     first->next=NULL;
+     return head;
+    }
+
+};
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

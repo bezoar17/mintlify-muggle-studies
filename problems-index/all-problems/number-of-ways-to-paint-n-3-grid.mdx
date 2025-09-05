@@ -1,0 +1,73 @@
+---
+title: '❗️ Number of Ways to Paint N × 3 Grid'
+description: '[leetcode link](https://leetcode.com/problems/number-of-ways-to-paint-n-3-grid/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You have a <code>grid</code> of size <code>n x 3</code> and you want to paint each cell of the grid with exactly one of the three colors: <strong>Red</strong>, <strong>Yellow,</strong> or <strong>Green</strong> while making sure that no two adjacent cells have the same color (i.e., no two cells that share vertical or horizontal sides have the same color).</p>  <p>Given <code>n</code> the number of rows of the grid, return <em>the number of ways</em> you can paint this <code>grid</code>. As the answer may grow large, the answer <strong>must be</strong> computed modulo <code>10<sup>9</sup> + 7</code>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/03/26/e1.png" style="width: 400px; height: 257px;" />  <strong>Input:</strong> n = 1 <br/> <strong>Output:</strong> 12 <br/> <strong>Explanation:</strong> There are 12 possible way to paint the grid as shown.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> n = 5000 <br/> <strong>Output:</strong> 30228214    <p><strong>Constraints:</strong></p>  <ul>  <li><code>n == grid.length</code></li>  <li><code>1 &lt;= n &lt;= 5000</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Perfect example for linear transformation matrix, Extension of 
+https://leetcode.com/problems/painting-a-grid-with-three-different-colors/?envType=problem-list-v2&envId=dynamic-programming
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Number of Ways to Paint N × 3 Grid" lines
+# @param {Integer} n
+# @return {Integer}
+def transition_matrix(m)
+  next_colors = {0=>[1,2], 1=>[0,2], 2=>[0,1]}
+  # Generate all valid row configurations, start with a color, and build out the state
+  states = []
+  generate =->(order) {
+    return states << order.dup if order.size == m
+    next_colors[order[-1]].each {|nc| generate.call(order + [nc]) }
+  }
+  next_colors.keys.each { |x| generate[[x]] }
+  
+  compatible=->(a,b) { (0...m).all? { |i| a[i]!=b[i] } }
+  
+  s = states.size
+  transition_matrix = Array.new(s) { Array.new(s, 0) }
+  (0...s).each { |i| ((i+1)...s).each { |j| 
+    (transition_matrix[i][j]=1; transition_matrix[j][i]=1) if (compatible[states[i],states[j]]) 
+  } }
+  transition_matrix
+end
+
+@t_matrix = transition_matrix(3)
+
+def num_of_ways(n)
+  big_mod = 10**9 + 7
+  s = @t_matrix.size
+  
+  matrix_pow = ->(mat, pow) {
+    result = Array.new(s) { |i| Array.new(s) { |j| i == j ? 1 : 0 } }
+    base = mat.map(&:dup)
+    
+    while pow > 0
+      if pow.odd?
+        result = (0...s).map do |i|
+          (0...s).map { |j| (0...s).sum { |k| result[i][k] * base[k][j] } % big_mod }
+        end
+      end
+      base = (0...s).map do |i|
+        (0...s).map { |j| (0...s).sum { |k| base[i][k] * base[k][j] } % big_mod }
+      end
+      pow >>= 1
+    end
+    result
+  }
+
+  matrix_pow.call(@t_matrix, n-1).flatten.sum % big_mod
+end
+
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,39 @@
+---
+title: '❗️ Candy'
+description: '[leetcode link](https://leetcode.com/problems/candy/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>There are <code>n</code> children standing in a line. Each child is assigned a rating value given in the integer array <code>ratings</code>.</p>  <p>You are giving candies to these children subjected to the following requirements:</p>  <ul>  <li>Each child must have at least one candy.</li>  <li>Children with a higher rating get more candies than their neighbors.</li> </ul>  <p>Return <em>the minimum number of candies you need to have to distribute the candies to the children</em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> ratings = [1,0,2] <br/> <strong>Output:</strong> 5 <br/> <strong>Explanation:</strong> You can allocate to the first, second and third child with 2, 1, 2 candies respectively.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> ratings = [1,2,2] <br/> <strong>Output:</strong> 4 <br/> <strong>Explanation:</strong> You can allocate to the first, second and third child with 1, 2, 1 candies respectively. The third child gets 1 candy because it satisfies the above two conditions.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>n == ratings.length</code></li>  <li><code>1 &lt;= n &lt;= 2 * 10<sup>4</sup></code></li>  <li><code>0 &lt;= ratings[i] &lt;= 2 * 10<sup>4</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      The child with least rating has 1 candy. Give it to him. If the kid with next rating from least, is not to immediate side of child with least rating, he will also get 1 candy wherever he is. So, sort kids by ratings, and start assigning candies. Candy for a kid is 1+max of side kids candies. 
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Candy" lines
+# @param {Integer[]} ratings
+# @return {Integer}
+def candy(ratings)
+  r_idxs = ratings.each_with_index.to_a.sort
+  r_idxs.sort!
+  n = ratings.size
+  candies = Array.new(n, 0)
+
+  r_idxs.each do |r, i|
+    side_candies = [candies[i]]
+    side_candies << candies[i-1] if i-1>=0 && ratings[i-1] < r
+    side_candies << candies[i+1] if i+1 <= n-1 && ratings[i+1] < r
+    candies[i] = 1+side_candies.max
+  end
+  candies.sum
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

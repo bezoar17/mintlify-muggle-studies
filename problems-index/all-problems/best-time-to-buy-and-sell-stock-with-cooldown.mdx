@@ -1,0 +1,56 @@
+---
+title: '🧀 Best Time to Buy and Sell Stock with Cooldown'
+description: '[leetcode link](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an array <code>prices</code> where <code>prices[i]</code> is the price of a given stock on the <code>i<sup>th</sup></code> day.</p>  <p>Find the maximum profit you can achieve. You may complete as many transactions as you like (i.e., buy one and sell one share of the stock multiple times) with the following restrictions:</p>  <ul>  <li>After you sell your stock, you cannot buy stock on the next day (i.e., cooldown one day).</li> </ul>  <p><strong>Note:</strong> You may not engage in multiple transactions simultaneously (i.e., you must sell the stock before you buy again).</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> prices = [1,2,3,0,2] <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> transactions = [buy, sell, cooldown, buy, sell]   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> prices = [1] <br/> <strong>Output:</strong> 0    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= prices.length &lt;= 5000</code></li>  <li><code>0 &lt;= prices[i] &lt;= 1000</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Similar to stock buying and selling problem where 2 states were maintained, but here there are 3 states and clear transition from each state to the other.
+
+Three states:
+
+Hold (h[i]): The maximum profit on day i when we are holding a stock.
+Sell (s[i]): The maximum profit on day i when we sell a stock.
+Cooldown (c[i]): The maximum profit on day i during a cooldown, meaning no stock is held, and no transaction occurs on that day.
+The transitions between these states are as follows:
+
+Hold (h[i]): Either we continue holding the stock from the previous day, or we buy a new stock after a cooldown:
+h[i] = max(h[i-1], c[i-1] - p[i])
+
+Sell (s[i]): We can only sell if we were holding a stock on the previous day:
+s[i] = h[i-1] + p[i]
+
+Cooldown (c[i]): We either stay in cooldown from the previous day or enter cooldown after selling on the previous day:
+c[i] = max(c[i-1], s[i-1])
+
+Finally, the answer will be the maximum between the final sell or cooldown states because we cannot end the day holding a stock.
+
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Best Time to Buy and Sell Stock with Cooldown" lines
+# @param {Integer[]} prices
+# @return {Integer}
+def max_profit(prices)
+    return 0 if prices.size < 2
+    # sell buy and cooldown states
+    # sell state can come from prev sell and rest or prev buy state and sell
+    # buy state can come from prev buy and rest or cooldown and buy
+    # cooldown can come from any of these 3
+    # cooldown is for the next buy and not the sell, so sell = buy + price, and not cooldown
+    prices[1..-1].inject([0, -prices.first, 0]) {|(s, b, c), p|
+        [[b + p, s].max, [c - p, b].max, [s, b, c].max]
+    }.max
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

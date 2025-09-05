@@ -1,0 +1,60 @@
+---
+title: '❗️ Stone Game IV'
+description: '[leetcode link](https://leetcode.com/problems/stone-game-iv/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Alice and Bob take turns playing a game, with Alice starting first.</p>  <p>Initially, there are <code>n</code> stones in a pile. On each player&#39;s turn, that player makes a <em>move</em> consisting of removing <strong>any</strong> non-zero <strong>square number</strong> of stones in the pile.</p>  <p>Also, if a player cannot make a move, he/she loses the game.</p>  <p>Given a positive integer <code>n</code>, return <code>true</code> if and only if Alice wins the game otherwise return <code>false</code>, assuming both players play optimally.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> n = 1 <br/> <strong>Output:</strong> true <strong>Explanation: </strong>Alice can remove 1 stone winning the game because Bob doesn&#39;t have any moves.  <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> n = 2 <br/> <strong>Output:</strong> false <strong>Explanation: </strong>Alice can only remove 1 stone, after that Bob removes the last one winning the game (2 -&gt; 1 -&gt; 0).   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> n = 4 <br/> <strong>Output:</strong> true <br/> <strong>Explanation:</strong> n is already a perfect square, Alice can win with one move, removing 4 stones (4 -&gt; 0).    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= n &lt;= 10<sup>5</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Store results in dp array for all n.
+
+Initialize the base case for 0, 1, 2.
+
+Possible move sets are all squares upto n. So calculate these moves, and also update dp for these values as true.
+
+Process each no. from 3 to n. For a given i
+
+Default value is false, 
+This can become true if we can find a value in dp, such that, i-square is false, if yes, we will play this move, and force state of bobs turn to false, hence state of this i becomes true, if we are unable to find such a square, this will become a losing state.
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Stone Game IV" lines
+# @param {Integer} n
+# @return {Boolean}
+def winner_square_game(n)
+  dp = Array.new(n+1)
+  dp[0] = false; dp[1] = true; dp[2] = false;
+  squares = []
+
+  # for all perfect squares, value is true
+  i = 1
+  while i*i <= n
+    squares << i*i; dp[i*i] = true; i+=1
+  end
+  return true if dp[n] == true
+  
+  # for faster processing, as lower values in dp are set, if we subtract bigger square, better chance of finding set state
+  squares.reverse!
+  
+  (3..n).each do |i|
+    next unless dp[i].nil?
+    
+    dp[i] = false
+    can_flip_to_losing_state = squares.detect { |sq| dp[i - sq] == false }
+    dp[i] = true unless can_flip_to_losing_state.nil?
+  end
+
+  dp[n]
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

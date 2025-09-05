@@ -1,0 +1,53 @@
+---
+title: '🧩 Minimum Positive Sum Subarray '
+description: '[leetcode link](https://leetcode.com/problems/minimum-positive-sum-subarray/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer array <code>nums</code> and <strong>two</strong> integers <code>l</code> and <code>r</code>. Your task is to find the <strong>minimum</strong> sum of a <strong>subarray</strong> whose size is between <code>l</code> and <code>r</code> (inclusive) and whose sum is greater than 0.</p>  <p>Return the <strong>minimum</strong> sum of such a subarray. If no such subarray exists, return -1.</p>  <p>A <strong>subarray</strong> is a contiguous <b>non-empty</b> sequence of elements within an array.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [3, -2, 1, 4], l = 2, r = 3</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">1</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>The subarrays of length between <code>l = 2</code> and <code>r = 3</code> where the sum is greater than 0 are:</p>  <ul>  <li><code>[3, -2]</code> with a sum of 1</li>  <li><code>[1, 4]</code> with a sum of 5</li>  <li><code>[3, -2, 1]</code> with a sum of 2</li>  <li><code>[-2, 1, 4]</code> with a sum of 3</li> </ul>  <p>Out of these, the subarray <code>[3, -2]</code> has a sum of 1, which is the smallest positive sum. Hence, the answer is 1.</p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [-2, 2, -3, 1], l = 2, r = 3</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">-1</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>There is no subarray of length between <code>l</code> and <code>r</code> that has a sum greater than 0. So, the answer is -1.</p> </div>  <p><strong class="example">Example 3:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [1, 2, 3, 4], l = 2, r = 4</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">3</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>The subarray <code>[1, 2]</code> has a length of 2 and the minimum sum greater than 0. So, the answer is 3.</p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 100</code></li>  <li><code>1 &lt;= l &lt;= r &lt;= nums.length</code></li>  <li><code>-1000 &lt;= nums[i] &lt;= 1000</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Minimum Positive Sum Subarray " lines
+# @param {Integer[]} nums
+# @param {Integer} l
+# @param {Integer} r
+# @return {Integer}
+class PseudoSumSegTree
+  def initialize(arr)
+    @n = arr.size # size of the source array
+    # query can have r till n, so sum of all elements is at prefix[n]
+    @prefix_sum_arr = (1..@n).reduce([0]) {|res, i| res << res.last + arr[i-1]; res } # sum till i-1
+  end
+  
+  # [l,r)
+  def query(l,r)
+    @prefix_sum_arr[r] - @prefix_sum_arr[l]
+  end
+end
+
+def minimum_sum_subarray(nums, l, r)
+  seg = PseudoSumSegTree.new(nums)
+  n = nums.size
+  result = Float::INFINITY
+  (l..r).each do |x|
+    (0...n).each do |i|
+      next if i+x>n
+      sum = seg.query(i, i+x)
+      result = [result, sum].min if sum > 0
+    end
+  end
+  result == Float::INFINITY ? -1:result
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

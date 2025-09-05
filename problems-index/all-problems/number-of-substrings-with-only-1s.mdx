@@ -1,0 +1,38 @@
+---
+title: '🧀 Number of Substrings With Only 1s'
+description: '[leetcode link](https://leetcode.com/problems/number-of-substrings-with-only-1s/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a binary string <code>s</code>, return <em>the number of substrings with all characters</em> <code>1</code><em>&#39;s</em>. Since the answer may be too large, return it modulo <code>10<sup>9</sup> + 7</code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> s = &quot;0110111&quot; <br/> <strong>Output:</strong> 9 <br/> <strong>Explanation:</strong> There are 9 substring in total with only 1&#39;s characters. &quot;1&quot; -&gt; 5 times. &quot;11&quot; -&gt; 3 times. &quot;111&quot; -&gt; 1 time.  <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> s = &quot;101&quot; <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> Substring &quot;1&quot; is shown 2 times in s.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> s = &quot;111111&quot; <br/> <strong>Output:</strong> 21 <br/> <strong>Explanation:</strong> Each substring contains only 1&#39;s characters.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= s.length &lt;= 10<sup>5</sup></code></li>  <li><code>s[i]</code> is either <code>&#39;0&#39;</code> or <code>&#39;1&#39;</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Just get substrings of 1, if L is length, no. of substrings is L*(L+1)/2
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Number of Substrings With Only 1s" lines
+# @param {String} s
+# @return {Integer}
+def num_sub(s)
+  total_count = 0
+  sb_len = 0
+  s.chars.each do |ch|
+    if ch=='1'
+      sb_len+=1
+    else
+      total_count += (sb_len*(sb_len+1)/2)
+      sb_len=0
+    end
+  end
+  (total_count += (sb_len*(sb_len+1)/2)) % (1_000_000_000+7)
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

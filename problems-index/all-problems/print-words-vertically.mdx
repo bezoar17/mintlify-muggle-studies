@@ -1,0 +1,39 @@
+---
+title: '🧀 Print Words Vertically'
+description: '[leetcode link](https://leetcode.com/problems/print-words-vertically/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a string <code>s</code>.&nbsp;Return&nbsp;all the words vertically in the same order in which they appear in <code>s</code>.<br /> Words are returned as a list of strings, complete with&nbsp;spaces when is necessary. (Trailing spaces are not allowed).<br /> Each word would be put on only one column and that in one column there will be only one word.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> s = &quot;HOW ARE YOU&quot; <br/> <strong>Output:</strong> [&quot;HAY&quot;,&quot;ORO&quot;,&quot;WEU&quot;] <strong>Explanation: </strong>Each word is printed vertically.   &quot;HAY&quot; &nbsp;&quot;ORO&quot; &nbsp;&quot;WEU&quot;   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> s = &quot;TO BE OR NOT TO BE&quot; <br/> <strong>Output:</strong> [&quot;TBONTB&quot;,&quot;OEROOE&quot;,&quot;   T&quot;] <strong>Explanation: </strong>Trailing spaces is not allowed.  &quot;TBONTB&quot; &quot;OEROOE&quot; &quot;   T&quot;   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> s = &quot;CONTEST IS COMING&quot; <br/> <strong>Output:</strong> [&quot;CIC&quot;,&quot;OSO&quot;,&quot;N M&quot;,&quot;T I&quot;,&quot;E N&quot;,&quot;S G&quot;,&quot;T&quot;]    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= s.length &lt;= 200</code></li>  <li><code>s</code>&nbsp;contains only upper case English letters.</li>  <li>It&#39;s guaranteed that there is only one&nbsp;space between 2 words.</li> </ul>
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Print Words Vertically" lines
+# @param {String} s
+# @return {String[]}
+def print_vertically(s)
+  words = s.split(" ")
+  n = words.size
+  max_len = words.map(&:size).max
+  all_chars = Array.new(n) { Array.new(max_len," ") }
+
+  words.each_with_index do |word, i|
+    word.chars.each_with_index do |ch, j|
+      all_chars[i][j] = ch
+    end
+  end
+
+  all_chars.transpose.map { |row| row.join.rstrip }
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

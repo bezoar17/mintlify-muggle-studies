@@ -1,0 +1,35 @@
+---
+title: '🧩 Ugly Number'
+description: '[leetcode link](https://leetcode.com/problems/ugly-number/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>An <strong>ugly number</strong> is a <em>positive</em> integer which does not have a prime factor other than 2, 3, and 5.</p>  <p>Given an integer <code>n</code>, return <code>true</code> <em>if</em> <code>n</code> <em>is an <strong>ugly number</strong></em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> n = 6 <br/> <strong>Output:</strong> true <br/> <strong>Explanation:</strong> 6 = 2 &times; 3   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> n = 1 <br/> <strong>Output:</strong> true <br/> <strong>Explanation:</strong> 1 has no prime factors.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> n = 14 <br/> <strong>Output:</strong> false <br/> <strong>Explanation:</strong> 14 is not ugly since it includes the prime factor 7.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>-2<sup>31</sup> &lt;= n &lt;= 2<sup>31</sup> - 1</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Ugly Number" lines
+# @param {Integer} n
+# @return {Boolean}
+def is_ugly(n)
+  return true if n==1
+  return false if n < 2
+  t = n
+  [2,3,5].each do |i|
+     t/=i while t >= i && t%i==0
+  end
+  t==1
+end
+
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

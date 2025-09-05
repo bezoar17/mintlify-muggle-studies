@@ -1,0 +1,70 @@
+---
+title: '🧀 Construct Binary Tree from Preorder and Postorder Traversal'
+description: '[leetcode link](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-postorder-traversal/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given two integer arrays, <code>preorder</code> and <code>postorder</code> where <code>preorder</code> is the preorder traversal of a binary tree of <strong>distinct</strong> values and <code>postorder</code> is the postorder traversal of the same tree, reconstruct and return <em>the binary tree</em>.</p>  <p>If there exist multiple answers, you can <strong>return any</strong> of them.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/07/24/lc-prepost.jpg" style="width: 304px; height: 265px;" />  <strong>Input:</strong> preorder = [1,2,4,5,3,6,7], postorder = [4,5,2,6,7,3,1] <br/> <strong>Output:</strong> [1,2,3,4,5,6,7]   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> preorder = [1], postorder = [1] <br/> <strong>Output:</strong> [1]    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= preorder.length &lt;= 30</code></li>  <li><code>1 &lt;= preorder[i] &lt;= preorder.length</code></li>  <li>All the values of <code>preorder</code> are <strong>unique</strong>.</li>  <li><code>postorder.length == preorder.length</code></li>  <li><code>1 &lt;= postorder[i] &lt;= postorder.length</code></li>  <li>All the values of <code>postorder</code> are <strong>unique</strong>.</li>  <li>It is guaranteed that <code>preorder</code> and <code>postorder</code> are the preorder traversal and postorder traversal of the same binary tree.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Preoder is Root LR, PostOrder is LR Root. First element of pre and last element of post is always root. Second element of pre is left, second last element of post is right value. If both are same, we have only 1 node. Else, we know the left and right values of root node. We can get the pre and post arrays for both left and right nodes by slicing original pre and post arrays, and call the function recursively. 
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Construct Binary Tree from Preorder and Postorder Traversal" lines
+# Definition for a binary tree node.
+# class TreeNode
+#     attr_accessor :val, :left, :right
+#     def initialize(val = 0, left = nil, right = nil)
+#         @val = val
+#         @left = left
+#         @right = right
+#     end
+# end
+# @param {Integer[]} preorder
+# @param {Integer[]} postorder
+# @return {TreeNode}
+def construct_from_pre_post(preorder, postorder)
+  recurse(preorder, postorder)
+end
+
+def recurse(preorder, postorder)
+  return nil if preorder.empty?
+  return TreeNode.new(preorder[0]) if preorder.size == 1
+  # Pre  -> Root LR
+  # Post -> LR Root
+  root = TreeNode.new(preorder[0])
+
+  l_val = preorder[1]
+  r_val = postorder[-2]
+  
+  if l_val == r_val # only 1 node for this root, keep it to left and recurse
+    root.left = recurse(preorder[1..], postorder[..-2])
+    return root
+  end
+
+  # 2 nodes, calculate new pre and post arr for left and right nodes
+  r_idx_pre = preorder.find_index(r_val)
+  l_idx_post = postorder.find_index(l_val)
+
+  l_pre = preorder[1...r_idx_pre]
+  r_pre = preorder[r_idx_pre..]
+  
+  l_post = postorder[..l_idx_post]
+  r_post = postorder[(l_idx_post+1)..-2]
+
+  # set left and right nodes from recursive calls
+  root.left = recurse(l_pre, l_post)
+  root.right = recurse(r_pre, r_post)
+
+  root
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

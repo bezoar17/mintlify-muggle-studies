@@ -1,0 +1,60 @@
+---
+title: '🧀 Longest Continuous Subarray With Absolute Diff Less Than or Equal to Limit'
+description: '[leetcode link](https://leetcode.com/problems/longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an array of integers <code>nums</code> and an integer <code>limit</code>, return the size of the longest <strong>non-empty</strong> subarray such that the absolute difference between any two elements of this subarray is less than or equal to <code>limit</code><em>.</em></p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [8,2,4,7], limit = 4 <br/> <strong>Output:</strong> 2  <br/> <strong>Explanation:</strong> All subarrays are:  [8] with maximum absolute diff |8-8| = 0 &lt;= 4. [8,2] with maximum absolute diff |8-2| = 6 &gt; 4.  [8,2,4] with maximum absolute diff |8-2| = 6 &gt; 4. [8,2,4,7] with maximum absolute diff |8-2| = 6 &gt; 4. [2] with maximum absolute diff |2-2| = 0 &lt;= 4. [2,4] with maximum absolute diff |2-4| = 2 &lt;= 4. [2,4,7] with maximum absolute diff |2-7| = 5 &gt; 4. [4] with maximum absolute diff |4-4| = 0 &lt;= 4. [4,7] with maximum absolute diff |4-7| = 3 &lt;= 4. [7] with maximum absolute diff |7-7| = 0 &lt;= 4.  Therefore, the size of the longest subarray is 2.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [10,1,2,4,7,2], limit = 5 <br/> <strong>Output:</strong> 4  <br/> <strong>Explanation:</strong> The subarray [2,4,7,2] is the longest since the maximum absolute diff is |2-7| = 5 &lt;= 5.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> nums = [4,2,2,2,4,4,2,2], limit = 0 <br/> <strong>Output:</strong> 3    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>  <li><code>0 &lt;= limit &lt;= 10<sup>9</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Deque implementations
+
+Typical sliding window with 2 heaps for min and max values.
+
+Instead of heaps, we can also keep deques, max(in decreasing order) 
+(Any new no. which is greater than right of queue will render the last of queue as irrelevant, so last of queue can be discarded to maintain a decreasing order of max no.s)
+and min(in increasing order)
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Longest Continuous Subarray With Absolute Diff Less Than or Equal to Limit" lines
+# @param {Integer[]} nums
+# @param {Integer} limit
+# @return {Integer}
+def longest_subarray(nums, limit)
+  max_deque = []
+  min_deque = []
+  left = 0
+  max_length = 0
+
+  (0...nums.size).each do |right|
+    # Maintain the maxDeque in decreasing order
+    max_deque.pop while !max_deque.empty? && max_deque.last < nums[right]
+    max_deque << nums[right]
+
+    # Maintain the minDeque in increasing order
+    min_deque.pop while !min_deque.empty? && min_deque.last > nums[right]
+    min_deque << nums[right]
+
+    # Check if the current windows minmax exceeds the limit
+    while max_deque.first - min_deque.first > limit
+      # remove the elements that are out of the current window, and move the left pointer
+      max_deque.shift if max_deque.first == nums[left]
+      min_deque.shift if min_deque.first == nums[left]
+      left += 1
+    end
+
+    max_length = [max_length, right - left + 1].max
+  end
+
+  max_length
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

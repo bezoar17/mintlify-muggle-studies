@@ -1,0 +1,69 @@
+---
+title: '🧀 Random Pick with Weight'
+description: '[leetcode link](https://leetcode.com/problems/random-pick-with-weight/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a <strong>0-indexed</strong> array of positive integers <code>w</code> where <code>w[i]</code> describes the <strong>weight</strong> of the <code>i<sup>th</sup></code> index.</p>  <p>You need to implement the function <code>pickIndex()</code>, which <strong>randomly</strong> picks an index in the range <code>[0, w.length - 1]</code> (<strong>inclusive</strong>) and returns it. The <strong>probability</strong> of picking an index <code>i</code> is <code>w[i] / sum(w)</code>.</p>  <ul>  <li>For example, if <code>w = [1, 3]</code>, the probability of picking index <code>0</code> is <code>1 / (1 + 3) = 0.25</code> (i.e., <code>25%</code>), and the probability of picking index <code>1</code> is <code>3 / (1 + 3) = 0.75</code> (i.e., <code>75%</code>).</li> </ul>   <p><strong class="example">Example 1:</strong></p>   <strong>Input</strong> [&quot;Solution&quot;,&quot;pickIndex&quot;] [[[1]],[]] <strong>Output</strong> [null,0]  <strong>Explanation</strong> Solution solution = new Solution([1]); solution.pickIndex(); // return 0. The only option is to return 0 since there is only one element in w.   <p><strong class="example">Example 2:</strong></p>   <strong>Input</strong> [&quot;Solution&quot;,&quot;pickIndex&quot;,&quot;pickIndex&quot;,&quot;pickIndex&quot;,&quot;pickIndex&quot;,&quot;pickIndex&quot;] [[[1,3]],[],[],[],[],[]] <strong>Output</strong> [null,1,1,1,1,0]  <strong>Explanation</strong> Solution solution = new Solution([1, 3]); solution.pickIndex(); // return 1. It is returning the second element (index = 1) that has a probability of 3/4. solution.pickIndex(); // return 1 solution.pickIndex(); // return 1 solution.pickIndex(); // return 1 solution.pickIndex(); // return 0. It is returning the first element (index = 0) that has a probability of 1/4.  Since this is a randomization problem, multiple answers are allowed. All of the following outputs can be considered correct: [null,1,1,1,1,0] [null,1,1,1,1,1] [null,1,1,1,0,0] [null,1,1,1,0,1] [null,1,0,1,0,0] ...... and so on.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= w.length &lt;= 10<sup>4</sup></code></li>  <li><code>1 &lt;= w[i] &lt;= 10<sup>5</sup></code></li>  <li><code>pickIndex</code> will be called at most <code>10<sup>4</sup></code> times.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      sample function in ruby can get elements from an array randomly. So, for a weight distribution with sum of 100 or 1000. we can populate an array with freq of weight and pick randomly.
+
+But when total sum of weights is huge, you cant make arrays like this. But want to have the similar concept, so create a cumulative weights array, where each element has its range, w[i]'s range is c_sum[i-1] to c_sum[i], that way, each weights range is proportional to the weight value. Now, we can just generate a random no. between 0 to 1, multiple it by total weight, and get the random pointer.
+
+
+Now, we just have to identify which range does this belong to, for that we can do binary_search. 
+[10,10,25] weights
+[10,20,45]
+
+here, range for 25 is (20,45]. For the 2nd one is (10,20]. So, we find the no. accordingly.
+we return left, in binary search.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Random Pick with Weight" lines
+class Solution
+
+=begin
+    :type w: Integer[]
+=end
+    def initialize(w)
+      @total = w.sum
+      @cumulative_weights = [w[0]]
+      (1...w.size).each {|x| @cumulative_weights << (@cumulative_weights.last + w[x]) }
+    end
+=begin
+    :rtype: Integer
+=end
+    def pick_index()
+      target = rand * @total
+
+      left = 0
+      right = @cumulative_weights.size-1
+
+      while left < right
+        mid = (right+left)/2
+
+        if target > @cumulative_weights[mid]
+          left = mid+1
+        else
+          right = mid
+        end
+      end
+
+      left
+    end
+end
+
+# Your Solution object will be instantiated and called as such:
+# obj = Solution.new(w)
+# param_1 = obj.pick_index()
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

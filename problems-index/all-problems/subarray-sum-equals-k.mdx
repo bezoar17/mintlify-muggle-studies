@@ -1,0 +1,38 @@
+---
+title: '🧀 Subarray Sum Equals K'
+description: '[leetcode link](https://leetcode.com/problems/subarray-sum-equals-k/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an array of integers <code>nums</code> and an integer <code>k</code>, return <em>the total number of subarrays whose sum equals to</em> <code>k</code>.</p>  <p>A subarray is a contiguous <strong>non-empty</strong> sequence of elements within an array.</p>   <p><strong class="example">Example 1:</strong></p> <strong>Input:</strong> nums = [1,1,1], k = 2 <br/> <strong>Output:</strong> 2 <p><strong class="example">Example 2:</strong></p> <strong>Input:</strong> nums = [1,2,3], k = 3 <br/> <strong>Output:</strong> 2   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 2 * 10<sup>4</sup></code></li>  <li><code>-1000 &lt;= nums[i] &lt;= 1000</code></li>  <li><code>-10<sup>7</sup> &lt;= k &lt;= 10<sup>7</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Store freq of prefix_sum occurences in a hash. Update count by freq[prefix_sum-k] for each idx.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Subarray Sum Equals K" lines
+# @param {Integer[]} nums
+# @param {Integer} k
+# @return {Integer}
+def subarray_sum(nums, k)
+  prefix_sum_count = Hash.new(0)
+  prefix_sum_count[0]=1
+  curr_sum = 0
+  result = 0
+  nums.each do |num|
+    curr_sum += num
+    result += prefix_sum_count[curr_sum-k]
+    prefix_sum_count[curr_sum]+=1
+  end
+  result
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,53 @@
+---
+title: '🧀 Swap Nodes in Pairs'
+description: '[leetcode link](https://leetcode.com/problems/swap-nodes-in-pairs/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a&nbsp;linked list, swap every two adjacent nodes and return its head. You must solve the problem without&nbsp;modifying the values in the list&#39;s nodes (i.e., only nodes themselves may be changed.)</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">head = [1,2,3,4]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">[2,1,4,3]</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2020/10/03/swap_ex1.jpg" style="width: 422px; height: 222px;" /></p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">head = []</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">[]</span></p> </div>  <p><strong class="example">Example 3:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">head = [1]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">[1]</span></p> </div>  <p><strong class="example">Example 4:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">head = [1,2,3]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">[2,1,3]</span></p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in the&nbsp;list&nbsp;is in the range <code>[0, 100]</code>.</li>  <li><code>0 &lt;= Node.val &lt;= 100</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```cpp title="Swap Nodes in Pairs" lines
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* A) {
+        ListNode* current=A;
+        if(A==NULL || A->next==NULL )
+          return A;
+    
+        int count=0;int temp_val;
+        while(current!=NULL)
+        {
+          count++;
+          if(count%2!=0 && current->next!=NULL) // every odd node ( counting starts from 1) except if it is the last one.
+          {
+            temp_val=current->val;
+            current->val=current->next->val;
+            current->next->val=temp_val;
+          }
+          current=current->next;
+        }
+        return A;
+        }
+};
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

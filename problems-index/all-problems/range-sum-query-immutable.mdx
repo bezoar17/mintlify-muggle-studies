@@ -1,0 +1,49 @@
+---
+title: '🧩 Range Sum Query - Immutable'
+description: '[leetcode link](https://leetcode.com/problems/range-sum-query-immutable/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an integer array <code>nums</code>, handle multiple queries of the following type:</p>  <ol>  <li>Calculate the <strong>sum</strong> of the elements of <code>nums</code> between indices <code>left</code> and <code>right</code> <strong>inclusive</strong> where <code>left &lt;= right</code>.</li> </ol>  <p>Implement the <code>NumArray</code> class:</p>  <ul>  <li><code>NumArray(int[] nums)</code> Initializes the object with the integer array <code>nums</code>.</li>  <li><code>int sumRange(int left, int right)</code> Returns the <strong>sum</strong> of the elements of <code>nums</code> between indices <code>left</code> and <code>right</code> <strong>inclusive</strong> (i.e. <code>nums[left] + nums[left + 1] + ... + nums[right]</code>).</li> </ul>   <p><strong class="example">Example 1:</strong></p>   <strong>Input</strong> [&quot;NumArray&quot;, &quot;sumRange&quot;, &quot;sumRange&quot;, &quot;sumRange&quot;] [[[-2, 0, 3, -5, 2, -1]], [0, 2], [2, 5], [0, 5]] <strong>Output</strong> [null, 1, -1, -3]  <strong>Explanation</strong> NumArray numArray = new NumArray([-2, 0, 3, -5, 2, -1]); numArray.sumRange(0, 2); // return (-2) + 0 + 3 = 1 numArray.sumRange(2, 5); // return 3 + (-5) + 2 + (-1) = -1 numArray.sumRange(0, 5); // return (-2) + 0 + 3 + (-5) + 2 + (-1) = -3    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>4</sup></code></li>  <li><code>-10<sup>5</sup> &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>  <li><code>0 &lt;= left &lt;= right &lt; nums.length</code></li>  <li>At most <code>10<sup>4</sup></code> calls will be made to <code>sumRange</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```cpp title="Range Sum Query - Immutable" lines
+class NumArray {
+public:
+    vector<int> val;
+    vector<int> sum_i;
+    NumArray(vector<int> &nums) {
+        if(nums.size()!=0)
+        val.push_back(nums[0]),sum_i.push_back(nums[0]);
+        for(int i=1;i<nums.size();i++)
+        val.push_back(nums[i]),sum_i.push_back(sum_i[i-1]+nums[i]);
+    }
+
+    int sumRange(int i, int j) {
+        if(i==j)
+        return val[i];
+        if(i!=0)
+        return sum_i[j]-sum_i[i-1];
+        else
+        return sum_i[j];
+    }
+};
+
+
+// Your NumArray object will be instantiated and called as such:
+// NumArray numArray(nums);
+// numArray.sumRange(0, 1);
+// numArray.sumRange(1, 2);
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

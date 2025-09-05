@@ -1,0 +1,51 @@
+---
+title: '🧀 Maximum Sum of Distinct Subarrays With Length K'
+description: '[leetcode link](https://leetcode.com/problems/maximum-sum-of-distinct-subarrays-with-length-k/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer array <code>nums</code> and an integer <code>k</code>. Find the maximum subarray sum of all the subarrays of <code>nums</code> that meet the following conditions:</p>  <ul>  <li>The length of the subarray is <code>k</code>, and</li>  <li>All the elements of the subarray are <strong>distinct</strong>.</li> </ul>  <p>Return <em>the maximum subarray sum of all the subarrays that meet the conditions</em><em>.</em> If no subarray meets the conditions, return <code>0</code>.</p>  <p><em>A <strong>subarray</strong> is a contiguous non-empty sequence of elements within an array.</em></p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [1,5,4,2,9,9,9], k = 3 <br/> <strong>Output:</strong> 15 <br/> <strong>Explanation:</strong> The subarrays of nums with length 3 are: - [1,5,4] which meets the requirements and has a sum of 10. - [5,4,2] which meets the requirements and has a sum of 11. - [4,2,9] which meets the requirements and has a sum of 15. - [2,9,9] which does not meet the requirements because the element 9 is repeated. - [9,9,9] which does not meet the requirements because the element 9 is repeated. We return 15 because it is the maximum subarray sum of all the subarrays that meet the conditions   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [4,4,4], k = 3 <br/> <strong>Output:</strong> 0 <br/> <strong>Explanation:</strong> The subarrays of nums with length 3 are: - [4,4,4] which does not meet the requirements because the element 4 is repeated. We return 0 because no subarrays meet the conditions.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= k &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Maintain freq and sub of current subarray, update max_sum when condition 
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Maximum Sum of Distinct Subarrays With Length K" lines
+# @param {Integer[]} nums
+# @param {Integer} k
+# @return {Integer}
+def maximum_subarray_sum(nums, k)
+  n = nums.size
+  left = 0
+  right = 0
+  current_sum = 0
+  current_hash = Hash.new(0)
+  max_sum = 0
+
+  while right < n && left < n - k + 1
+    current_sum += nums[right]
+    current_hash[nums[right]] += 1
+
+    if right - left == k - 1
+      max_sum = [max_sum, current_sum].max if current_hash.size == k
+
+      current_sum -= nums[left]
+      current_hash[nums[left]] -= 1
+      current_hash.delete(nums[left]) if current_hash[nums[left]].zero?
+      left += 1
+    end
+    right += 1
+  end
+
+  max_sum
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

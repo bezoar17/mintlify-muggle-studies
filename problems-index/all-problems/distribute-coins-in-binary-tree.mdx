@@ -1,0 +1,58 @@
+---
+title: '🧀 Distribute Coins in Binary Tree'
+description: '[leetcode link](https://leetcode.com/problems/distribute-coins-in-binary-tree/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given the <code>root</code> of a binary tree with <code>n</code> nodes where each <code>node</code> in the tree has <code>node.val</code> coins. There are <code>n</code> coins in total throughout the whole tree.</p>  <p>In one move, we may choose two adjacent nodes and move one coin from one node to another. A move may be from parent to child, or from child to parent.</p>  <p>Return <em>the <strong>minimum</strong> number of moves required to make every node have <strong>exactly</strong> one coin</em>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2019/01/18/tree1.png" style="width: 250px; height: 236px;" />  <strong>Input:</strong> root = [3,0,0] <br/> <strong>Output:</strong> 2 <strong>Explanation: </strong>From the root of the tree, we move one coin to its left child, and one coin to its right child.   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2019/01/18/tree2.png" style="width: 250px; height: 236px;" />  <strong>Input:</strong> root = [0,3,0] <br/> <strong>Output:</strong> 3 <strong>Explanation: </strong>From the left child of the root, we move two coins to the root [taking two moves]. Then, we move one coin from the root of the tree to the right child.    <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in the tree is <code>n</code>.</li>  <li><code>1 &lt;= n &lt;= 100</code></li>  <li><code>0 &lt;= Node.val &lt;= n</code></li>  <li>The sum of all <code>Node.val</code> is <code>n</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      https://leetcode.com/problems/longest-univalue-path/
+
+Similar to above problem, start from leaf nodes, dfs update in reverse, so call dfs first. Postorder dfs
+
+We return the offset of current_node. To calculate, we calculate offset.abs for left and right, as both offsets needs that many moves.
+
+Leaf has offset of (coin-1), for its parent, l+r moves would be required. 
+And resulting offset would be (coin -1 + left_reserve + right_reserve), reserve can be negative. Moves would be left_reserve.abs + right_reserve.abs
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Distribute Coins in Binary Tree" lines
+# Definition for a binary tree node.
+# class TreeNode
+#     attr_accessor :val, :left, :right
+#     def initialize(val = 0, left = nil, right = nil)
+#         @val = val
+#         @left = left
+#         @right = right
+#     end
+# end
+# @param {TreeNode} root
+# @return {Integer}
+def distribute_coins(root)
+  # distribute from leafs, if leaf has 0, needs 1 move and coin
+  # if has L coins, needs L-1 moves, and 0 coins
+  # for parent, we can get or spend coins in sub-tree, and moves will be summed up
+  moves = 0
+  dfs=->(node) {
+    return 0 if node.nil?
+    left_coins = dfs.call(node.left)
+    right_coins = dfs.call(node.right)
+
+    moves += left_coins.abs + right_coins.abs
+
+    (node.val-1) + left_coins + right_coins # coins remaining
+  }
+  dfs.call(root)
+  moves
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

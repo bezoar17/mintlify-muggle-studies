@@ -1,0 +1,39 @@
+---
+title: '🧩 Maximum Value of an Ordered Triplet I'
+description: '[leetcode link](https://leetcode.com/problems/maximum-value-of-an-ordered-triplet-i/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a <strong>0-indexed</strong> integer array <code>nums</code>.</p>  <p>Return <em><strong>the maximum value over all triplets of indices</strong></em> <code>(i, j, k)</code> <em>such that</em> <code>i &lt; j &lt; k</code>. If all such triplets have a negative value, return <code>0</code>.</p>  <p>The <strong>value of a triplet of indices</strong> <code>(i, j, k)</code> is equal to <code>(nums[i] - nums[j]) * nums[k]</code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [12,6,1,2,7] <br/> <strong>Output:</strong> 77 <br/> <strong>Explanation:</strong> The value of the triplet (0, 2, 4) is (nums[0] - nums[2]) * nums[4] = 77. It can be shown that there are no ordered triplets of indices with a value greater than 77.    <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [1,10,3,4,19] <br/> <strong>Output:</strong> 133 <br/> <strong>Explanation:</strong> The value of the triplet (1, 2, 4) is (nums[1] - nums[2]) * nums[4] = 133. It can be shown that there are no ordered triplets of indices with a value greater than 133.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> nums = [1,2,3] <br/> <strong>Output:</strong> 0 <br/> <strong>Explanation:</strong> The only ordered triplet of indices (0, 1, 2) has a negative value of (nums[0] - nums[1]) * nums[2] = -3. Hence, the answer would be 0.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>3 &lt;= nums.length &lt;= 100</code></li>  <li><code>1 &lt;= nums[i] &lt;= 10<sup>6</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Keep track of left and right max for each i, calculate score for each idx considering it to be j. As everything is positive, fairly simple max tracking for prefix and suffix
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Maximum Value of an Ordered Triplet I" lines
+# @param {Integer[]} nums
+# @return {Integer}
+def maximum_triplet_value(nums)
+  n = nums.size
+  rmax = [nums.last]
+  (n-2).downto(0).each {|i| rmax.unshift([rmax.first, nums[i]].max) }
+
+  lmax = nums[0]
+  res = 0
+  (1...(n-1)).each do |i|
+    res = [res, (lmax - nums[i]) * rmax[i+1]].max
+    lmax = [lmax, nums[i]].max
+  end
+
+  res
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

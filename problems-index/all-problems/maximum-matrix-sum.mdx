@@ -1,0 +1,50 @@
+---
+title: '🧀 Maximum Matrix Sum'
+description: '[leetcode link](https://leetcode.com/problems/maximum-matrix-sum/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an <code>n x n</code> integer <code>matrix</code>. You can do the following operation <strong>any</strong> number of times:</p>  <ul>  <li>Choose any two <strong>adjacent</strong> elements of <code>matrix</code> and <strong>multiply</strong> each of them by <code>-1</code>.</li> </ul>  <p>Two elements are considered <strong>adjacent</strong> if and only if they share a <strong>border</strong>.</p>  <p>Your goal is to <strong>maximize</strong> the summation of the matrix&#39;s elements. Return <em>the <strong>maximum</strong> sum of the matrix&#39;s elements using the operation mentioned above.</em></p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/07/16/pc79-q2ex1.png" style="width: 401px; height: 81px;" />  <strong>Input:</strong> matrix = [[1,-1],[-1,1]] <br/> <strong>Output:</strong> 4 <b>Explanation:</b> We can follow the following steps to reach sum equals 4: - Multiply the 2 elements in the first row by -1. - Multiply the 2 elements in the first column by -1.   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/07/16/pc79-q2ex2.png" style="width: 321px; height: 121px;" />  <strong>Input:</strong> matrix = [[1,2,3],[-1,-2,-3],[1,2,3]] <br/> <strong>Output:</strong> 16 <b>Explanation:</b> We can follow the following step to reach sum equals 16: - Multiply the 2 last elements in the second row by -1.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>n == matrix.length == matrix[i].length</code></li>  <li><code>2 &lt;= n &lt;= 250</code></li>  <li><code>-10<sup>5</sup> &lt;= matrix[i][j] &lt;= 10<sup>5</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Imagine a line of no.s, suppose on the x axis only. If we have no negatives, just sum of all no.s. If have atleast 1 negative in this line.
+Suppose that is at the start, so out of n1 n2 n3 n4 n5, n1 is negative, rest all nums can be anything. We can use this negative number as a slider between any positive no. to make it negative. But, while sliding if the next no. is also negative, multiplication will make them both negative, both are consumed by themselves, now in the remaining we need atleast 1 more negative value to use the sliding effect. If there are none, we have all positive anyways. 
+
+Another way to think about it is, suppose there are 2 no.s [a,b], If both positive, nothing to do. If both negative nothing to do. Make them both positive, if 1 is negative, we can control which out of a/b will be negative. And then go to the next pair c,d. If c,d both have 1 negative, then, we make b and c negative out of the 2 pairs, and then merge them. This can continue until 1 pair has 1 negative, 1 negative always remains.
+
+Efffectively, if there is total even negatives, they can be paired up and consumed to make both positive. If there are odd negatives, 1 no. will remain negative. To maximize sum, we make the no. with lowest abs value negative. (among all no.s we can make anyone negative with 1 negative value.)
+
+Also, now for the important part, the sliding effect is not limited to x-axis, but also y axis,  2 negatives across the matrix can also be merged and both made positive by sliding the first negative to the other across rows and cols.
+
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Maximum Matrix Sum" lines
+# @param {Integer[][]} matrix
+# @return {Integer}
+def max_matrix_sum(matrix)
+  n = matrix.size
+  all_sum = 0
+  least_abs = Float::INFINITY
+  negative_count = 0
+
+  (0...n).each do |i|
+    (0...n).each do |j|
+      all_sum+= (matrix[i][j]).abs
+      least_abs = [least_abs, matrix[i][j].abs].min
+      negative_count+=1 if matrix[i][j] < 0
+    end
+  end
+
+  all_sum -  (negative_count.odd? ? 2*least_abs : 0)
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

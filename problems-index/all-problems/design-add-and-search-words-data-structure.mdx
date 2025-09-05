@@ -1,0 +1,85 @@
+---
+title: '🧀 Design Add and Search Words Data Structure'
+description: '[leetcode link](https://leetcode.com/problems/design-add-and-search-words-data-structure/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Design a data structure that supports adding new words and finding if a string matches any previously added string.</p>  <p>Implement the <code>WordDictionary</code> class:</p>  <ul>  <li><code>WordDictionary()</code>&nbsp;Initializes the object.</li>  <li><code>void addWord(word)</code> Adds <code>word</code> to the data structure, it can be matched later.</li>  <li><code>bool search(word)</code>&nbsp;Returns <code>true</code> if there is any string in the data structure that matches <code>word</code>&nbsp;or <code>false</code> otherwise. <code>word</code> may contain dots <code>&#39;.&#39;</code> where dots can be matched with any letter.</li> </ul>   <p><strong class="example">Example:</strong></p>   <strong>Input</strong> [&quot;WordDictionary&quot;,&quot;addWord&quot;,&quot;addWord&quot;,&quot;addWord&quot;,&quot;search&quot;,&quot;search&quot;,&quot;search&quot;,&quot;search&quot;] [[],[&quot;bad&quot;],[&quot;dad&quot;],[&quot;mad&quot;],[&quot;pad&quot;],[&quot;bad&quot;],[&quot;.ad&quot;],[&quot;b..&quot;]] <strong>Output</strong> [null,null,null,null,false,true,true,true]  <strong>Explanation</strong> WordDictionary wordDictionary = new WordDictionary(); wordDictionary.addWord(&quot;bad&quot;); wordDictionary.addWord(&quot;dad&quot;); wordDictionary.addWord(&quot;mad&quot;); wordDictionary.search(&quot;pad&quot;); // return False wordDictionary.search(&quot;bad&quot;); // return True wordDictionary.search(&quot;.ad&quot;); // return True wordDictionary.search(&quot;b..&quot;); // return True    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= word.length &lt;= 25</code></li>  <li><code>word</code> in <code>addWord</code> consists of lowercase English letters.</li>  <li><code>word</code> in <code>search</code> consist of <code>&#39;.&#39;</code> or lowercase English letters.</li>  <li>There will be at most <code>2</code> dots in <code>word</code> for <code>search</code> queries.</li>  <li>At most <code>10<sup>4</sup></code> calls will be made to <code>addWord</code> and <code>search</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Atlassian
+
+
+Update the Trie definition to have more features, and standardized approach - Ruby
+
+try to implement words starting with functionality too
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Design Add and Search Words Data Structure" lines
+Node = Struct.new(:children, :is_word)
+
+class Trie
+    attr_reader :root
+    def initialize()
+        @root = Node.new({}, false)
+    end
+
+    def add_word(word)
+        node = @root
+        word.each_char do |ch|
+           node = (node.children[ch] ||= Node.new({}, false))
+        end
+        node.is_word = true
+    end
+
+    def search(word, node, index)
+       return false if node.nil?
+       return node.is_word if word.size == index
+       ch = word[index]
+       if ch == '.'
+        node.children.any? { |k,child_node| search(word, child_node, index+1) }
+       else
+        search(word, node.children[ch] , index+1)
+       end
+    end
+
+    # def delete
+end
+
+class WordDictionary
+    def initialize()
+      @trie = Trie.new()        
+    end
+
+=begin
+    :type word: String
+    :rtype: Void
+=end
+    def add_word(word)
+      @trie.add_word(word)
+    end
+
+
+=begin
+    :type word: String
+    :rtype: Boolean
+=end
+    def search(word)
+      @trie.search(word, @trie.root, 0) == true
+    end
+end
+
+# Your WordDictionary object will be instantiated and called as such:
+# obj = WordDictionary.new()
+# obj.add_word(word)
+# param_2 = obj.search(word)
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,58 @@
+---
+title: '🧀 Find the Count of Numbers Which Are Not Special'
+description: '[leetcode link](https://leetcode.com/problems/find-the-count-of-numbers-which-are-not-special/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given 2 <strong>positive</strong> integers <code>l</code> and <code>r</code>. For any number <code>x</code>, all positive divisors of <code>x</code> <em>except</em> <code>x</code> are called the <strong>proper divisors</strong> of <code>x</code>.</p>  <p>A number is called <strong>special</strong> if it has exactly 2 <strong>proper divisors</strong>. For example:</p>  <ul>  <li>The number 4 is <em>special</em> because it has proper divisors 1 and 2.</li>  <li>The number 6 is <em>not special</em> because it has proper divisors 1, 2, and 3.</li> </ul>  <p>Return the count of numbers in the range <code>[l, r]</code> that are <strong>not</strong> <strong>special</strong>.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">l = 5, r = 7</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">3</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>There are no special numbers in the range <code>[5, 7]</code>.</p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">l = 4, r = 16</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">11</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>The special numbers in the range <code>[4, 16]</code> are 4 and 9.</p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= l &lt;= r &lt;= 10<sup>9</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      sieve_of_eratosthenes implementation
+Special no. has to have a prime factorization PF of x^2, where x is prime. If PF has 2 or more primes, no. cant be special. If PF is x^3 or more, then both x and x^2 are divisors, so no. cant be special. Special no. has to be square of prime. Find special no.s and get answer for [l,r]. Just find primes between sqrt of l and r, these are special, rest are not.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Find the Count of Numbers Which Are Not Special" lines
+# @param {Integer} l
+# @param {Integer} r
+# @return {Integer}
+def non_special_count(l, r)
+  primes = sieve_of_eratosthenes(Math.sqrt(r).ceil).to_set
+  special_range = (Math.sqrt(l).ceil..Math.sqrt(r).floor)
+  r-l+1- special_range.count {|x| primes.include?(x) }
+end
+
+def sieve_of_eratosthenes(n)
+  is_prime = Array.new(n + 1, true)
+  
+  # Mark 0 and 1 as non-prime
+  is_prime[0] = is_prime[1] = false
+  
+  # Use Sieve of Eratosthenes to mark non-prime numbers
+  (2..Math.sqrt(n).to_i).each do |i|
+    if is_prime[i]
+      # Update all multiples of i starting from i*i
+      # Numbers smaller than i * i would have already been marked
+      (i * i).step(n, i) do |j|
+        is_prime[j] = false
+      end
+    end
+  end
+  
+  # Create array of prime numbers
+  primes = []
+  (2..n).each do |i|
+    primes << i if is_prime[i]
+  end
+  
+  primes
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

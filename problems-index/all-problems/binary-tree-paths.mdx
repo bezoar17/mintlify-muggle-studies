@@ -1,0 +1,53 @@
+---
+title: '🧩 Binary Tree Paths'
+description: '[leetcode link](https://leetcode.com/problems/binary-tree-paths/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given the <code>root</code> of a binary tree, return <em>all root-to-leaf paths in <strong>any order</strong></em>.</p>  <p>A <strong>leaf</strong> is a node with no children.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/03/12/paths-tree.jpg" style="width: 207px; height: 293px;" />  <strong>Input:</strong> root = [1,2,3,null,5] <br/> <strong>Output:</strong> [&quot;1-&gt;2-&gt;5&quot;,&quot;1-&gt;3&quot;]   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> root = [1] <br/> <strong>Output:</strong> [&quot;1&quot;]    <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in the tree is in the range <code>[1, 100]</code>.</li>  <li><code>-100 &lt;= Node.val &lt;= 100</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```cpp title="Binary Tree Paths" lines
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<string> paths;
+    void add_paths(TreeNode* root,string s){
+        s=s+to_string(root->val);
+        if(root->left!=NULL)
+        add_paths(root->left,s+"->");
+        if(root->right!=NULL)
+        add_paths(root->right,s+"->");
+        if(root->right==NULL && root->left==NULL)
+        paths.push_back(s);
+        return ;
+    }
+    vector<string> binaryTreePaths(TreeNode* root) {
+        string s="";
+        if(root==NULL)
+        return paths;
+        add_paths(root,s);
+        return paths;
+    }
+};
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

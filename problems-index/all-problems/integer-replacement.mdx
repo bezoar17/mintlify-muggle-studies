@@ -1,0 +1,34 @@
+---
+title: '🧀 Integer Replacement'
+description: '[leetcode link](https://leetcode.com/problems/integer-replacement/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a positive integer <code>n</code>,&nbsp;you can apply one of the following&nbsp;operations:</p>  <ol>  <li>If <code>n</code> is even, replace <code>n</code> with <code>n / 2</code>.</li>  <li>If <code>n</code> is odd, replace <code>n</code> with either <code>n + 1</code> or <code>n - 1</code>.</li> </ol>  <p>Return <em>the minimum number of operations needed for</em> <code>n</code> <em>to become</em> <code>1</code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> n = 8 <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> 8 -&gt; 4 -&gt; 2 -&gt; 1   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> n = 7 <br/> <strong>Output:</strong> 4 <strong>Explanation: </strong>7 -&gt; 8 -&gt; 4 -&gt; 2 -&gt; 1 or 7 -&gt; 6 -&gt; 3 -&gt; 2 -&gt; 1   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> n = 4 <br/> <strong>Output:</strong> 2    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= n &lt;= 2<sup>31</sup> - 1</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Just simulate the problem as given
+
+100000000 -&gt; 
+
+optimal way is to reach to closest upper value of 2 and then use power based reduction.
+
+First submission tried storing dp in array, but we dont know the upper limit, so store in hash, or dont store even, as the recursion tree might not have many overlaps, for a given n.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Integer Replacement" lines
+# @param {Integer} n
+# @return {Integer}
+def integer_replacement(n)
+  n.between?(1,3) ? n - 1 : 1 + (n % 2 == 0 ? integer_replacement(n / 2) : [integer_replacement(n + 1), integer_replacement(n - 1)].min)
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

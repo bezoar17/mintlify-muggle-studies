@@ -1,0 +1,48 @@
+---
+title: '❗️ Jump Game IV'
+description: '[leetcode link](https://leetcode.com/problems/jump-game-iv/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an array of&nbsp;integers <code>arr</code>, you are initially positioned at the first index of the array.</p>  <p>In one step you can jump from index <code>i</code> to index:</p>  <ul>  <li><code>i + 1</code> where:&nbsp;<code>i + 1 &lt; arr.length</code>.</li>  <li><code>i - 1</code> where:&nbsp;<code>i - 1 &gt;= 0</code>.</li>  <li><code>j</code> where: <code>arr[i] == arr[j]</code> and <code>i != j</code>.</li> </ul>  <p>Return <em>the minimum number of steps</em> to reach the <strong>last index</strong> of the array.</p>  <p>Notice that you can not jump outside of the array at any time.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> arr = [100,-23,-23,404,100,23,23,23,3,404] <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> You need three jumps from index 0 --&gt; 4 --&gt; 3 --&gt; 9. Note that index 9 is the last index of the array.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> arr = [7] <br/> <strong>Output:</strong> 0 <br/> <strong>Explanation:</strong> Start index is the last index. You do not need to jump.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> arr = [7,6,9,6,9,6,9,7] <br/> <strong>Output:</strong> 1 <br/> <strong>Explanation:</strong> You can jump directly from index 0 to index 7 which is last index of the array.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= arr.length &lt;= 5 * 10<sup>4</sup></code></li>  <li><code>-10<sup>8</sup> &lt;= arr[i] &lt;= 10<sup>8</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Shortest path from 0 to n-1. Edges are adjacent idxs, and other idxs for same number. Start bfs, from 0, and pre-process same num idxs for each elem.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Jump Game IV" lines
+# @param {Integer[]} arr
+# @return {Integer}
+def min_jumps(arr)
+  # go left right or any of the other idx of same num
+  n = arr.size
+  return n-1 if arr.uniq.size == n
+  # make edges and shortest path using bfs
+  positions = Hash.new{|h,k| h[k]=[]}
+  arr.each_with_index {|x,i| positions[x]<<i}
+  
+  queue = [[0,0]]
+  visited = Array.new(n, false)
+  visited[0]=true
+
+  until queue.empty?
+    idx, dist = queue.shift
+    return dist if idx == n-1
+
+    # edges are sides and other positions of this num arr[idx]
+    ([idx-1, idx+1] + positions[arr[idx]]).each do |n_idx|
+      (visited[n_idx] = true; queue << [n_idx, dist+1]) if n_idx!=idx && n_idx.between?(0,n-1) && !visited[n_idx]
+    end
+    positions.delete(arr[idx])
+  end
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,64 @@
+---
+title: '🧀 Shortest Bridge'
+description: '[leetcode link](https://leetcode.com/problems/shortest-bridge/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an <code>n x n</code> binary matrix <code>grid</code> where <code>1</code> represents land and <code>0</code> represents water.</p>  <p>An <strong>island</strong> is a 4-directionally connected group of <code>1</code>&#39;s not connected to any other <code>1</code>&#39;s. There are <strong>exactly two islands</strong> in <code>grid</code>.</p>  <p>You may change <code>0</code>&#39;s to <code>1</code>&#39;s to connect the two islands to form <strong>one island</strong>.</p>  <p>Return <em>the smallest number of </em><code>0</code><em>&#39;s you must flip to connect the two islands</em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> grid = [[0,1],[1,0]] <br/> <strong>Output:</strong> 1   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> grid = [[0,1,0],[0,0,0],[0,0,1]] <br/> <strong>Output:</strong> 2   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> grid = [[1,1,1,1,1],[1,0,0,0,1],[1,0,1,0,1],[1,0,0,0,1],[1,1,1,1,1]] <br/> <strong>Output:</strong> 1    <p><strong>Constraints:</strong></p>  <ul>  <li><code>n == grid.length == grid[i].length</code></li>  <li><code>2 &lt;= n &lt;= 100</code></li>  <li><code>grid[i][j]</code> is either <code>0</code> or <code>1</code>.</li>  <li>There are exactly two islands in <code>grid</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      get all boundary 0s for 1 island, and start a multi-source bfs using these 0s which ends when we find another island, like rotten oranges.
+
+Other way to look at this, 
+First use DFS to find the first island and replace all 1 with 2. Be careful not to call the DFS twice, otherwise the second island will become 2 too.Next, use a BFS to control the expansion of the first island and count the steps until it reaches the second island(the number is one).
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Shortest Bridge" lines
+# @param {Integer[][]} grid
+# @return {Integer}
+def shortest_bridge(grid)
+  n = grid.size
+
+  directions = [[1, 0],[-1, 0],[0, 1],[0, -1]]
+  neighbors = -> (x,y) {directions.map{|dx,dy|[x+dx, y+dy]}.select{|x,y| x.between?(0,n-1) && y.between?(0,n-1)}}
+  queue = Queue.new
+
+  dfs =-> (i, j) do
+    return unless grid[i][j]==1
+
+    grid[i][j] = 2; queue << [i,j,0];
+
+    neighbors.call(i,j).each {|x,y| dfs.call(x,y) }
+  end
+
+  first_1 = nil
+  (0...n).each { |i| (0...n).each {|j| first_1 ||= [i,j] if grid[i][j] == 1 }}
+
+  dfs.call(*first_1)
+
+  # bfs from queue to find next island
+
+  while !queue.empty?
+    i, j, d = queue.pop
+
+    neighbors.call(i,j).each do |x,y|
+      return d if grid[x][y] == 1 # found the island
+      
+      if grid[x][y] == 0
+        queue << [x,y,d+1]
+        grid[x][y] = 2
+      end
+    end
+  end
+
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

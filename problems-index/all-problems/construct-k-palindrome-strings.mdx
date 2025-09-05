@@ -1,0 +1,29 @@
+---
+title: '🧀 Construct K Palindrome Strings'
+description: '[leetcode link](https://leetcode.com/problems/construct-k-palindrome-strings/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a string <code>s</code> and an integer <code>k</code>, return <code>true</code> if you can use all the characters in <code>s</code> to construct <strong>non-empty</strong> <code>k</code> <span data-keyword="palindrome-string">palindrome strings</span> or <code>false</code> otherwise.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> s = &quot;annabelle&quot;, k = 2 <br/> <strong>Output:</strong> true <br/> <strong>Explanation:</strong> You can construct two palindromes using all characters in s. Some possible constructions &quot;anna&quot; + &quot;elble&quot;, &quot;anbna&quot; + &quot;elle&quot;, &quot;anellena&quot; + &quot;b&quot;   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> s = &quot;leetcode&quot;, k = 3 <br/> <strong>Output:</strong> false <br/> <strong>Explanation:</strong> It is impossible to construct 3 palindromes using all the characters of s.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> s = &quot;true&quot;, k = 4 <br/> <strong>Output:</strong> true <br/> <strong>Explanation:</strong> The only possible solution is to put each character in a separate string.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= s.length &lt;= 10<sup>5</sup></code></li>  <li><code>s</code> consists of lowercase English letters.</li>  <li><code>1 &lt;= k &lt;= 10<sup>5</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Imagine this as sending each char to a string out of the k strings. We can always ensure to send the even counts in any of the strings such that palindrome constraint is true. For the 1 extra char for the odd freq chars, only 1 such extra char can be sent to one of the palindrome strings. For k output strings, if we have less than k such extra chars, palindrome constraint can be maintained, if we have more such chars, they will break palindrome constraint wherever they go.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Construct K Palindrome Strings" lines
+# @param {String} s
+# @param {Integer} k
+# @return {Boolean}
+def can_construct(s, k)
+  k<=s.size && s.chars.tally.values.count(&:odd?) <= k 
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

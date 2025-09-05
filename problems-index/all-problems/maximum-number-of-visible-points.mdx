@@ -1,0 +1,63 @@
+---
+title: '❗️ Maximum Number of Visible Points'
+description: '[leetcode link](https://leetcode.com/problems/maximum-number-of-visible-points/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an array <code>points</code>, an integer <code>angle</code>, and your <code>location</code>, where <code>location = [pos<sub>x</sub>, pos<sub>y</sub>]</code> and <code>points[i] = [x<sub>i</sub>, y<sub>i</sub>]</code> both denote <strong>integral coordinates</strong> on the X-Y plane.</p>  <p>Initially, you are facing directly east from your position. You <strong>cannot move</strong> from your position, but you can <strong>rotate</strong>. In other words, <code>pos<sub>x</sub></code> and <code>pos<sub>y</sub></code> cannot be changed. Your field of view in <strong>degrees</strong> is represented by <code>angle</code>, determining how wide you can see from any given view direction. Let <code>d</code> be the amount in degrees that you rotate counterclockwise. Then, your field of view is the <strong>inclusive</strong> range of angles <code>[d - angle/2, d + angle/2]</code>.</p>  <p> <video autoplay="" controls="" height="360" muted="" style="max-width:100%;height:auto;" width="480"><source src="https://assets.leetcode.com/uploads/2020/09/30/angle.mp4" type="video/mp4" />Your browser does not support the video tag or this video format.</video> </p>  <p>You can <strong>see</strong> some set of points if, for each point, the <strong>angle</strong> formed by the point, your position, and the immediate east direction from your position is <strong>in your field of view</strong>.</p>  <p>There can be multiple points at one coordinate. There may be points at your location, and you can always see these points regardless of your rotation. Points do not obstruct your vision to other points.</p>  <p>Return <em>the maximum number of points you can see</em>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/09/30/89a07e9b-00ab-4967-976a-c723b2aa8656.png" style="width: 400px; height: 300px;" />  <strong>Input:</strong> points = [[2,1],[2,2],[3,3]], angle = 90, location = [1,1] <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> The shaded region represents your field of view. All points can be made visible in your field of view, including [3,3] even though [2,2] is in front and in the same line of sight.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> points = [[2,1],[2,2],[3,4],[1,1]], angle = 90, location = [1,1] <br/> <strong>Output:</strong> 4 <br/> <strong>Explanation:</strong> All points can be made visible in your field of view, including the one at your location.   <p><strong class="example">Example 3:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/09/30/5010bfd3-86e6-465f-ac64-e9df941d2e49.png" style="width: 690px; height: 348px;" />  <strong>Input:</strong> points = [[1,0],[2,1]], angle = 13, location = [1,1] <br/> <strong>Output:</strong> 1 <br/> <strong>Explanation:</strong> You can only see one of the two points, as shown above.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= points.length &lt;= 10<sup>5</sup></code></li>  <li><code>points[i].length == 2</code></li>  <li><code>location.length == 2</code></li>  <li><code>0 &lt;= angle &lt; 360</code></li>  <li><code>0 &lt;= pos<sub>x</sub>, pos<sub>y</sub>, x<sub>i</sub>, y<sub>i</sub> &lt;= 100</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Question is to find angles to all points which are not location. In that sorted array of angles, assuming it is circular, find max points which lie within angle dist. To include circular case, append points to itself. To handle cases like [-135, 135], in the appending use 360+angle, so [-135, 135, -135, 135] becomes [-135, 135, 225, 495].
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Maximum Number of Visible Points" lines
+# @param {Integer[][]} points
+# @param {Integer} angle
+# @param {Integer[]} location
+# @return {Integer}
+def visible_points(points, angle, location)
+  # we have to find the correct d, such that most points are visible
+  locations, other_points = points.partition {|x| x==location }
+  point_angles = other_points.map { |pt| get_angle(*location, *pt) }.sort
+  point_angles += point_angles.map {|val| val + 360}
+  n = point_angles.size
+
+  return locations.size if n ==0
+  # max_points within angle 
+  left=0
+  right=0
+  current_diff = point_angles[right]-point_angles[left]
+  max_points = 1
+
+  while right < n
+    right+=1 while right <n && point_angles[right]-point_angles[left]<=angle
+    max_points = [max_points, right-left].max
+    left+=1
+  end
+
+  max_points + locations.size
+end
+
+def get_angle(x1, y1, x2, y2)
+  # Calculate differences in coordinates
+  dx = x2 - x1
+  dy = y2 - y1
+  
+  # Calculate angle in radians using atan2
+  angle_rad = Math.atan2(dy, dx)
+  
+  # Convert to degrees
+  angle_deg = angle_rad * 180 / Math::PI
+  
+  return angle_deg
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,34 @@
+---
+title: '🧩 Excel Sheet Column Number'
+description: '[leetcode link](https://leetcode.com/problems/excel-sheet-column-number/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a string <code>columnTitle</code> that represents the column title as appears in an Excel sheet, return <em>its corresponding column number</em>.</p>  <p>For example:</p>   A -&gt; 1 B -&gt; 2 C -&gt; 3 ... Z -&gt; 26 AA -&gt; 27 AB -&gt; 28  ...    <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> columnTitle = &quot;A&quot; <br/> <strong>Output:</strong> 1   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> columnTitle = &quot;AB&quot; <br/> <strong>Output:</strong> 28   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> columnTitle = &quot;ZY&quot; <br/> <strong>Output:</strong> 701    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= columnTitle.length &lt;= 7</code></li>  <li><code>columnTitle</code> consists only of uppercase English letters.</li>  <li><code>columnTitle</code> is in the range <code>[&quot;A&quot;, &quot;FXSHRXW&quot;]</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```cpp title="Excel Sheet Column Number" lines
+class Solution {
+public:
+    int titleToNumber(string A) {
+        int ret=0;
+    for(int i=A.size()-1,j=1;i>=0;--i,j++)
+    {
+        ret+=  int(A.at(i)-64)*int(pow(26,j-1));
+    }
+    return ret;
+    }
+};
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

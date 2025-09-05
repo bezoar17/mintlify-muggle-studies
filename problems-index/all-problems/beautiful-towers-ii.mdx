@@ -1,0 +1,88 @@
+---
+title: '🧀 Beautiful Towers II'
+description: '[leetcode link](https://leetcode.com/problems/beautiful-towers-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a <strong>0-indexed</strong> array <code>maxHeights</code> of <code>n</code> integers.</p>  <p>You are tasked with building <code>n</code> towers in the coordinate line. The <code>i<sup>th</sup></code> tower is built at coordinate <code>i</code> and has a height of <code>heights[i]</code>.</p>  <p>A configuration of towers is <strong>beautiful</strong> if the following conditions hold:</p>  <ol>  <li><code>1 &lt;= heights[i] &lt;= maxHeights[i]</code></li>  <li><code>heights</code> is a <strong>mountain</strong> array.</li> </ol>  <p>Array <code>heights</code> is a <strong>mountain</strong> if there exists an index <code>i</code> such that:</p>  <ul>  <li>For all <code>0 &lt; j &lt;= i</code>, <code>heights[j - 1] &lt;= heights[j]</code></li>  <li>For all <code>i &lt;= k &lt; n - 1</code>, <code>heights[k + 1] &lt;= heights[k]</code></li> </ul>  <p>Return <em>the <strong>maximum possible sum of heights</strong> of a beautiful configuration of towers</em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> maxHeights = [5,3,4,1,1] <br/> <strong>Output:</strong> 13 <br/> <strong>Explanation:</strong> One beautiful configuration with a maximum sum is heights = [5,3,3,1,1]. This configuration is beautiful since: - 1 &lt;= heights[i] &lt;= maxHeights[i]   - heights is a mountain of peak i = 0. It can be shown that there exists no other beautiful configuration with a sum of heights greater than 13.  <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> maxHeights = [6,5,3,9,2,7] <br/> <strong>Output:</strong> 22 <br/> <strong>Explanation:</strong> One beautiful configuration with a maximum sum is heights = [3,3,3,9,2,2]. This configuration is beautiful since: - 1 &lt;= heights[i] &lt;= maxHeights[i] - heights is a mountain of peak i = 3. It can be shown that there exists no other beautiful configuration with a sum of heights greater than 22.  <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> maxHeights = [3,2,5,5,2,3] <br/> <strong>Output:</strong> 18 <br/> <strong>Explanation:</strong> One beautiful configuration with a maximum sum is heights = [2,2,5,5,2,2]. This configuration is beautiful since: - 1 &lt;= heights[i] &lt;= maxHeights[i] - heights is a mountain of peak i = 2.  Note that, for this configuration, i = 3 can also be considered a peak. It can be shown that there exists no other beautiful configuration with a sum of heights greater than 18.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= n == maxHeights.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= maxHeights[i] &lt;= 10<sup>9</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      beautiful means, it has only 1 peak. Assume i is peak, and calculate left_peak_sum(sum of all left if i is peak) and right sums
+a b c d  &lt; i &gt; e f g h
+i is peak, with peak_val, going left first occurence where max_height is less than peak val
+lets call that j; Then left_peak_sum[i] = left_peak_sum[j] + peak_val * (i-j)
+left_peak_sum includes i, calculate on number line and see.
+left_peak_sum[j], ensures we dont have to recalculate minim etc before j, till j, peak property is satisfied
+for j+1 -&gt; i, values are &gt;=peak_val ,max height we can have is peak_val
+do the same thing for right hand side, go to right, first occurence.
+this first occurence of smaller element to left and right can be calculated using montonic stack
+
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Beautiful Towers II" lines
+# @param {Integer[]} max_heights
+# @return {Integer}
+def maximum_sum_of_heights(max_heights)
+  n = max_heights.size
+  # beautiful means, it has only 1 peak
+  # assume i is peak, and calculate left_peak_sum(sum of all left if i is peak) and right sums
+  # a b c d  < i > e f g h
+  # i is peak, with peak_val, going left first occurence where max_height is less than peak val
+  # lets call that j; Then left_peak_sum[i] = left_peak_sum[j] + peak_val * (i-j)
+  # left_peak_sum includes i, calculate on number line and see.
+  # left_peak_sum[j], ensures we dont have to recalculate minim etc before j, till j, peak property is satisfied
+  # for j+1 -> i, values are >=peak_val ,max height we can have is peak_val
+  # do the same thing for right hand side, go to right, first occurence.
+  # this first occurence of smaller element to left and right can be calculated using montonic stack
+  
+  prev_smaller_idx = smaller_idx(max_heights, -1)
+  next_smaller_idx = smaller_idx(max_heights, 1)
+  
+  left_peak_sum = []
+  right_peak_sum = []
+
+  (0...n).each do |i|
+    j = prev_smaller_idx[i]
+    left_peak_sum[i] = max_heights[i] * (i-j)
+    left_peak_sum[i] += left_peak_sum[j] if j!=-1
+  end
+
+  (n-1).downto(0).each do |i|
+    j = next_smaller_idx[i]
+    right_peak_sum[i] = max_heights[i] * (j-i)
+    right_peak_sum[i] += right_peak_sum[j] if j!=n
+  end
+
+  (0...n).reduce(0) do |res, i|
+    [res, left_peak_sum[i]+right_peak_sum[i]-max_heights[i]].max
+  end
+end
+
+def discard?(top,num) = top>=num;
+
+def smaller_idx(nums, direction)
+  n = nums.size
+  calculate_previous = direction == -1;
+  default, index_range = calculate_previous ? [-1, (0...n)] : [n, (n-1).downto(0)]
+
+  result = Array.new(nums.size, default)
+  stack = [] # stores only the index of element, not [element, idx]
+
+  index_range.each do |idx|
+    stack.pop while !stack.empty? && discard?(nums[stack.last], nums[idx])
+    result[idx] = stack.last unless stack.empty?
+    stack << idx
+  end
+  result
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

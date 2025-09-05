@@ -1,0 +1,80 @@
+---
+title: '❗️ Design In-Memory File System'
+description: '[leetcode link](https://leetcode.com/problems/design-in-memory-file-system/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Design a data structure that simulates an in-memory file system.</p>  <p>Implement the FileSystem class:</p>  <ul>  <li><code>FileSystem()</code> Initializes the object of the system.</li>  <li><code>List&lt;String&gt; ls(String path)</code>  <ul>   <li>If <code>path</code> is a file path, returns a list that only contains this file&#39;s name.</li>   <li>If <code>path</code> is a directory path, returns the list of file and directory names <strong>in this directory</strong>.</li>  </ul>  The answer should in <strong>lexicographic order</strong>.</li>  <li><code>void mkdir(String path)</code> Makes a new directory according to the given <code>path</code>. The given directory path does not exist. If the middle directories in the path do not exist, you should create them as well.</li>  <li><code>void addContentToFile(String filePath, String content)</code>  <ul>   <li>If <code>filePath</code> does not exist, creates that file containing given <code>content</code>.</li>   <li>If <code>filePath</code> already exists, appends the given <code>content</code> to original content.</li>  </ul>  </li>  <li><code>String readContentFromFile(String filePath)</code> Returns the content in the file at <code>filePath</code>.</li> </ul>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/04/28/filesystem.png" style="width: 650px; height: 315px;" />  <strong>Input</strong> [&quot;FileSystem&quot;, &quot;ls&quot;, &quot;mkdir&quot;, &quot;addContentToFile&quot;, &quot;ls&quot;, &quot;readContentFromFile&quot;] [[], [&quot;/&quot;], [&quot;/a/b/c&quot;], [&quot;/a/b/c/d&quot;, &quot;hello&quot;], [&quot;/&quot;], [&quot;/a/b/c/d&quot;]] <strong>Output</strong> [null, [], null, null, [&quot;a&quot;], &quot;hello&quot;]  <strong>Explanation</strong> FileSystem fileSystem = new FileSystem(); fileSystem.ls(&quot;/&quot;);                         // return [] fileSystem.mkdir(&quot;/a/b/c&quot;); fileSystem.addContentToFile(&quot;/a/b/c/d&quot;, &quot;hello&quot;); fileSystem.ls(&quot;/&quot;);                         // return [&quot;a&quot;] fileSystem.readContentFromFile(&quot;/a/b/c/d&quot;); // return &quot;hello&quot;    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= path.length,&nbsp;filePath.length &lt;= 100</code></li>  <li><code>path</code> and <code>filePath</code>&nbsp;are absolute paths which begin with <code>&#39;/&#39;</code>&nbsp;and do not end with <code>&#39;/&#39;</code>&nbsp;except that the path is just&nbsp;<code>&quot;/&quot;</code>.</li>  <li>You can assume that all directory names and file names only contain lowercase letters, and the same names will not exist in the same directory.</li>  <li>You can assume that all operations will be passed valid parameters, and users will not attempt to retrieve file content or list a directory or file that does not exist.</li>  <li>You can assume that the parent directory for the file in <code>addContentToFile</code> will exist.</li>  <li><code>1 &lt;= content.length &lt;= 50</code></li>  <li>At most <code>300</code> calls will be made to <code>ls</code>, <code>mkdir</code>,&nbsp;<code>addContentToFile</code>, and&nbsp;<code>readContentFromFile</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Store everything as a hash of hash, nested hash objects.
+
+Hash is a dir, Array is a file, with contents as values.
+
+Get to parent dict of last value, either sub-dir or filename, then use that. To do action based on file or folder.
+
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Design In-Memory File System" lines
+class FileSystem
+  def initialize()
+    @root = {} # file is a Array, dir is a Hash
+    @root[""] = {}
+  end
+
+  def ls(path) # list file name, or if path, list files and directory in this path only
+    dir = get_parent_lvl_dict(path)
+    filename = get_chunks(path).last
+    return [filename] if dir[filename].is_a?(Array) # file
+    dir[filename].keys.sort # dir
+  end
+
+  def mkdir(path)
+    create_dirs(path)
+  end
+
+  def add_content_to_file(file_path, content)
+    dir = get_parent_lvl_dict(file_path)
+    filename = get_chunks(file_path).last
+    (dir[filename]||=[]).append(content)
+  end
+
+  def read_content_from_file(file_path)
+    dir = get_parent_lvl_dict(file_path)
+    filename = get_chunks(file_path).last
+    dir[filename].join
+  end
+
+  private
+  def get_chunks(path)
+    path == "/" ? [""] : path.split("/")
+  end
+
+  # given path, get parent dict, path might be for file or dir
+  def get_parent_lvl_dict(path)
+    get_chunks(path)[..-2].reduce(@root) { |current_dir, folder| current_dir[folder] }
+  end
+
+  # create dirs
+  def create_dirs(path)
+    get_chunks(path).reduce(@root) { |current_dir, folder| current_dir[folder] ||= {} }
+  end
+end
+
+# Your FileSystem object will be instantiated and called as such:
+# obj = FileSystem.new()
+# param_1 = obj.ls(path)
+# obj.mkdir(path)
+# obj.add_content_to_file(file_path, content)
+# param_4 = obj.read_content_from_file(file_path)
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

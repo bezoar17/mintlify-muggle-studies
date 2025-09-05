@@ -1,0 +1,134 @@
+---
+title: '🧀 Kth Smallest Element in a Sorted Matrix'
+description: '[leetcode link](https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an <code>n x n</code> <code>matrix</code> where each of the rows and columns is sorted in ascending order, return <em>the</em> <code>k<sup>th</sup></code> <em>smallest element in the matrix</em>.</p>  <p>Note that it is the <code>k<sup>th</sup></code> smallest element <strong>in the sorted order</strong>, not the <code>k<sup>th</sup></code> <strong>distinct</strong> element.</p>  <p>You must find a solution with a memory complexity better than <code>O(n<sup>2</sup>)</code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> matrix = [[1,5,9],[10,11,13],[12,13,15]], k = 8 <br/> <strong>Output:</strong> 13 <br/> <strong>Explanation:</strong> The elements in the matrix are [1,5,9,10,11,12,13,<u><strong>13</strong></u>,15], and the 8<sup>th</sup> smallest number is 13   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> matrix = [[-5]], k = 1 <br/> <strong>Output:</strong> -5    <p><strong>Constraints:</strong></p>  <ul>  <li><code>n == matrix.length == matrix[i].length</code></li>  <li><code>1 &lt;= n &lt;= 300</code></li>  <li><code>-10<sup>9</sup> &lt;= matrix[i][j] &lt;= 10<sup>9</sup></code></li>  <li>All the rows and columns of <code>matrix</code> are <strong>guaranteed</strong> to be sorted in <strong>non-decreasing order</strong>.</li>  <li><code>1 &lt;= k &lt;= n<sup>2</sup></code></li> </ul>   <p><strong>Follow up:</strong></p>  <ul>  <li>Could you solve the problem with a constant memory (i.e., <code>O(1)</code> memory complexity)?</li>  <li>Could you solve the problem in <code>O(n)</code> time complexity? The solution may be too advanced for an interview but you may find reading <a href="http://www.cse.yorku.ca/~andy/pubs/X+Y.pdf" target="_blank">this paper</a> fun.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Kth Smallest Element in a Sorted Matrix" lines
+class PriorityQueue
+  def initialize
+    @elements = [nil]
+  end
+  
+  def size
+    @elements.size - 1
+  end
+
+  def <<(element)
+    @elements << element
+    # bubble up the element that we just added
+    bubble_up(@elements.size - 1)
+  end
+
+  def peek
+    @elements[1]
+  end
+
+  def bubble_up(index)
+    parent_index = (index / 2)
+
+    # return if we reach the root element
+    return if index <= 1
+
+    # or if the parent is already greater than the child
+    return if @elements[parent_index] >= @elements[index]
+
+    # otherwise we exchange the child with the parent
+    exchange(index, parent_index)
+
+    # and keep bubbling up
+    bubble_up(parent_index)
+  end
+
+  def exchange(source, target)
+    @elements[source], @elements[target] = @elements[target], @elements[source]
+  end
+
+  def pop
+    # exchange the root with the last element
+    exchange(1, @elements.size - 1)
+
+    # remove the last element of the list
+    max = @elements.pop
+
+    # and make sure the tree is ordered again
+    bubble_down(1)
+    max
+  end
+
+  def bubble_down(index)
+    child_index = (index * 2)
+
+    # stop if we reach the bottom of the tree
+    return if child_index > @elements.size - 1
+
+    # make sure we get the largest child
+    not_the_last_element = child_index < @elements.size - 1
+    left_element = @elements[child_index]
+    right_element = @elements[child_index + 1]
+    child_index += 1 if not_the_last_element && right_element > left_element
+
+    # there is no need to continue if the parent element is already bigger
+    # then its children
+    return if @elements[index] >= @elements[child_index]
+
+    exchange(index, child_index)
+
+    # repeat the process until we reach a point where the parent
+    # is larger than its children
+    bubble_down(child_index)
+  end
+end
+
+def kth_smallest(matrix, k)
+    max_heap = PriorityQueue.new
+    n = matrix.size
+    i,j = nil, nil
+
+    (0...n).each do |l|
+      (0...n).each do |m|
+        if max_heap.size <k
+          max_heap << matrix[l][m] 
+        elsif max_heap.size == k
+          if matrix[l][m] < max_heap.peek
+            max_heap.pop
+            max_heap << matrix[l][m]
+          end
+          
+          # # j should be max_j.
+          # i,j = l+1, m-1 # 2,2
+          # break
+        end
+      end
+      break if !i.nil?
+    end
+    
+    # unless i.nil?
+    #   (i...n).each do |l|
+    #     (0..j).each do |m|
+    #       if matrix[l][m] <= max_heap.peek
+    #         max_heap.pop
+    #         max_heap << matrix[l][m]
+    #       end
+    #     end
+    #   end
+    # end
+
+    result = max_heap.peek
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

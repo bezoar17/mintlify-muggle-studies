@@ -1,0 +1,94 @@
+---
+title: '❗️ Final Array State After K Multiplication Operations II'
+description: '[leetcode link](https://leetcode.com/problems/final-array-state-after-k-multiplication-operations-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer array <code>nums</code>, an integer <code>k</code>, and an integer <code>multiplier</code>.</p>  <p>You need to perform <code>k</code> operations on <code>nums</code>. In each operation:</p>  <ul>  <li>Find the <strong>minimum</strong> value <code>x</code> in <code>nums</code>. If there are multiple occurrences of the minimum value, select the one that appears <strong>first</strong>.</li>  <li>Replace the selected minimum value <code>x</code> with <code>x * multiplier</code>.</li> </ul>  <p>After the <code>k</code> operations, apply <strong>modulo</strong> <code>10<sup>9</sup> + 7</code> to every value in <code>nums</code>.</p>  <p>Return an integer array denoting the <em>final state</em> of <code>nums</code> after performing all <code>k</code> operations and then applying the modulo.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [2,1,3,5,6], k = 5, multiplier = 2</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">[8,4,6,5,6]</span></p>  <p><br/> <strong>Explanation:</strong></p>  <table>  <tbody>   <tr>    <th>Operation</th>    <th>Result</th>   </tr>   <tr>    <td>After operation 1</td>    <td>[2, 2, 3, 5, 6]</td>   </tr>   <tr>    <td>After operation 2</td>    <td>[4, 2, 3, 5, 6]</td>   </tr>   <tr>    <td>After operation 3</td>    <td>[4, 4, 3, 5, 6]</td>   </tr>   <tr>    <td>After operation 4</td>    <td>[4, 4, 6, 5, 6]</td>   </tr>   <tr>    <td>After operation 5</td>    <td>[8, 4, 6, 5, 6]</td>   </tr>   <tr>    <td>After applying modulo</td>    <td>[8, 4, 6, 5, 6]</td>   </tr>  </tbody> </table> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [100000,2000], k = 2, multiplier = 1000000</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">[999999307,999999993]</span></p>  <p><br/> <strong>Explanation:</strong></p>  <table>  <tbody>   <tr>    <th>Operation</th>    <th>Result</th>   </tr>   <tr>    <td>After operation 1</td>    <td>[100000, 2000000000]</td>   </tr>   <tr>    <td>After operation 2</td>    <td>[100000000000, 2000000000]</td>   </tr>   <tr>    <td>After applying modulo</td>    <td>[999999307, 999999993]</td>   </tr>  </tbody> </table> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>4</sup></code></li>  <li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>  <li><code>1 &lt;= k &lt;= 10<sup>9</sup></code></li>  <li><code>1 &lt;= multiplier &lt;= 10<sup>6</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Whenever we have k operations to be applied where k is huge. There is usually a cycle of states. Here that cycle is triggered after a certain state only, but cycle length is n always. In other probems, usually cycle starts from the first state, but you have to identify the reason and length of cycle.
+
+Here, when array is in a state, say 0th state, such that for the next operation, min_of_arr * multiplier &gt; max_of_arr, a cycle of length n is triggered. For xth cycle, nums[x][i] is nums[0][i] * multiplier^n. Basically in each iteration of the cycle, each number would receive 1 multiplier, so cycle of n.
+
+Say the 0th state in sorted_order is a1 a2 a3 a4 aN. We have a1 * mpr &gt; aN. 
+In the new sorted array after 1 operation, a1 would be at last position, after the next op a2 will become the last position, and so on, after n turns, initial 0th state would be restored, each num would have received 1 multiplication and shifted to last. So a cycle of n, and initial state is such that from next operation, min being picked will move to last_pos in next states sorted arr.
+
+Now for the remaining extra=(rem_k%n) operations, rem_k=k-x where x is ops needed to reach initial state, which would be &lt;n, the first extra numbers in the sorted order will get 1 operation each.
+
+Now for the remaining, (rem_k%n) operations, 
+
+
+Now, when will the min_of_arr * multiplier &gt; max_of_arr, trigger ?
+
+Suppose condition will trigger for the (x+1)th operation, means after x operations, we have initial state of cycle, in (x+1)th iteration, the number being picked would go to last_position in next states sorted order. This will only happen when after x operations, all numbers are just 1 operation away from being &gt; than the max of starting_arr.  Because until num1 is 1 away from being strictly greater than max_val, num1* multiplier will not have the last position in the new sorted arr as [max_val, rightmost_idx] is present as soon as num1 is &lt;= max_val, and is 1 away, it will become the last_position in the sorted array in next op, now same is valid for num2 and all nums. This can be thought of as all nums will receive some multiplier operations till they become &lt;=starting_max. That can be checked 1 by 1 in the starting array itself. It is (Math.log(max_val, multiplier)-Math.log(num, multiplier)).floor. For multiple max_val, it is 0, as its already 1 op away from exceeding max_val.
+
+Now read paragraph again.
+
+Why num should be 1 away from strictly greater, and not 1 away from being &gt;=.
+If 1 away from = is the requirement, we want at this stage when num is 1 away from =maxval, we do the operation, num is now =maxval, and also has last position in the sorted array.
+
+This cant happen first of all if there is some smaller_num &lt; max_val in array, that can picked as the min. So only possible if num1 is last of the values which will eventually become=max_val. Rest of have already become &gt;=max_val or were =max_val from the start(case of multiple max_vals). 
+
+Now if num1 is last of such values, one of the candidates of such values is already present, which is rightmost max_val itself. Till the point this value is present, and all other values are not either &gt;= this value, this will always be last position in the sorted array.
+
+(K-X)/n will be no. of cycles. And rem will be (k-x)%n operations. So do a total of X+rem operations for the output array.
+
+3 stages of problem.
+1. Find initial state(All nums are 1 op away from being &gt; max_val) and no. of ops required to reach initial state of cycle
+2. Find remaining ops,  no. of cycles, and extra_ops
+3. Apply cycle multiplication and extra ops.
+
+
+https://leetcode.com/problems/final-array-state-after-k-multiplication-operations-ii/solutions/5687613/min-heap-greedy-how-why-explanation-with-example-c
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Final Array State After K Multiplication Operations II" lines
+# @param {Integer[]} nums
+# @param {Integer} k
+# @param {Integer} multiplier
+# @return {Integer[]}
+def get_final_state(nums, k, multiplier)
+  def fast_pow(num, exp, mod)
+    num %= mod; res = 1
+    (res = (res*num) % mod if exp.odd?; exp >>= 1; num = (num * num) % mod) while exp > 0
+    res
+  end
+
+  return nums if multiplier==1
+  n = nums.size; big_mod = 1_000_000_000 + 7
+
+  simulate=->(state, op_count) {
+    pq = Containers::MinHeap.new(state.each_with_index.to_a)
+    op_count.times { min_num, i = pq.pop; pq.push([min_num*multiplier,i]) }
+    n.times { val, idx = pq.pop; state[idx]=val }
+    state.map{|x| x%big_mod}
+  }
+  # order is preserved only when cycle starts, before that(cycle length = n), we have to simulate as we dont know which num will get how many ops
+  return simulate.call(nums, k) if k <= n
+  
+  max_val = nums.max; max_val_log = Math.log(max_val, multiplier);
+  # ops required to make num[i] reach stable state, which is start of cycle, all nums are 1 op away from exceeding max_val
+  stable_state_op_req = nums.map {|num| (max_val_log-Math.log(num, multiplier)).floor }
+  stable_state = (0...n).map { |i| nums[i] * fast_pow(multiplier, stable_state_op_req[i], big_mod) }
+  
+  op_remaining_for_cycles = k-stable_state_op_req.sum
+  cycle_count, extra_ops_after_cycles = op_remaining_for_cycles.divmod(n)
+  op_distribution = Array.new(n, cycle_count) # all nums have 1 op each per cycle.
+  stable_state_idx_order = stable_state.each_with_index.sort.map(&:last) # order is preserved in a stable state
+  stable_state_idx_order.first(extra_ops_after_cycles).each {|i| op_distribution[i]+=1 } # these idxs get 1 more op
+
+  (0...n).map { |i| (stable_state[i] * fast_pow(multiplier, op_distribution[i], big_mod)) % big_mod }
+end
+
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

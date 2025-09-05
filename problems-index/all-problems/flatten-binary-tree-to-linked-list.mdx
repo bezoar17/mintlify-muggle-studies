@@ -1,0 +1,54 @@
+---
+title: '🧀 Flatten Binary Tree to Linked List'
+description: '[leetcode link](https://leetcode.com/problems/flatten-binary-tree-to-linked-list/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given the <code>root</code> of a binary tree, flatten the tree into a &quot;linked list&quot;:</p>  <ul>  <li>The &quot;linked list&quot; should use the same <code>TreeNode</code> class where the <code>right</code> child pointer points to the next node in the list and the <code>left</code> child pointer is always <code>null</code>.</li>  <li>The &quot;linked list&quot; should be in the same order as a <a href="https://en.wikipedia.org/wiki/Tree_traversal#Pre-order,_NLR" target="_blank"><strong>pre-order</strong><strong> traversal</strong></a> of the binary tree.</li> </ul>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/01/14/flaten.jpg" style="width: 500px; height: 226px;" />  <strong>Input:</strong> root = [1,2,5,3,4,null,6] <br/> <strong>Output:</strong> [1,null,2,null,3,null,4,null,5,null,6]   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> root = [] <br/> <strong>Output:</strong> []   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> root = [0] <br/> <strong>Output:</strong> [0]    <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in the tree is in the range <code>[0, 2000]</code>.</li>  <li><code>-100 &lt;= Node.val &lt;= 100</code></li> </ul>   <strong>Follow up:</strong> Can you flatten the tree in-place (with <code>O(1)</code> extra space)?
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Set the right subtree of root to the right child of the rightmost node of the left subtree of root. 
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Flatten Binary Tree to Linked List" lines
+# Definition for a binary tree node.
+# class TreeNode
+#     attr_accessor :val, :left, :right
+#     def initialize(val = 0, left = nil, right = nil)
+#         @val = val
+#         @left = left
+#         @right = right
+#     end
+# end
+# @param {TreeNode} root
+# @return {Void} Do not return anything, modify root in-place instead.
+def flatten(root)
+  # pre-order is left root right
+  return nil unless root
+  # set the right subtree of root to the right child of the rightmost node of the left subtree of root
+  # flatten the left subtree, and set the flattened subtree as the right child of root
+  root.right = flatten(append(root.left, root.right))
+  root.left = nil
+  root
+end
+
+# Set right_tree as the right child of the rightmost node in the tree with root
+def append(root, right_tree)
+  return right_tree unless root
+  return root unless right_tree
+
+  curr = root
+  curr = curr.right while curr.right
+  curr.right = right_tree
+  root
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

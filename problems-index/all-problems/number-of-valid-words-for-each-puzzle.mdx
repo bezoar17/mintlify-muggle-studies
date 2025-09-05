@@ -1,0 +1,115 @@
+---
+title: '❗️ Number of Valid Words for Each Puzzle'
+description: '[leetcode link](https://leetcode.com/problems/number-of-valid-words-for-each-puzzle/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      With respect to a given <code>puzzle</code> string, a <code>word</code> is <em>valid</em> if both the following conditions are satisfied: <ul>  <li><code>word</code> contains the first letter of <code>puzzle</code>.</li>  <li>For each letter in <code>word</code>, that letter is in <code>puzzle</code>.  <ul>   <li>For example, if the puzzle is <code>&quot;abcdefg&quot;</code>, then valid words are <code>&quot;faced&quot;</code>, <code>&quot;cabbage&quot;</code>, and <code>&quot;baggage&quot;</code>, while</li>   <li>invalid words are <code>&quot;beefed&quot;</code> (does not include <code>&#39;a&#39;</code>) and <code>&quot;based&quot;</code> (includes <code>&#39;s&#39;</code> which is not in the puzzle).</li>  </ul>  </li> </ul> Return <em>an array </em><code>answer</code><em>, where </em><code>answer[i]</code><em> is the number of words in the given word list </em><code>words</code><em> that is valid with respect to the puzzle </em><code>puzzles[i]</code>.  <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> words = [&quot;aaaa&quot;,&quot;asas&quot;,&quot;able&quot;,&quot;ability&quot;,&quot;actt&quot;,&quot;actor&quot;,&quot;access&quot;], puzzles = [&quot;aboveyz&quot;,&quot;abrodyz&quot;,&quot;abslute&quot;,&quot;absoryz&quot;,&quot;actresz&quot;,&quot;gaswxyz&quot;] <br/> <strong>Output:</strong> [1,1,3,2,4,0] <br/> <strong>Explanation:</strong>  1 valid word for &quot;aboveyz&quot; : &quot;aaaa&quot;  1 valid word for &quot;abrodyz&quot; : &quot;aaaa&quot; 3 valid words for &quot;abslute&quot; : &quot;aaaa&quot;, &quot;asas&quot;, &quot;able&quot; 2 valid words for &quot;absoryz&quot; : &quot;aaaa&quot;, &quot;asas&quot; 4 valid words for &quot;actresz&quot; : &quot;aaaa&quot;, &quot;asas&quot;, &quot;actt&quot;, &quot;access&quot; There are no valid words for &quot;gaswxyz&quot; cause none of the words in the list contains letter &#39;g&#39;.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> words = [&quot;apple&quot;,&quot;pleas&quot;,&quot;please&quot;], puzzles = [&quot;aelwxyz&quot;,&quot;aelpxyz&quot;,&quot;aelpsxy&quot;,&quot;saelpxy&quot;,&quot;xaelpsy&quot;] <br/> <strong>Output:</strong> [0,1,3,2,0]    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= words.length &lt;= 10<sup>5</sup></code></li>  <li><code>4 &lt;= words[i].length &lt;= 50</code></li>  <li><code>1 &lt;= puzzles.length &lt;= 10<sup>4</sup></code></li>  <li><code>puzzles[i].length == 7</code></li>  <li><code>words[i]</code> and <code>puzzles[i]</code> consist of lowercase English letters.</li>  <li>Each <code>puzzles[i] </code>does not contain repeated characters.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Sub-mask generation, Trie implementation
+
+First letter of puzzle should be present
+all letters in words should be within puzzles
+puzzle, and words can be represented as 26 bit no.
+if a word is sub-mask of a puzzle, it should be counted
+word & puzzle should be == word
+now further optimization we dont check all words for a puzzle
+but for a puzzle, we generate possible sub-masks, and then see
+if there are any words with that or not
+also, words-&gt;distinct submask-&gt; count, we keep this pre-processed
+
+generation of sub-masks is easier as puzzle length is only 7, instead of checking all words, we check
+all sub-masks of a puzzle. For sub-mask generation, there is an easy trick
+
+
+
+Other trie based approach is as follows
+we pre-process all words into codes, and insert them into a trie with a count
+word-&gt;code is as follows, we pick unique char from words, and sort it, and we ignore any word. sorting also reduces nodes in trie due to common prefixes
+that has code length &gt; 7, as puzzle max len is 7
+
+to check the first letter thing of a puzzle, we simply check if a char is same as first
+only then we add it to the result, and pass the same info down
+if a puzzle didnt have a starting char fulfilled, then it wont be counted in the result
+
+For each puzzle, we start dfs for the trie, which would start from 7 nodes, and then go to 6, and so on, to find all paths which are valid.
+Check code for explanation.
+
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Number of Valid Words for Each Puzzle" lines
+# @param {String[]} words
+# @param {String[]} puzzles
+# @return {Integer[]}
+def find_num_of_valid_words(words, puzzles)
+  # bitmask_solution(words, puzzles)
+  trie_solution(words, puzzles)
+end
+
+TrieNode = Struct.new(:children, :count)
+class Trie
+  def initialize
+    @root = TrieNode.new({},0)
+  end
+
+  def insert(chars)
+    node = chars.reduce(@root) {|n,ch| n.children[ch]||=TrieNode.new({},0); n.children[ch] }
+    node.count+=1
+  end
+
+  def puzzle_match_count(puzzleset, node=@root, has_first=false)
+    # collect all valid paths from trie
+    # starting point for a node is dependent on when has_first becomes true in a path
+    count = has_first ? node.count : 0
+
+    # since unique charsets were inserted in trie, no downward path would have duplicates, first level has 7, then each has 6, and so on
+    # so each char from puzzle is used as a starting point for a path, but the path becomes usable only once
+    # a node with first char comes, and then we collects counts for all paths branching from there
+    # but we test all paths from start, because has_first node might be at level 3, for some path
+    
+    # so, at each level, to go to next level, we use chars from puzzle which have not been used to get to this level
+    # rem_ch is remaining chars
+    
+    count + (puzzleset & node.children.keys).sum do |rem_char| 
+      puzzle_match_count(puzzleset, node.children[rem_char], has_first || rem_char==puzzleset.first)
+    end
+  end
+end
+
+def trie_solution(words, puzzles)
+  trie = Trie.new
+  words.each {|w| ws=w.chars.to_set; trie.insert(ws.sort) if ws.size<8 }
+  puzzles.map { |pz| trie.puzzle_match_count(pz.chars.to_set) }
+end
+
+def bitmask_solution(words, puzzles)
+  get_bitmask=->(s) { s.chars.reduce(0) { |m,c| m | (1 << c.ord-'a'.ord) } }
+  
+  wc = words.map {|w| get_bitmask.call(w) }.tally
+  
+  puzzles.map do |puzzle|
+    count = 0
+    pm = get_bitmask.call(puzzle)
+    fl_mask = 1 << puzzle[0].ord - 'a'.ord
+    
+    sb_mask = pm # iterate over all sub-masks of a mask
+    while sb_mask > 0
+      count+=wc[sb_mask].to_i if sb_mask & fl_mask >0 # has first letter common
+      sb_mask = (sb_mask-1) & pm
+    end
+    
+    count
+  end
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

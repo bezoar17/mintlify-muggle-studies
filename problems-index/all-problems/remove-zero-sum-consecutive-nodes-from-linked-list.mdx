@@ -1,0 +1,62 @@
+---
+title: '🧀 Remove Zero Sum Consecutive Nodes from Linked List'
+description: '[leetcode link](https://leetcode.com/problems/remove-zero-sum-consecutive-nodes-from-linked-list/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given the <code>head</code> of a linked list, we repeatedly delete consecutive sequences of nodes that sum to <code>0</code> until there are no such sequences.</p>  <p>After doing so, return the head of the final linked list.&nbsp; You may return any such answer.</p>   <p>(Note that in the examples below, all sequences are serializations of <code>ListNode</code> objects.)</p>  <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> head = [1,2,-3,3,1] <br/> <strong>Output:</strong> [3,1] <strong>Note:</strong> The answer [1,2,1] would also be accepted.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> head = [1,2,3,-3,4] <br/> <strong>Output:</strong> [1,2,4]   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> head = [1,2,3,-3,-2] <br/> <strong>Output:</strong> [1]    <p><strong>Constraints:</strong></p>  <ul>  <li>The given linked list will contain between <code>1</code> and <code>1000</code> nodes.</li>  <li>Each node in the linked list has <code>-1000 &lt;= node.val &lt;= 1000</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      A subarray in between of 0 to i, can have 0 sum if prefix sum of 0 to i repeats. Wherever it repeats that node is end of zero-sum-subarray, with last seen idx of this repeating sum being the start. Once you find this left and right, nodes between have to be skipped(update next for left node), and all prefix values between this range have to be deleted from map of prefix to idx.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Remove Zero Sum Consecutive Nodes from Linked List" lines
+# Definition for singly-linked list.
+# class ListNode
+#     attr_accessor :val, :next
+#     def initialize(val = 0, _next = nil)
+#         @val = val
+#         @next = _next
+#     end
+# end
+# @param {ListNode} head
+# @return {ListNode}
+def remove_zero_sum_sublists(head)
+  front = ListNode.new(0, head)
+  current = front
+  prefix_sum = 0
+  prefix_sum_to_node = {}
+
+  until current.nil?
+    prefix_sum += current.val
+    if prefix_sum_to_node.has_key?(prefix_sum)
+      repeating_sum = prefix_sum
+      prev = prefix_sum_to_node[repeating_sum] # left node
+
+      current = prev.next # start deleting from left_node + 1      
+      sum_in_zero_subarray = repeating_sum + current.val # first prefix sum to be deleted
+      while sum_in_zero_subarray!=repeating_sum # delete all which are not prefix_sum
+        prefix_sum_to_node.delete(sum_in_zero_subarray)
+        current = current.next
+        sum_in_zero_subarray += current.val
+      end
+
+      prev.next = current.next # update the left nodes next value
+    else
+      prefix_sum_to_node[prefix_sum] = current
+    end
+    current=current.next
+  end
+  
+  return front.next
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

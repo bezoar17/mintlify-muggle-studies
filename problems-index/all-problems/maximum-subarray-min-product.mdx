@@ -1,0 +1,115 @@
+---
+title: '🧀 Maximum Subarray Min-Product'
+description: '[leetcode link](https://leetcode.com/problems/maximum-subarray-min-product/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>The <strong>min-product</strong> of an array is equal to the <strong>minimum value</strong> in the array <strong>multiplied by</strong> the array&#39;s <strong>sum</strong>.</p>  <ul>  <li>For example, the array <code>[3,2,5]</code> (minimum value is <code>2</code>) has a min-product of <code>2 * (3+2+5) = 2 * 10 = 20</code>.</li> </ul>  <p>Given an array of integers <code>nums</code>, return <em>the <strong>maximum min-product</strong> of any <strong>non-empty subarray</strong> of </em><code>nums</code>. Since the answer may be large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>  <p>Note that the min-product should be maximized <strong>before</strong> performing the modulo operation. Testcases are generated such that the maximum min-product <strong>without</strong> modulo will fit in a <strong>64-bit signed integer</strong>.</p>  <p>A <strong>subarray</strong> is a <strong>contiguous</strong> part of an array.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [1,<u>2,3,2</u>] <br/> <strong>Output:</strong> 14 <br/> <strong>Explanation:</strong> The maximum min-product is achieved with the subarray [2,3,2] (minimum value is 2). 2 * (2+3+2) = 2 * 7 = 14.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [2,<u>3,3</u>,1,2] <br/> <strong>Output:</strong> 18 <br/> <strong>Explanation:</strong> The maximum min-product is achieved with the subarray [3,3] (minimum value is 3). 3 * (3+3) = 3 * 6 = 18.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> nums = [3,1,<u>5,6,4</u>,2] <br/> <strong>Output:</strong> 60 <br/> <strong>Explanation:</strong> The maximum min-product is achieved with the subarray [5,6,4] (minimum value is 4). 4 * (5+6+4) = 4 * 15 = 60.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= nums[i] &lt;= 10<sup>7</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Best example of 3 concepts.
+
+1. Concept of getting sub-array where num is minimum. Find previous and next idx where number is smaller than num. Then this forms boundary for such sub-array
+2. To calculate previous smaller idx and next smaller idx, use a monotonic stack and get it in O(n)
+3. a. Seg Tree for sum queries of a subarray. 
+    b. Or This can also be done using a prefix_till_i sum array, and sum of range [l,r] is prefix_till_i[r] - prefix_till_i[i-1]
+		
+Difference between 3a. and 3b. is segtree is useful when updates are also happening, and range result should still be less than O(n).
+
+In our case, only reads will happen, sum calculation can happen through prefix also.
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Maximum Subarray Min-Product" lines
+# @param {Integer[]} nums
+# @return {Integer}
+class SegTree
+  def initialize(n)
+    @n = n # size of the source array
+    @tree = Array.new(2 * n, 0)
+  end
+
+  def build(arr)
+    # assuming arr is of size n
+    (0...@n).each { |i| @tree[@n + i] = arr[i] } # put actual values of arr
+    # build tree in descending order, so all RHS values would be initialized already
+    (@n - 1).downto(1) { |i| @tree[i] = @tree[2 * i] + @tree[2 * i + 1] }
+  end
+
+  # range fn
+  # [l,r) , so max value of r is n, ideally
+  def query(l,r)
+    l += @n; r = [@n+r, 2*@n].min
+    sum = 0
+    while l < r
+      # odd means it is the right child of its parent,
+      if l.odd?
+        sum += @tree[l]; l+=1; # if l is odd, so add it and move to the right parent( go to next element and then do /2)
+      end
+      if r.odd?
+        r-=1; sum += @tree[r] # if r is odd, as right index is excluded, so add left element, and then go to parent;
+      end
+      l /= 2; r /= 2
+    end
+    sum
+  end
+end
+
+class PseudoSumSegTree
+  def initialize(arr)
+    @n = arr.size # size of the source array
+    # query can have r till n, so sum of all elements is at prefix[n]
+    @prefix_sum_arr = (1..@n).reduce([0]) {|res, i| res << res.last + arr[i-1]; res } # sum till i-1
+  end
+  
+  # [l,r)
+  def query(l,r)
+    @prefix_sum_arr[r] - @prefix_sum_arr[l]
+  end
+end
+
+
+def discard?(top, num) = top >= num
+def smaller_idx(nums, direction)  
+  n = nums.size
+  calculate_previous = direction == -1;
+  default, index_range = calculate_previous ? [-1, (0...n)] : [n, (n-1).downto(0)]
+  
+  result = Array.new(nums.size, default)
+  stack = [] # stores only the index of element, not [element, idx]
+  
+  index_range.each do |idx|
+    stack.pop while !stack.empty? && discard?(nums[stack.last], nums[idx])
+    result[idx] = stack.last unless stack.empty?
+    stack << idx
+  end
+  result
+end
+
+def max_sum_min_product(nums)
+  # non-empty subarrays; total subarrays are n*n+1/2;
+  n = nums.size
+
+#   @seg_tree = SegTree.new(n)
+#   @seg_tree.build(nums)
+
+  @seg_tree = PseudoSumSegTree.new(nums)
+
+  prev_smaller_idx = smaller_idx(nums, -1)
+  next_smaller_idx = smaller_idx(nums, 1)
+
+  # prev_idx+1, next_idx-1 is subarray of minimum; segtree query is [l,r), so interval becomes prev_idx+1, next_idx
+  nums.each_with_index.map do |num, i|
+    num * @seg_tree.query(prev_smaller_idx[i] + 1, next_smaller_idx[i])
+  end.max % (1_000_000_000 + 7)
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

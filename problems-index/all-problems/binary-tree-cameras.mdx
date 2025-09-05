@@ -1,0 +1,64 @@
+---
+title: '❗️ Binary Tree Cameras'
+description: '[leetcode link](https://leetcode.com/problems/binary-tree-cameras/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given the <code>root</code> of a binary tree. We install cameras on the tree nodes where each camera at a node can monitor its parent, itself, and its immediate children.</p>  <p>Return <em>the minimum number of cameras needed to monitor all nodes of the tree</em>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2018/12/29/bst_cameras_01.png" style="width: 138px; height: 163px;" />  <strong>Input:</strong> root = [0,0,null,0,0] <br/> <strong>Output:</strong> 1 <br/> <strong>Explanation:</strong> One camera is enough to monitor all nodes if placed as shown.   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2018/12/29/bst_cameras_02.png" style="width: 139px; height: 312px;" />  <strong>Input:</strong> root = [0,0,null,0,null,0,null,null,0] <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> At least two cameras are needed to monitor all nodes of the tree. The above image shows one of the valid configurations of camera placement.    <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in the tree is in the range <code>[1, 1000]</code>.</li>  <li><code>Node.val == 0</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Postorder dfs. sub-tree state at a node can be
+Below nodes are covered, camera is present here.
+Below nodes are covered, camera is absent here -&gt; this node is not covered, covered.
+
+We work our way up, ensure all below nodes are covered, and do necessary state changes.
+
+Postorder DFS -&gt; https://leetcode.com/problems/distribute-coins-in-binary-tree/
+
+For each node, make camera or skip. Similar problems.
+https://leetcode.com/problems/house-robber-iii/
+https://leetcode.com/problems/minimize-the-total-price-of-the-trips/
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Binary Tree Cameras" lines
+# Definition for a binary tree node.
+# class TreeNode
+#     attr_accessor :val, :left, :right
+#     def initialize(val = 0, left = nil, right = nil)
+#         @val = val
+#         @left = left
+#         @right = right
+#     end
+# end
+# @param {TreeNode} root
+# @return {Integer}
+def min_camera_cover(root)
+  # starting from leaf, and work your way up
+  # 0-> No camera, not covered
+  # 1-> No camera, but covered
+  # 2-> Placed camera, obviously covered
+  dfs=->(node){
+    return [0,0,Float::INFINITY] if node.nil?
+    l = dfs.call(node.left)
+    r = dfs.call(node.right)
+
+    dp0 = l[1] + r[1] # for current-subtree state to be 0, children subtree will be in state 1
+    dp1 = [l[2] + r[1..].min, r[2] + l[1..].min].min # force state 2 in either child and for other child, 1,2 are valid
+    dp2 = 1 + l.min + r.min # 1 + , all 3 options of child subtree are valid 
+
+    # Note: state 0 from children is only useful for current state 2
+
+    [dp0, dp1, dp2]
+  }
+  dfs.call(root)[1..].min # state 0 is not valid
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

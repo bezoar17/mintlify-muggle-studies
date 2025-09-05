@@ -1,0 +1,53 @@
+---
+title: '❗️ Closest Binary Search Tree Value II'
+description: '[leetcode link](https://leetcode.com/problems/closest-binary-search-tree-value-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given the <code>root</code> of a binary search tree, a <code>target</code> value, and an integer <code>k</code>, return <em>the </em><code>k</code><em> values in the BST that are closest to the</em> <code>target</code>. You may return the answer in <strong>any order</strong>.</p>  <p>You are <strong>guaranteed</strong> to have only one unique set of <code>k</code> values in the BST that are closest to the <code>target</code>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/03/12/closest1-1-tree.jpg" style="width: 292px; height: 302px;" />  <strong>Input:</strong> root = [4,2,5,1,3], target = 3.714286, k = 2 <br/> <strong>Output:</strong> [4,3]   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> root = [1], target = 0.000000, k = 1 <br/> <strong>Output:</strong> [1]    <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in the tree is <code>n</code>.</li>  <li><code>1 &lt;= k &lt;= n &lt;= 10<sup>4</sup></code>.</li>  <li><code>0 &lt;= Node.val &lt;= 10<sup>9</sup></code></li>  <li><code>-10<sup>9</sup> &lt;= target &lt;= 10<sup>9</sup></code></li> </ul>   <p><strong>Follow up:</strong> Assume that the BST is balanced. Could you solve it in less than <code>O(n)</code> runtime (where <code>n = total nodes</code>)?</p> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Get all values in a sorted arr.
+Now to get k values, 2 methods
+
+Method1: Sort array by dist to target, and return first k elements
+
+Method2: Get to element closest to target, now the k elements would form a sub-array around this element. So initialize a l,r pointer, and keep including the element from left/right which ever is closest to target, until we have k elements.
+
+Method 1 implemented with a min-heap. Use bfs, and put distances into min heap, return first k.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Closest Binary Search Tree Value II" lines
+# Definition for a binary tree node.
+# class TreeNode
+#     attr_accessor :val, :left, :right
+#     def initialize(val = 0, left = nil, right = nil)
+#         @val = val
+#         @left = left
+#         @right = right
+#     end
+# end
+# @param {TreeNode} root
+# @param {Float} target
+# @param {Integer} k
+# @return {Integer[]}
+def closest_k_values(root, target, k)
+  heap = MinHeap.new
+  queue = [root]
+  until queue.empty?
+    node = queue.shift
+    heap.push((target - node.val).abs, node.val)
+    [node.left, node.right].compact.each {|x| queue << x }
+  end
+  (1..k).map { heap.pop }
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

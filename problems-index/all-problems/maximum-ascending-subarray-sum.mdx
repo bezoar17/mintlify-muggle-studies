@@ -1,0 +1,31 @@
+---
+title: '🧩 Maximum Ascending Subarray Sum'
+description: '[leetcode link](https://leetcode.com/problems/maximum-ascending-subarray-sum/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an array of positive integers <code>nums</code>, return the <strong>maximum</strong> possible sum of an <span data-keyword="strictly-increasing-array">strictly increasing subarray</span> in<em> </em><code>nums</code>.</p>  <p>A subarray is defined as a contiguous sequence of numbers in an array.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [10,20,30,5,10,50] <br/> <strong>Output:</strong> 65 <strong>Explanation: </strong>[5,10,50] is the ascending subarray with the maximum sum of 65.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [10,20,30,40,50] <br/> <strong>Output:</strong> 150 <strong>Explanation: </strong>[10,20,30,40,50] is the ascending subarray with the maximum sum of 150.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> nums = [12,17,15,13,10,11,12] <br/> <strong>Output:</strong> 33 <strong>Explanation: </strong>[10,11,12] is the ascending subarray with the maximum sum of 33.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 100</code></li>  <li><code>1 &lt;= nums[i] &lt;= 100</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Maximum Ascending Subarray Sum" lines
+# @param {Integer[]} nums
+# @return {Integer}
+def max_ascending_sum(nums)
+  (1...nums.length).reduce([nums.first, nums.first]) do |(max_sum, curr_sum), i|
+    curr_sum = (nums[i-1] < nums[i]) ? curr_sum + nums[i] : nums[i]
+    [[max_sum, curr_sum].max, curr_sum]
+  end[0]
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

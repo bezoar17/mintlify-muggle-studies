@@ -1,0 +1,87 @@
+---
+title: '❗️ Time Taken to Mark All Nodes'
+description: '[leetcode link](https://leetcode.com/problems/time-taken-to-mark-all-nodes/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>There exists an <strong>undirected</strong> tree with <code>n</code> nodes numbered <code>0</code> to <code>n - 1</code>. You are given a 2D integer array <code>edges</code> of length <code>n - 1</code>, where <code>edges[i] = [u<sub>i</sub>, v<sub>i</sub>]</code> indicates that there is an edge between nodes <code>u<sub>i</sub></code> and <code>v<sub>i</sub></code> in the tree.</p>  <p>Initially, <strong>all</strong> nodes are <strong>unmarked</strong>. For each node <code>i</code>:</p>  <ul>  <li>If <code>i</code> is odd, the node will get marked at time <code>x</code> if there is <strong>at least</strong> one node <em>adjacent</em> to it which was marked at time <code>x - 1</code>.</li>  <li>If <code>i</code> is even, the node will get marked at time <code>x</code> if there is <strong>at least</strong> one node <em>adjacent</em> to it which was marked at time <code>x - 2</code>.</li> </ul>  <p>Return an array <code>times</code> where <code>times[i]</code> is the time when all nodes get marked in the tree, if you mark node <code>i</code> at time <code>t = 0</code>.</p>  <p><strong>Note</strong> that the answer for each <code>times[i]</code> is <strong>independent</strong>, i.e. when you mark node <code>i</code> all other nodes are <em>unmarked</em>.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">edges = [[0,1],[0,2]]</span></p>  <p><br/> <strong>Output:</strong> [2,4,3]</p>  <p><br/> <strong>Explanation:</strong></p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2024/06/01/screenshot-2024-06-02-122236.png" style="width: 500px; height: 241px;" /></p>  <ul>  <li>For <code>i = 0</code>:   <ul>   <li>Node 1 is marked at <code>t = 1</code>, and Node 2 at <code>t = 2</code>.</li>  </ul>  </li>  <li>For <code>i = 1</code>:  <ul>   <li>Node 0 is marked at <code>t = 2</code>, and Node 2 at <code>t = 4</code>.</li>  </ul>  </li>  <li>For <code>i = 2</code>:  <ul>   <li>Node 0 is marked at <code>t = 2</code>, and Node 1 at <code>t = 3</code>.</li>  </ul>  </li> </ul> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">edges = [[0,1]]</span></p>  <p><br/> <strong>Output:</strong> [1,2]</p>  <p><br/> <strong>Explanation:</strong></p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2024/06/01/screenshot-2024-06-02-122249.png" style="width: 500px; height: 257px;" /></p>  <ul>  <li>For <code>i = 0</code>:   <ul>   <li>Node 1 is marked at <code>t = 1</code>.</li>  </ul>  </li>  <li>For <code>i = 1</code>:  <ul>   <li>Node 0 is marked at <code>t = 2</code>.</li>  </ul>  </li> </ul> </div>  <p><strong class="example">Example 3:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">edges = </span>[[2,4],[0,1],[2,3],[0,2]]</p>  <p><br/> <strong>Output:</strong> [4,6,3,5,5]</p>  <p><br/> <strong>Explanation:</strong></p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2024/06/03/screenshot-2024-06-03-210550.png" style="height: 266px; width: 500px;" /></p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>2 &lt;= n &lt;= 10<sup>5</sup></code></li>  <li><code>edges.length == n - 1</code></li>  <li><code>edges[i].length == 2</code></li>  <li><code>0 &lt;= edges[i][0], edges[i][1] &lt;= n - 1</code></li>  <li>The input is generated such that <code>edges</code> represents a valid tree.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      **Diameter of a tree**
+For a path from u to v (u,v], time is 2E+O, where E is no. of even nodes, O is odd nodes excluding u.
+For each node, answer will be longest such time taken to reach all other nodes.
+
+If we simply had to get for each node, longest distance to all other nodes, without worrying about time, but only dist, then the following point will help in finding that out.
+
+**Theory** -&gt; If there is a pair of nodes (a,b) which has the largest distance between any pair of nodes. For every node c in the tree the largest distance to any other node is either the distance to node a or the distance to node b.
+
+So, we calculate distance from a for all nodes, same for b. And for each node i, max distance to any node is either dist(a,i) or dist(b,i).
+
+Acc to above theory, we have calculated distance from a-&gt;i and b-&gt;, but for this question, for a node c max time taken will be when path reaches from c -&gt; a or c-&gt; b.  dist(a,i) would be same as dist(i,a) if distance was simple, but here distance effectively means time_taken, which is 2E+O, not E+O.
+
+Now, we look at how time taken can be calculated instead of distance. For a given path a-&gt;i vs i-&gt;a.
+
+Assuming we calculated distance as 2E+O, then effectively we have to keep count of even-odd in the path. Because the path doesnt include the source, dist(a,i) will consider all nodes except a. And dist(i,a) should consider all nodes except i.
+
+So dist(i,a) = dist(a,i) - c + a. Where -c and +a means add a's parity and remove c's parity of odd even.
+
+This way we have the dist(i,a) and dist(i,b) calculated, and answer is max of these 2.
+
+**Note**: To get diameter nodes, start from any node , do bfs and mark last node(furthest) as start_node. Do bfs from start_node, the furthest point from start_node will be other end of diameter. This technique is also using the fact that for every node c, largest dist is to either a or b. So when we start from random node, last node in bfs is furthest and this is either a or b, and now repeat this to find other end b.
+
+Resources: https://www.youtube.com/watch?v=wGrOPSBPpyk
+https://codeforces.com/blog/entry/101271 
+	
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Time Taken to Mark All Nodes" lines
+# @param {Integer[][]} edges
+# @return {Integer[]}
+def time_taken(edges)
+  # if u is marked at t, v is marked at t+1 if odd, t+2 if even
+  # so dist is 1 if v is odd, or 2 if v is even
+  n = edges.size+1
+  adj_h = Hash.new{|h,k| h[k]=[]}; edges.each {|u,v| adj_h[u]<<v;adj_h[v]<<u;}
+
+  bfs_dist_array =->(node) {
+    dist_arr = Array.new(n);
+    queue = Queue.new;
+    queue << [node, nil, 0]
+
+    until queue.empty?
+      node, parent, dist = queue.pop
+      dist_arr[node] = dist
+
+      children = adj_h[node].select {|x| x!=parent}
+
+      children.each do |ch_node|
+        queue.push([ch_node, node, dist + (ch_node.even? ? 2:1)])
+      end
+    end
+
+    dist_arr
+  }
+  # find a,b and distances. picking 0 as begin node to find a
+  a = bfs_dist_array.call(0).each_with_index.max[1]
+  dist_a = bfs_dist_array.call(a);
+  b = dist_a.each_with_index.max[1]
+  dist_b = bfs_dist_array.call(b);
+
+  a_contribution = (a.even? ? 2:1)
+  b_contribution = (b.even? ? 2:1)
+  (0...n).map do |node|
+    dist_i_a = dist_a[node] + a_contribution - (node.even? ? 2:1)
+    dist_i_b = dist_b[node] + b_contribution - (node.even? ? 2:1)
+    [dist_i_a, dist_i_b].max
+  end
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

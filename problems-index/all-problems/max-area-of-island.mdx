@@ -1,0 +1,54 @@
+---
+title: '🧀 Max Area of Island'
+description: '[leetcode link](https://leetcode.com/problems/max-area-of-island/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an <code>m x n</code> binary matrix <code>grid</code>. An island is a group of <code>1</code>&#39;s (representing land) connected <strong>4-directionally</strong> (horizontal or vertical.) You may assume all four edges of the grid are surrounded by water.</p>  <p>The <strong>area</strong> of an island is the number of cells with a value <code>1</code> in the island.</p>  <p>Return <em>the maximum <strong>area</strong> of an island in </em><code>grid</code>. If there is no island, return <code>0</code>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/05/01/maxarea1-grid.jpg" style="width: 500px; height: 310px;" />  <strong>Input:</strong> grid = [[0,0,1,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,1,1,0,1,0,0,0,0,0,0,0,0],[0,1,0,0,1,1,0,0,1,0,1,0,0],[0,1,0,0,1,1,0,0,1,1,1,0,0],[0,0,0,0,0,0,0,0,0,0,1,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,0,0,0,0,0,0,1,1,0,0,0,0]] <br/> <strong>Output:</strong> 6 <br/> <strong>Explanation:</strong> The answer is not 11, because the island must be connected 4-directionally.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> grid = [[0,0,0,0,0,0,0,0]] <br/> <strong>Output:</strong> 0    <p><strong>Constraints:</strong></p>  <ul>  <li><code>m == grid.length</code></li>  <li><code>n == grid[i].length</code></li>  <li><code>1 &lt;= m, n &lt;= 50</code></li>  <li><code>grid[i][j]</code> is either <code>0</code> or <code>1</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Simple no. of islands like problem, find connected components using dfs, each time you start a new island(connected component), start a counter and return the max size of an island
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Max Area of Island" lines
+# @param {Integer[][]} grid
+# @return {Integer}
+def max_area_of_island(grid)
+  r,c = grid.size, grid[0].size
+  # visited = 2, island = 1, water = 0
+  max_island_size = 0
+  @island_count = 0
+
+  (0...r).each do |i|
+    (0...c).each do |j|
+      if grid[i][j] == 1
+        @island_count = 0
+        dfs(grid, i, j)
+        max_island_size = [@island_count, max_island_size].max
+      end
+    end
+  end
+  max_island_size
+end
+
+def dfs(grid, i, j)
+  grid[i][j] = 2; @island_count += 1
+  directions = [[1,0],[-1,0],[0,1],[0,-1]]
+
+  for dx, dy in directions do
+    x = i+dx; y= j+dy
+    if x.between?(0, grid.size-1) && y.between?(0, grid[0].size-1) && grid[x][y] == 1
+      dfs(grid, x, y)
+    end
+  end
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

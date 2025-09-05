@@ -1,0 +1,40 @@
+---
+title: '🧀 Find the Minimum Area to Cover All Ones I'
+description: '[leetcode link](https://leetcode.com/problems/find-the-minimum-area-to-cover-all-ones-i/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a 2D <strong>binary</strong> array <code>grid</code>. Find a rectangle with horizontal and vertical sides with the<strong> smallest</strong> area, such that all the 1&#39;s in <code>grid</code> lie inside this rectangle.</p>  <p>Return the <strong>minimum</strong> possible area of the rectangle.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">grid = [[0,1,0],[1,0,1]]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">6</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2024/05/08/examplerect0.png" style="padding: 10px; background: rgb(255, 255, 255); border-radius: 0.5rem; width: 279px; height: 198px;" /></p>  <p>The smallest rectangle has a height of 2 and a width of 3, so it has an area of <code>2 * 3 = 6</code>.</p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">grid = [[1,0],[0,0]]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">1</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2024/05/08/examplerect1.png" style="padding: 10px; background: rgb(255, 255, 255); border-radius: 0.5rem; width: 204px; height: 201px;" /></p>  <p>The smallest rectangle has both height and width 1, so its area is <code>1 * 1 = 1</code>.</p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= grid.length, grid[i].length &lt;= 1000</code></li>  <li><code>grid[i][j]</code> is either 0 or 1.</li>  <li>The input is generated such that there is at least one 1 in <code>grid</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Column-wise min max col value for cell with 1, same for row. This will give side lengths. 
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Find the Minimum Area to Cover All Ones I" lines
+# @param {Integer[][]} grid
+# @return {Integer}
+def minimum_area(grid)
+  m = grid.size; n = grid[0].size
+  r_max = c_max = -1
+  r_min = c_min = 1001
+  (0...m).each do |i|
+    (0...n).each do |j|
+      if grid[i][j] == 1
+        r_max = [r_max, i].max; c_max = [c_max, j].max
+        r_min = [r_min, i].min; c_min = [c_min, j].min
+      end
+    end
+  end
+
+  (r_max-r_min+1) * (c_max-c_min+1)
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

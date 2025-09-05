@@ -1,0 +1,29 @@
+---
+title: '🧩 Intersection of Two Arrays'
+description: '[leetcode link](https://leetcode.com/problems/intersection-of-two-arrays/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given two integer arrays <code>nums1</code> and <code>nums2</code>, return <em>an array of their <span data-keyword="array-intersection">intersection</span></em>. Each element in the result must be <strong>unique</strong> and you may return the result in <strong>any order</strong>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums1 = [1,2,2,1], nums2 = [2,2] <br/> <strong>Output:</strong> [2]   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums1 = [4,9,5], nums2 = [9,4,9,8,4] <br/> <strong>Output:</strong> [9,4] <br/> <strong>Explanation:</strong> [4,9] is also accepted.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums1.length, nums2.length &lt;= 1000</code></li>  <li><code>0 &lt;= nums1[i], nums2[i] &lt;= 1000</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Intersection of Two Arrays" lines
+# @param {Integer[]} nums1
+# @param {Integer[]} nums2
+# @return {Integer[]}
+def intersection(nums1, nums2)
+  nums1 & nums2
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

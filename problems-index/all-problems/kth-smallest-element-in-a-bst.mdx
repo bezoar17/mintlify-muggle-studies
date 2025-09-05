@@ -1,0 +1,53 @@
+---
+title: '🧀 Kth Smallest Element in a BST'
+description: '[leetcode link](https://leetcode.com/problems/kth-smallest-element-in-a-bst/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given the <code>root</code> of a binary search tree, and an integer <code>k</code>, return <em>the</em> <code>k<sup>th</sup></code> <em>smallest value (<strong>1-indexed</strong>) of all the values of the nodes in the tree</em>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/01/28/kthtree1.jpg" style="width: 212px; height: 301px;" />  <strong>Input:</strong> root = [3,1,4,null,2], k = 1 <br/> <strong>Output:</strong> 1   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/01/28/kthtree2.jpg" style="width: 382px; height: 302px;" />  <strong>Input:</strong> root = [5,3,6,2,4,null,null,1], k = 3 <br/> <strong>Output:</strong> 3    <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in the tree is <code>n</code>.</li>  <li><code>1 &lt;= k &lt;= n &lt;= 10<sup>4</sup></code></li>  <li><code>0 &lt;= Node.val &lt;= 10<sup>4</sup></code></li> </ul>   <p><strong>Follow up:</strong> If the BST is modified often (i.e., we can do insert and delete operations) and you need to find the kth smallest frequently, how would you optimize?</p> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      For the follow up, use augmented BST with nodes having count of elements in its subtree
+
+
+When searching for the kth smallest element, compare k with the count of nodes in the left subtree:
+* If  k equals the left subtree count plus one, return the current node's value.
+* If k is less than or equal to the left subtree count, search in the left subtree.
+* If k is greater, search in the right subtree and adjust k accordingly.
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Kth Smallest Element in a BST" lines
+# Definition for a binary tree node.
+# class TreeNode
+#     attr_accessor :val, :left, :right
+#     def initialize(val = 0, left = nil, right = nil)
+#         @val = val
+#         @left = left
+#         @right = right
+#     end
+# end
+# @param {TreeNode} root
+# @param {Integer} k
+# @return {Integer}
+def kth_smallest(root, k)
+  arr =  []
+  inorder = ->(node) do
+    return if node.nil?
+    inorder.call(node.left)
+    arr << node.val
+    inorder.call(node.right)
+  end
+  inorder.call(root)
+  arr[k-1]
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

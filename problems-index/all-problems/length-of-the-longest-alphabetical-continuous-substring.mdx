@@ -1,0 +1,42 @@
+---
+title: '🧀 Length of the Longest Alphabetical Continuous Substring'
+description: '[leetcode link](https://leetcode.com/problems/length-of-the-longest-alphabetical-continuous-substring/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>An <strong>alphabetical continuous string</strong> is a string consisting of consecutive letters in the alphabet. In other words, it is any substring of the string <code>&quot;abcdefghijklmnopqrstuvwxyz&quot;</code>.</p>  <ul>  <li>For example, <code>&quot;abc&quot;</code> is an alphabetical continuous string, while <code>&quot;acb&quot;</code> and <code>&quot;za&quot;</code> are not.</li> </ul>  <p>Given a string <code>s</code> consisting of lowercase letters only, return the <em>length of the <strong>longest</strong> alphabetical continuous substring.</em></p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> s = &quot;abacaba&quot; <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> There are 4 distinct continuous substrings: &quot;a&quot;, &quot;b&quot;, &quot;c&quot; and &quot;ab&quot;. &quot;ab&quot; is the longest continuous substring.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> s = &quot;abcde&quot; <br/> <strong>Output:</strong> 5 <br/> <strong>Explanation:</strong> &quot;abcde&quot; is the longest continuous substring.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= s.length &lt;= 10<sup>5</sup></code></li>  <li><code>s</code> consists of only English lowercase letters.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Just convert to numbers, and check longest length where num[i]==num[i-1]+1. Start with a counter which increments when num(i) == num(i-1)+1, and resets to 1 when this condition is not satisfied. Whenever we reset to 1, we track len in max_len.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Length of the Longest Alphabetical Continuous Substring" lines
+# @param {String} s
+# @return {Integer}
+def longest_continuous_substring(s)
+  char_codes = s.chars.map {|ch| ch.ord - 'a'.ord}
+  # length of longest_consecutive_numbers list
+  max_len = 1
+  len = 1
+  n = char_codes.size
+
+  (1..n).each do |i|
+    if char_codes[i] == (char_codes[i-1]+1)
+      len+=1
+    else
+      max_len=[max_len, len].max
+      len=1
+    end
+  end
+  max_len
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

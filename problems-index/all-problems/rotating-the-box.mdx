@@ -1,0 +1,45 @@
+---
+title: '🧀 Rotating the Box'
+description: '[leetcode link](https://leetcode.com/problems/rotating-the-box/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an <code>m x n</code> matrix of characters <code>boxGrid</code> representing a side-view of a box. Each cell of the box is one of the following:</p>  <ul>  <li>A stone <code>&#39;#&#39;</code></li>  <li>A stationary obstacle <code>&#39;*&#39;</code></li>  <li>Empty <code>&#39;.&#39;</code></li> </ul>  <p>The box is rotated <strong>90 degrees clockwise</strong>, causing some of the stones to fall due to gravity. Each stone falls down until it lands on an obstacle, another stone, or the bottom of the box. Gravity <strong>does not</strong> affect the obstacles&#39; positions, and the inertia from the box&#39;s rotation <strong>does not </strong>affect the stones&#39; horizontal positions.</p>  <p>It is <strong>guaranteed</strong> that each stone in <code>boxGrid</code> rests on an obstacle, another stone, or the bottom of the box.</p>  <p>Return <em>an </em><code>n x m</code><em> matrix representing the box after the rotation described above</em>.</p>   <p><strong class="example">Example 1:</strong></p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2021/04/08/rotatingtheboxleetcodewithstones.png" style="width: 300px; height: 150px;" /></p>   <strong>Input:</strong> boxGrid = [[&quot;#&quot;,&quot;.&quot;,&quot;#&quot;]] <br/> <strong>Output:</strong> [[&quot;.&quot;], &nbsp;        [&quot;#&quot;], &nbsp;        [&quot;#&quot;]]   <p><strong class="example">Example 2:</strong></p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2021/04/08/rotatingtheboxleetcode2withstones.png" style="width: 375px; height: 195px;" /></p>   <strong>Input:</strong> boxGrid = [[&quot;#&quot;,&quot;.&quot;,&quot;*&quot;,&quot;.&quot;], &nbsp;             [&quot;#&quot;,&quot;#&quot;,&quot;*&quot;,&quot;.&quot;]] <br/> <strong>Output:</strong> [[&quot;#&quot;,&quot;.&quot;], &nbsp;        [&quot;#&quot;,&quot;#&quot;], &nbsp;        [&quot;*&quot;,&quot;*&quot;], &nbsp;        [&quot;.&quot;,&quot;.&quot;]]   <p><strong class="example">Example 3:</strong></p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2021/04/08/rotatingtheboxleetcode3withstone.png" style="width: 400px; height: 218px;" /></p>   <strong>Input:</strong> boxGrid = [[&quot;#&quot;,&quot;#&quot;,&quot;*&quot;,&quot;.&quot;,&quot;*&quot;,&quot;.&quot;], &nbsp;             [&quot;#&quot;,&quot;#&quot;,&quot;#&quot;,&quot;*&quot;,&quot;.&quot;,&quot;.&quot;], &nbsp;             [&quot;#&quot;,&quot;#&quot;,&quot;#&quot;,&quot;.&quot;,&quot;#&quot;,&quot;.&quot;]] <br/> <strong>Output:</strong> [[&quot;.&quot;,&quot;#&quot;,&quot;#&quot;], &nbsp;        [&quot;.&quot;,&quot;#&quot;,&quot;#&quot;], &nbsp;        [&quot;#&quot;,&quot;#&quot;,&quot;*&quot;], &nbsp;        [&quot;#&quot;,&quot;*&quot;,&quot;.&quot;], &nbsp;        [&quot;#&quot;,&quot;.&quot;,&quot;*&quot;], &nbsp;        [&quot;#&quot;,&quot;.&quot;,&quot;.&quot;]]    <p><strong>Constraints:</strong></p>  <ul>  <li><code>m == boxGrid.length</code></li>  <li><code>n == boxGrid[i].length</code></li>  <li><code>1 &lt;= m, n &lt;= 500</code></li>  <li><code>boxGrid[i][j]</code> is either <code>&#39;#&#39;</code>, <code>&#39;*&#39;</code>, or <code>&#39;.&#39;</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Transpose the matrix and reverse each row to get initial state of 90 degree rotation without gravity. Now process each column for effect of gravity. Start from bottom, and maintain the current platform/bottom value.
+When you see a stone push it to the current bottom, and increment bottom height by 1(or decrease row value by 1). When you see an obstacle, update the platform height to current obstacle height+1. 
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Rotating the Box" lines
+# @param {Character[][]} box_grid
+# @return {Character[][]}
+def rotate_the_box(box_grid)
+  m = box_grid.size; n = box_grid[0].size
+  rotated = box_grid.transpose.map(&:reverse) # 90 degree rotation
+  
+  (0...m).each do |col| # process each col separately
+    platform = n-1
+
+    (n-1).downto(0).each do |height|
+      platform=height-1 if rotated[height][col] == '*' # new platform is just above the obstacle
+      if rotated[height][col] == '#'
+        rotated[height][col] = '.'  # previous space now becomes empty
+        rotated[platform][col] = '#'  # drop stone to platform
+        platform-=1 # platform updates by 1
+      end
+    end
+  end
+
+  rotated
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

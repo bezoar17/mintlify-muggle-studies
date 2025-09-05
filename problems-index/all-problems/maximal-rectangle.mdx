@@ -1,0 +1,67 @@
+---
+title: '❗️ Maximal Rectangle'
+description: '[leetcode link](https://leetcode.com/problems/maximal-rectangle/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a <code>rows x cols</code>&nbsp;binary <code>matrix</code> filled with <code>0</code>&#39;s and <code>1</code>&#39;s, find the largest rectangle containing only <code>1</code>&#39;s and return <em>its area</em>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/09/14/maximal.jpg" style="width: 402px; height: 322px;" />  <strong>Input:</strong> matrix = [[&quot;1&quot;,&quot;0&quot;,&quot;1&quot;,&quot;0&quot;,&quot;0&quot;],[&quot;1&quot;,&quot;0&quot;,&quot;1&quot;,&quot;1&quot;,&quot;1&quot;],[&quot;1&quot;,&quot;1&quot;,&quot;1&quot;,&quot;1&quot;,&quot;1&quot;],[&quot;1&quot;,&quot;0&quot;,&quot;0&quot;,&quot;1&quot;,&quot;0&quot;]] <br/> <strong>Output:</strong> 6 <br/> <strong>Explanation:</strong> The maximal rectangle is shown in the above picture.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> matrix = [[&quot;0&quot;]] <br/> <strong>Output:</strong> 0   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> matrix = [[&quot;1&quot;]] <br/> <strong>Output:</strong> 1    <p><strong>Constraints:</strong></p>  <ul>  <li><code>rows == matrix.length</code></li>  <li><code>cols == matrix[i].length</code></li>  <li><code>1 &lt;= row, cols &lt;= 200</code></li>  <li><code>matrix[i][j]</code> is <code>&#39;0&#39;</code> or <code>&#39;1&#39;</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      https://leetcode.com/problems/largest-rectangle-in-histogram/description/ 
+At each row, consider each columns height as bar height. This needs to be calculated for all rows.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Maximal Rectangle" lines
+# @param {Character[][]} matrix
+# @return {Integer}
+def maximal_rectangle(matrix)
+  r = matrix.size; c = matrix[0].size
+  heights = [0] * c
+  max_area = 0
+
+  matrix.each do |row|
+    (0...c).each { |i| heights[i] = row[i] == '1' ? heights[i]+1 : 0 }
+    max_area = [max_area, largest_rectangle_area(heights)].max
+  end
+
+  max_area
+end
+
+def largest_rectangle_area(heights)
+  prev_smaller_idx = smaller_idx(heights, -1)
+  next_smaller_idx = smaller_idx(heights, 1)
+
+  (0...heights.size).reduce(0) do |res, i|
+    rect_length = next_smaller_idx[i]-prev_smaller_idx[i]-1
+    area_at_i = heights[i] * rect_length
+    [res, area_at_i].max
+  end
+end
+
+def discard?(top,num) = top>=num;
+
+def smaller_idx(nums, direction)
+  n = nums.size
+  calculate_previous = direction == -1;
+  default, index_range = calculate_previous ? [-1, (0...n)] : [n, (n-1).downto(0)]
+
+  result = Array.new(nums.size, default)
+  stack = [] # stores only the index of element, not [element, idx]
+
+  index_range.each do |idx|
+    stack.pop while !stack.empty? && discard?(nums[stack.last], nums[idx])
+    result[idx] = stack.last unless stack.empty?
+    stack << idx
+  end
+  result
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

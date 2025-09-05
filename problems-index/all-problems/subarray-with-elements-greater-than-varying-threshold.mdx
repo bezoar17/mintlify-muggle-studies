@@ -1,0 +1,73 @@
+---
+title: '❗️ Subarray With Elements Greater Than Varying Threshold'
+description: '[leetcode link](https://leetcode.com/problems/subarray-with-elements-greater-than-varying-threshold/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer array <code>nums</code> and an integer <code>threshold</code>.</p>  <p>Find any subarray of <code>nums</code> of length <code>k</code> such that <strong>every</strong> element in the subarray is <strong>greater</strong> than <code>threshold / k</code>.</p>  <p>Return<em> the <strong>size</strong> of <strong>any</strong> such subarray</em>. If there is no such subarray, return <code>-1</code>.</p>  <p>A <strong>subarray</strong> is a contiguous non-empty sequence of elements within an array.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [1,3,4,3,1], threshold = 6 <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> The subarray [3,4,3] has a size of 3, and every element is greater than 6 / 3 = 2. Note that this is the only valid subarray.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [6,5,6,5,8], threshold = 7 <br/> <strong>Output:</strong> 1 <br/> <strong>Explanation:</strong> The subarray [8] has a size of 1, and 8 &gt; 7 / 1 = 7. So 1 is returned. Note that the subarray [6,5] has a size of 2, and every element is greater than 7 / 2 = 3.5.  Similarly, the subarrays [6,5,6], [6,5,6,5], [6,5,6,5,8] also satisfy the given conditions. Therefore, 2, 3, 4, or 5 may also be returned.   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= nums[i], threshold &lt;= 10<sup>9</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      2 ways to solve this.
+
+# First
+Similar to the Daily Temperatures problem ( no. of days to wait for warmer day, this is basically next greater element 's index for each element). Similar to this, if we calculate the next smaller element's index and previous smaller element's index for each of the element. What we will have is for each element , sub array with [prev_small_idx, next_small_idx] this will be the subarray for which the current element is the minimum. And if this is greater than the threshold/ size of this interval, we have a valid solution, else we dont. 
+
+So, we need to calculate prev smaller idx and next smaller idx using monotonic stack, and then traverse and evaluate the said condition
+
+Useful link -&gt; https://leetcode.com/discuss/study-guide/2347639/A-comprehensive-guide-and-template-for-monotonic-stack-based-problems
+
+
+# Second
+
+Using Union Find, think of sets as subarrays, initially there are n sets of size 1 each,  representing subarray of size 1. We sort the nums in desc order and store indexes with it. 
+
+For k = 1, we check how many pass the test, activate those.
+Similarly for each increasing k, we keep traversing the and see what new numbers pass the threshold now that the size is increased. We activate each of these numbers. But whenever we activate a no., if its neighbor is also activated, we merge the sets. So, essentially set's size increases only when they are neighbors(a set is a subarray) and they are activated, meaning passing the current threshold based on k. And if we get a set with size &gt;= k , we have a subarray with size &gt;=k, so our solution is fulfilled.
+
+Useful link -&gt; https://www.youtube.com/watch?v=j7hXhjuwqaY
+https://leetcode.com/submissions/detail/742698390/
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Subarray With Elements Greater Than Varying Threshold" lines
+# @param {Integer[]} nums
+# @param {Integer} threshold
+# @return {Integer}
+def valid_subarray_size(nums, threshold)
+  prev_smaller_idx = smaller_idx(nums, -1)
+  next_smaller_idx = smaller_idx(nums, 1)
+  
+  nums.each_with_index do |num, idx|
+    k = next_smaller_idx[idx] - prev_smaller_idx[idx] - 1  # subarray where num is minimum
+    return k if k >0 && num*k> threshold
+  end
+
+  -1
+end
+
+def discard?(top, num) = top >= num
+
+def smaller_idx(nums, direction)  
+  n = nums.size
+  calculate_previous = direction == -1;
+  default, index_range = calculate_previous ? [-1, (0...n)] : [n, (n-1).downto(0)]
+  
+  result = Array.new(nums.size, default)
+  stack = [] # stores only the index of element, not [element, idx]
+  
+  index_range.each do |idx|
+    stack.pop while !stack.empty? && discard?(nums[stack.last], nums[idx])
+    result[idx] = stack.last unless stack.empty?
+    stack << idx
+  end
+  result
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,77 @@
+---
+title: '❗️ Minimum Operations to Equalize Binary String'
+description: '[leetcode link](https://leetcode.com/problems/minimum-operations-to-equalize-binary-string/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a binary string <code>s</code>, and an integer <code>k</code>.</p>  <p>In one operation, you must choose <strong>exactly</strong> <code>k</code> <strong>different</strong> indices and <strong>flip</strong> each <code>&#39;0&#39;</code> to <code>&#39;1&#39;</code> and each <code>&#39;1&#39;</code> to <code>&#39;0&#39;</code>.</p>  <p>Return the <strong>minimum</strong> number of operations required to make all characters in the string equal to <code>&#39;1&#39;</code>. If it is not possible, return -1.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">s = &quot;110&quot;, k = 1</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">1</span></p>  <p><br/> <strong>Explanation:</strong></p>  <ul>  <li>There is one <code>&#39;0&#39;</code> in <code>s</code>.</li>  <li>Since <code>k = 1</code>, we can flip it directly in one operation.</li> </ul> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">s = &quot;0101&quot;, k = 3</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">2</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>One optimal set of operations choosing <code>k = 3</code> indices in each operation is:</p>  <ul>  <li><strong>Operation 1</strong>: Flip indices <code>[0, 1, 3]</code>. <code>s</code> changes from <code>&quot;0101&quot;</code> to <code>&quot;1000&quot;</code>.</li>  <li><strong>Operation 2</strong>: Flip indices <code>[1, 2, 3]</code>. <code>s</code> changes from <code>&quot;1000&quot;</code> to <code>&quot;1111&quot;</code>.</li> </ul>  <p>Thus, the minimum number of operations is 2.</p> </div>  <p><strong class="example">Example 3:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">s = &quot;101&quot;, k = 2</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">-1</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>Since <code>k = 2</code> and <code>s</code> has only one <code>&#39;0&#39;</code>, it is impossible to flip exactly <code>k</code> indices to make all <code>&#39;1&#39;</code>. Hence, the answer is -1.</p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= s.length &lt;= 10<sup>​​​​​​​5</sup></code></li>  <li><code>s[i]</code> is either <code>&#39;0&#39;</code> or <code>&#39;1&#39;</code>.</li>  <li><code>1 &lt;= k &lt;= s.length</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      First and second solution are similar, in the second one, equations have been simplified to get lower bounds for ops itself, and then just getting the lowest valid solution. In the first one, ops is increased 1 by 1 to see when it becomes valid.
+
+https://leetcode.com/problems/minimum-operations-to-equalize-binary-string/solutions/7139112/check-for-each-number-of-operation
+
+based on no. of operations, total flips to be distributed to z,o such that we get all 1s
+
+total_flips and z parity has to be same
+
+we need atleast z flips, and for a given i a max no. of flips can be assigned to ensure
+correct parity, if total_flips goes beyond that, then it cant be distributed to maintain parity
+
+check total_flips range based on i's parity
+range is calculated assuming each z and o get min operations, vs get max operations
+for min we have to have only zeroes receiving the operations, so z total_flips
+in max case, all z and o receive as many as i operations, but to maintain parity
+when i is odd, all ones will receive 1 operation less, so total ops for each 1 is even
+when i is even, all zeroes will receive 1 operation less, so total ops for each 0 is odd
+
+this can be represented as all z,o receive i ops, and then ones are subtracted when i is odd, else zeros
+are subtracted, as they will receive 1 op less
+
+
+**Another solution**, https://leetcode.com/problems/minimum-operations-to-equalize-binary-string/solutions/7138938/python-math
+
+Simpler to understand once you really get the hang of it. What ever ops you are doing, z have to be used to set the 0s to 1s, and the remaining extra ones have to be even(distributed amongst the 0s and 1s, so that parity doesnt change by these extra ops). 
+
+Using the even requirement, and a max range for extra ops, you can get lower bound equations for no. of ops (when ops is even, and when ops is odd). Once you have the equations, just implement them to get minimum viable ops value.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Minimum Operations to Equalize Binary String" lines
+# @param {String} s
+# @param {Integer} k
+# @return {Integer}
+def min_operations(s, k)    
+  n = s.size; z = s.count('0'); o = n - z
+  return 0 if z == 0
+  return (z == n ? 1 : -1) if n == k
+  ceil=->(a,b) { (a/b.to_f).ceil }
+
+  return -1 if z.odd? && (z-k).odd?
+
+  ops1 = ops2 = Float::INFINITY
+  
+  # when z is even, both cases are covered
+  # when z is odd, k has to be odd
+  
+  if z.even? # ops should be even for this case
+    ops1 = [ceil[z,k], ceil[z,n-k]].max
+    ops1 = ops1.odd? ? ops1+1 : ops1
+  end
+  if (z-k).even? # ops should be odd for this case
+    ops2 = [ceil[z,k], ceil[o,n-k]].max
+    ops2 = ops2.even? ? ops2+1 : ops2
+  end
+
+  [ops1, ops2].min
+end
+
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

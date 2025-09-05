@@ -1,0 +1,64 @@
+---
+title: '🧀 Maximum Score From Removing Substrings'
+description: '[leetcode link](https://leetcode.com/problems/maximum-score-from-removing-substrings/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a string <code>s</code> and two integers <code>x</code> and <code>y</code>. You can perform two types of operations any number of times.</p>  <ul>  <li>Remove substring <code>&quot;ab&quot;</code> and gain <code>x</code> points.   <ul>   <li>For example, when removing <code>&quot;ab&quot;</code> from <code>&quot;c<u>ab</u>xbae&quot;</code> it becomes <code>&quot;cxbae&quot;</code>.</li>  </ul>  </li>  <li>Remove substring <code>&quot;ba&quot;</code> and gain <code>y</code> points.  <ul>   <li>For example, when removing <code>&quot;ba&quot;</code> from <code>&quot;cabx<u>ba</u>e&quot;</code> it becomes <code>&quot;cabxe&quot;</code>.</li>  </ul>  </li> </ul>  <p>Return <em>the maximum points you can gain after applying the above operations on</em> <code>s</code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> s = &quot;cdbcbbaaabab&quot;, x = 4, y = 5 <br/> <strong>Output:</strong> 19 <br/> <strong>Explanation:</strong> - Remove the &quot;ba&quot; underlined in &quot;cdbcbbaaa<u>ba</u>b&quot;. Now, s = &quot;cdbcbbaaab&quot; and 5 points are added to the score. - Remove the &quot;ab&quot; underlined in &quot;cdbcbbaa<u>ab</u>&quot;. Now, s = &quot;cdbcbbaa&quot; and 4 points are added to the score. - Remove the &quot;ba&quot; underlined in &quot;cdbcb<u>ba</u>a&quot;. Now, s = &quot;cdbcba&quot; and 5 points are added to the score. - Remove the &quot;ba&quot; underlined in &quot;cdbc<u>ba</u>&quot;. Now, s = &quot;cdbc&quot; and 5 points are added to the score. Total score = 5 + 4 + 5 + 5 = 19.  <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> s = &quot;aabbaaxybbaabb&quot;, x = 5, y = 4 <br/> <strong>Output:</strong> 20    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= s.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= x, y &lt;= 10<sup>4</sup></code></li>  <li><code>s</code> consists of lowercase English letters.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Use stack, when searching for ab, if you reach pt where idx has b, and stack has a, update score, and move ahead. This simulates picking that pattern. Similarly for ba, in the remaining string. 
+
+Now, how to prioritize and pick, for that, we always have to prioritize one of the patterns, based on x,y values.
+So, if ab has to be prioritized, in first pass pick all ab values, then in the remaining string pick ba, and vice versa for other case.
+
+Why we always have to prioritize ?, think of a case where option is present, like baba, here we can pick 2 ba, or 1 ab, and 1 ba. 
+
+Or abab, here we can pick  2ab, or 1ba and 1 ab. 
+
+In both such cases, based on x/y, it is optimal to pick the higher one, can be proved by contradiction.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Maximum Score From Removing Substrings" lines
+# @param {String} s
+# @param {Integer} x
+# @param {Integer} y
+# @return {Integer}
+def maximum_gain(s, x, y)
+  x <= y ? calculate_score(s, x, y, 'a', 'b') : calculate_score(s, y, x, 'b', 'a')
+end
+
+def calculate_score(s, x, y, p1, p2)
+  stack = []
+  score = 0
+
+  s.each_char do |char|
+    if char == p1 && stack[-1] == p2
+      stack.pop
+      score += y
+    else
+      stack.push(char)
+    end
+  end
+
+  stack2 = []
+  stack.each do |char|
+    if char == p2 && stack2[-1] == p1
+      stack2.pop
+      score += x
+    else
+      stack2.push(char)
+    end
+  end
+  score
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

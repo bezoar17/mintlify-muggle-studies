@@ -1,0 +1,53 @@
+---
+title: '🧀 Find Largest Value in Each Tree Row'
+description: '[leetcode link](https://leetcode.com/problems/find-largest-value-in-each-tree-row/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given the <code>root</code> of a binary tree, return <em>an array of the largest value in each row</em> of the tree <strong>(0-indexed)</strong>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/08/21/largest_e1.jpg" style="width: 300px; height: 172px;" />  <strong>Input:</strong> root = [1,3,2,5,3,null,9] <br/> <strong>Output:</strong> [1,3,9]   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> root = [1,2,3] <br/> <strong>Output:</strong> [1,3]    <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in the tree will be in the range <code>[0, 10<sup>4</sup>]</code>.</li>  <li><code>-2<sup>31</sup> &lt;= Node.val &lt;= 2<sup>31</sup> - 1</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Simple level order traversal
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Find Largest Value in Each Tree Row" lines
+# Definition for a binary tree node.
+# class TreeNode
+#     attr_accessor :val, :left, :right
+#     def initialize(val = 0, left = nil, right = nil)
+#         @val = val
+#         @left = left
+#         @right = right
+#     end
+# end
+# @param {TreeNode} root
+# @return {Integer[]}
+def largest_values(root)
+  return [] if root.nil?
+  q = Queue.new
+  q << root
+  result = []
+
+  until q.empty?
+    node_count = q.size
+    max_for_level = -Float::INFINITY
+    node_count.times do
+      node = q.pop
+      max_for_level = [max_for_level, node.val].max
+      q << node.left unless node.left.nil?
+      q << node.right unless node.right.nil?
+    end
+    result << max_for_level
+  end
+  result
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

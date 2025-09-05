@@ -1,0 +1,33 @@
+---
+title: '🧀 Maximum Number of Integers to Choose From a Range I'
+description: '[leetcode link](https://leetcode.com/problems/maximum-number-of-integers-to-choose-from-a-range-i/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer array <code>banned</code> and two integers <code>n</code> and <code>maxSum</code>. You are choosing some number of integers following the below rules:</p>  <ul>  <li>The chosen integers have to be in the range <code>[1, n]</code>.</li>  <li>Each integer can be chosen <strong>at most once</strong>.</li>  <li>The chosen integers should not be in the array <code>banned</code>.</li>  <li>The sum of the chosen integers should not exceed <code>maxSum</code>.</li> </ul>  <p>Return <em>the <strong>maximum</strong> number of integers you can choose following the mentioned rules</em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> banned = [1,6,5], n = 5, maxSum = 6 <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> You can choose the integers 2 and 4. 2 and 4 are from the range [1, 5], both did not appear in banned, and their sum is 6, which did not exceed maxSum.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> banned = [1,2,3,4,5,6,7], n = 8, maxSum = 1 <br/> <strong>Output:</strong> 0 <br/> <strong>Explanation:</strong> You cannot choose any integer while following the mentioned conditions.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> banned = [11], n = 7, maxSum = 50 <br/> <strong>Output:</strong> 7 <br/> <strong>Explanation:</strong> You can choose the integers 1, 2, 3, 4, 5, 6, and 7. They are from the range [1, 7], all did not appear in banned, and their sum is 28, which did not exceed maxSum.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= banned.length &lt;= 10<sup>4</sup></code></li>  <li><code>1 &lt;= banned[i], n &lt;= 10<sup>4</sup></code></li>  <li><code>1 &lt;= maxSum &lt;= 10<sup>9</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Use a set and choose minimum no.s first
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Maximum Number of Integers to Choose From a Range I" lines
+# @param {Integer[]} banned
+# @param {Integer} n
+# @param {Integer} max_sum
+# @return {Integer}
+def max_count(banned, n, max_sum)
+  banned_set = banned.to_set
+  sum = 0; count= 0;
+  (1..n).each {|i|  count+=1 if !banned_set.include?(i) && ((sum+=i)<=max_sum)  }
+  count
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

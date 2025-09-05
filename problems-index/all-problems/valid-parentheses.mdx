@@ -1,0 +1,44 @@
+---
+title: '🧩 Valid Parentheses'
+description: '[leetcode link](https://leetcode.com/problems/valid-parentheses/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a string <code>s</code> containing just the characters <code>&#39;(&#39;</code>, <code>&#39;)&#39;</code>, <code>&#39;{&#39;</code>, <code>&#39;}&#39;</code>, <code>&#39;[&#39;</code> and <code>&#39;]&#39;</code>, determine if the input string is valid.</p>  <p>An input string is valid if:</p>  <ol>  <li>Open brackets must be closed by the same type of brackets.</li>  <li>Open brackets must be closed in the correct order.</li>  <li>Every close bracket has a corresponding open bracket of the same type.</li> </ol>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">s = &quot;()&quot;</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">true</span></p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">s = &quot;()[]{}&quot;</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">true</span></p> </div>  <p><strong class="example">Example 3:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">s = &quot;(]&quot;</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">false</span></p> </div>  <p><strong class="example">Example 4:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">s = &quot;([])&quot;</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">true</span></p> </div>  <p><strong class="example">Example 5:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">s = &quot;([)]&quot;</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">false</span></p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= s.length &lt;= 10<sup>4</sup></code></li>  <li><code>s</code> consists of parentheses only <code>&#39;()[]{}&#39;</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Valid Parentheses" lines
+# @param {String} s
+# @return {Boolean}
+def is_valid(s)
+  parens_h = {
+    "(" => ")",
+    "{" => "}",
+    "[" => "]"
+  }
+
+  stack = []
+  
+  s.chars.each do |ch|
+    if parens_h.keys.include?(ch)
+      stack << ch
+    else
+      ch == parens_h[stack.last] ? stack.pop : (return false)
+    end
+  end
+
+  stack.empty?
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

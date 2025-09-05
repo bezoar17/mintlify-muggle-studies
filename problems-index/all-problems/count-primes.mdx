@@ -1,0 +1,45 @@
+---
+title: '🧀 Count Primes'
+description: '[leetcode link](https://leetcode.com/problems/count-primes/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an integer <code>n</code>, return <em>the number of prime numbers that are strictly less than</em> <code>n</code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> n = 10 <br/> <strong>Output:</strong> 4 <br/> <strong>Explanation:</strong> There are 4 prime numbers less than 10, they are 2, 3, 5, 7.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> n = 0 <br/> <strong>Output:</strong> 0   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> n = 1 <br/> <strong>Output:</strong> 0    <p><strong>Constraints:</strong></p>  <ul>  <li><code>0 &lt;= n &lt;= 5 * 10<sup>6</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```cpp title="Count Primes" lines
+class Solution {
+public:
+    int countPrimes(int n) {
+        if(n<2) return 0;
+        vector<bool> marks(n+1,0);
+        marks[0]=marks[1]=1;int c=0;
+        for(int i=2;i<=sqrt(n);i++){
+            if(marks[i]==0)
+            c++;
+            for(int j=i*i;j<=n;j+=i)
+            {
+                marks[j]=1;
+            }
+        }
+        for(int i=1+sqrt(n);i<n;i++)
+        {
+            if(marks[i]==0)
+            c++;
+        }
+        return c;
+    }
+};
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

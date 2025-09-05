@@ -1,0 +1,53 @@
+---
+title: '❗️ Count Unique Characters of All Substrings of a Given String'
+description: '[leetcode link](https://leetcode.com/problems/count-unique-characters-of-all-substrings-of-a-given-string/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Let&#39;s define a function <code>countUniqueChars(s)</code> that returns the number of unique characters in&nbsp;<code>s</code>.</p>  <ul>  <li>For example, calling <code>countUniqueChars(s)</code> if <code>s = &quot;LEETCODE&quot;</code> then <code>&quot;L&quot;</code>, <code>&quot;T&quot;</code>, <code>&quot;C&quot;</code>, <code>&quot;O&quot;</code>, <code>&quot;D&quot;</code> are the unique characters since they appear only once in <code>s</code>, therefore <code>countUniqueChars(s) = 5</code>.</li> </ul>  <p>Given a string <code>s</code>, return the sum of <code>countUniqueChars(t)</code> where <code>t</code> is a substring of <code>s</code>. The test cases are generated such that the answer fits in a 32-bit integer.</p>  <p>Notice that some substrings can be repeated so in this case you have to count the repeated ones too.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> s = &quot;ABC&quot; <br/> <strong>Output:</strong> 10 <strong>Explanation: </strong>All possible substrings are: &quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;AB&quot;,&quot;BC&quot; and &quot;ABC&quot;. Every substring is composed with only unique letters. Sum of lengths of all substring is 1 + 1 + 1 + 2 + 2 + 3 = 10   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> s = &quot;ABA&quot; <br/> <strong>Output:</strong> 8 <strong>Explanation: </strong>The same as example 1, except <code>countUniqueChars</code>(&quot;ABA&quot;) = 1.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> s = &quot;LEETCODE&quot; <br/> <strong>Output:</strong> 92    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= s.length &lt;= 10<sup>5</sup></code></li>  <li><code>s</code> consists of uppercase English letters only.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      countUniqueChars(s) that returns the number of unique characters in s.
+That means, no. of chars which are unique. Not no. of distinct chars in s.
+
+So, if we look at each char at a particular idx, in how many substrings will it contribute as a unique char ? Simple left_ext * right_ext, which is calculated by last and next occurence of this char.
+
+"XAXAXXAX" and focus on making the second "A" a unique character.
+"XA (XAXX) AX". Now for placing the (, left_ext we have 2 opts, right we have 3 options, basis of occurence of A.
+
+
+Similar problem, https://leetcode.com/problems/total-appeal-of-a-string/
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Count Unique Characters of All Substrings of a Given String" lines
+# @param {String} s
+# @return {Integer}
+def unique_letter_string(s)
+  n = s.size
+  prev_idx = Array.new(n,-1) # default values
+  next_idx = Array.new(n, n)
+  
+  last_seen_at = {}
+
+  s.chars.each_with_index do |ch, idx|
+    if last_seen_at[ch] # if this idx has been seen last
+      next_idx[last_seen_at[ch]] = idx # set next idx value for last occurence
+      prev_idx[idx] = last_seen_at[ch] # set prev idx value for this occurence
+    end
+
+    last_seen_at[ch] = idx # track last seen occurence
+  end
+  
+  # get contribution of each char, which is left right extensions upto next occurence
+  (0...n).map { |i| (i-prev_idx[i]) * (next_idx[i]-i) }.sum
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

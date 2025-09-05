@@ -1,0 +1,31 @@
+---
+title: '🧩 Degree of an Array'
+description: '[leetcode link](https://leetcode.com/problems/degree-of-an-array/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a non-empty array of non-negative integers <code>nums</code>, the <b>degree</b> of this array is defined as the maximum frequency of any one of its elements.</p>  <p>Your task is to find the smallest possible length of a (contiguous) subarray of <code>nums</code>, that has the same degree as <code>nums</code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [1,2,2,3,1] <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong>  The input array has a degree of 2 because both elements 1 and 2 appear twice. Of the subarrays that have the same degree: [1, 2, 2, 3, 1], [1, 2, 2, 3], [2, 2, 3, 1], [1, 2, 2], [2, 2, 3], [2, 2] The shortest length is 2. So return 2.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [1,2,2,3,1,4,2] <br/> <strong>Output:</strong> 6 <br/> <strong>Explanation:</strong>  The degree is 3 because the element 2 is repeated 3 times. So [2,2,3,1,4,2] is the shortest subarray, therefore returning 6.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>nums.length</code> will be between 1 and 50,000.</li>  <li><code>nums[i]</code> will be an integer between 0 and 49,999.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Degree of an Array" lines
+# @param {Integer[]} nums
+# @return {Integer}
+def find_shortest_sub_array(nums)
+  count_h = nums.tally
+  first_idx = {}; last_idx = {}
+  nums.each_with_index {|x,i| first_idx[x]||=i; last_idx[x]=i;}
+  count_h.map {|k,v| [-v, last_idx[k]-first_idx[k]+1 ]}.sort.first[1]
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

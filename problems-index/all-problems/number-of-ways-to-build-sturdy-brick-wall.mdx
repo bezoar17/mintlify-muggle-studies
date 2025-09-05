@@ -1,0 +1,95 @@
+---
+title: '🧀 Number of Ways to Build Sturdy Brick Wall'
+description: '[leetcode link](https://leetcode.com/problems/number-of-ways-to-build-sturdy-brick-wall/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given integers <code>height</code> and <code>width</code> which specify the dimensions of a brick wall you are building. You are also given a <strong>0-indexed</strong> array of <strong>unique</strong> integers <code>bricks</code>, where the <code>i<sup>th</sup></code> brick has a height of <code>1</code> and a width of <code>bricks[i]</code>. You have an <strong>infinite </strong>supply of each type of brick and bricks may <strong>not</strong> be rotated.</p>  <p>Each row in the wall must be exactly <code>width</code> units long. For the wall to be <strong>sturdy</strong>, adjacent rows in the wall should <strong>not </strong>join bricks at the same location, except at the ends of the wall.</p>  <p>Return <em>the number of ways to build a <strong>sturdy </strong>wall.</em> Since the answer may be very large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>   <p><strong class="example">Example 1:</strong></p> <img src="https://assets.leetcode.com/uploads/2022/02/20/image-20220220190749-1.png" style="width: 919px; height: 250px;" />  <strong>Input:</strong> height = 2, width = 3, bricks = [1,2] <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> The first two walls in the diagram show the only two ways to build a sturdy brick wall. Note that the third wall in the diagram is not sturdy because adjacent rows join bricks 2 units from the left.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> height = 1, width = 1, bricks = [5] <br/> <strong>Output:</strong> 0 <br/> <strong>Explanation:</strong> There are no ways to build a sturdy wall because the only type of brick we have is longer than the width of the wall.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= height &lt;= 100</code></li>  <li><code>1 &lt;= width &lt;= 10</code></li>  <li><code>1 &lt;= bricks.length &lt;= 10</code></li>  <li><code>1 &lt;= bricks[i] &lt;= 10</code></li>  <li>All the values of <code>bricks</code> are <strong>unique</strong>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Linear transformation matrix can also be used here, https://leetcode.com/problems/total-characters-in-string-after-transformations-ii/. Arriving to a state uses some of last states, if that is modelled in a matrix, the matrix can be exponentiated for heights.
+
+If valid states size is s, and row size is r. Using Linear transformation, time complexity is s^2 * log r. 
+Using sub-set sum over DP r times, we have k * s * r. Where k is bitlength of states. So, based on input, method can be chosen. In linear transformations, we build the matrix for state space. Doing that will require s^2. So, based on size of s, and r, we can choose which method we use. In this question, a linear transformation has been applied but its tle. 
+
+In following, r is greater, linear matrix method will be more useful.
+https://leetcode.com/problems/painting-a-grid-with-three-different-colors/editorial/?envType=problem-list-v2&envId=dynamic-programming
+https://leetcode.com/problems/number-of-ways-to-paint-n-3-grid/ Here it is more applicable.
+
+Subset-Sum over DP, which is applied iteratively.
+
+Very similar to https://leetcode.com/problems/maximum-product-of-two-integers-with-no-common-bits/. 
+Another one, https://leetcode.com/problems/painting-a-grid-with-three-different-colors/description/?envType=problem-list-v2&envId=dynamic-programming
+The subset sum over dp part, can be avoided also, it is mainly to improve the time for following calculation. For each state/mask, check/add/take max etc. from all possible states which dont have anything in common with current state/mask. When the valid masks/states are too huge, we cant process all states for each state, as this becomes n^2. The optimization when using subset sum over dp is that we can do this in nK, where n is size of all states, and k is max bit length. In this problem, n will not be that huge, but subset sum over dp is used, so
+we can get good at using it.
+
+let the joins represent a particular combination, store all valid states for the join as masks
+for 1 state in heights[i], the next state for heights[i+1], can be all valid states which are submasks of 1's complement of heights[i]. To do this, we can use subset over sum dp, which is more optimized than all sub-mask gen for a given complement mask, which sub-masks of it are present, all contribute 1
+so complement mask has value, which is how many sub-masks are present, this part is subset over sum DP
+
+We can either iterate over all masks and check if valid, mark them as 1, these will form initial presence masks.
+
+For subset over sum dp
+for each bit, and for each mask, we update its supermasks value, by taking OR with it
+Now for each row, we process each valid state, and can quickly check how many valid configs
+are present (i.e, dont clash with the last row). As given a previous row value, how many new row configs we can have, this value does not change for each row.
+
+The subser over sum dp, applied to initial counts for a mask, is used to calculate, for a given mask, sum of all sub-masks initial count. Or, for a given mask, what is the contribution of all its sub-masks which are present. Contribution in this case will be summation. Now that we have this for all the masks, when at row i. Lets call the result as supersum.
+
+Consider going from i to i+1 row, for each valid_mask, say curr_mask, we need sum of all other masks which have no common bit set with curr_mask, which is basically supersum of complement of curr_mask. We calculate this for all valid_masks. Now these counts serve as starting counts for the next row. But subset over sum dp is again calculated. So, we do this height times, and because result for a row depends only on last, we only need to have 1 array itself.
+
+Also, instead of calculating the sum everytime using complements. We can also store list of edges from each valid_masks, to other masks which are compatible. And everytime, for the complement sum, we calculate sum of those values only. This reference will not have to be calculated each time.
+
+Now a note on how to generate valid masks, first of all, a mask is joins in between(excluding ends), so it can be represented by width-1 bits. So, we can simply
+iterate over all the masks, and check if each mask is a valid config. For that, we need to check the brick sizes being formed between 1s and bounds(start/end).
+If we encounter a brick size which is not present in our supply, its an invalid config. 
+
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Number of Ways to Build Sturdy Brick Wall" lines
+# @param {Integer} height
+# @param {Integer} width
+# @param {Integer[]} bricks
+# @return {Integer}
+def build_wall(height, width, bricks)
+  return (height > 1 || width.modulo(bricks.first)!=0 ? 0 : 1 ) if bricks.size == 1
+  
+  big_mod = 10**9 + 7; brick_set = bricks.to_set
+  k = width-1 # bit length for valid masks
+  max_mask = 1<<k
+  
+  # calculation of valid masks which represent joins in exclusive range (0,width-1)
+  valid_masks = (0...max_mask).select do |mask|
+    joins_at = [-1] + (0...k).select { |b| mask & (1<<b) > 0 } + [k]
+    required_brick_set = (1...joins_at.size).map { |x| (joins_at[x]-joins_at[x-1]) }.to_set
+    (required_brick_set - brick_set).empty?
+  end
+
+  return 0 if valid_masks.empty?
+
+  # initial counts for row - 0
+  dp_init = [0]*max_mask; valid_masks.each {|m| dp_init[m]=1 }
+
+  # Iterative subset-sum-over dp begins from here
+  dp = (height-1).times.reduce(dp_init) do |dp, h|
+    # subset sum over dp, for each super-mask, it gets total sum of all valid submasks present
+    (0..k).each{ |b| (0...max_mask).each { |m| dp[m] += dp[m ^ (1<<b)] if m & (1<<b) != 0 } }
+
+    # counts for a mask in this row is it's complement mask's total sum calculated above
+    dp_new = [0]*max_mask; valid_masks.each { |m| dp_new[m] = dp[(max_mask-1)^m] }
+    dp_new
+  end
+
+  dp.sum % big_mod
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

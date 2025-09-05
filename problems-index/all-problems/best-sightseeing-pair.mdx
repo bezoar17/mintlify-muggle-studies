@@ -1,0 +1,35 @@
+---
+title: '🧀 Best Sightseeing Pair'
+description: '[leetcode link](https://leetcode.com/problems/best-sightseeing-pair/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer array <code>values</code> where values[i] represents the value of the <code>i<sup>th</sup></code> sightseeing spot. Two sightseeing spots <code>i</code> and <code>j</code> have a <strong>distance</strong> <code>j - i</code> between them.</p>  <p>The score of a pair (<code>i &lt; j</code>) of sightseeing spots is <code>values[i] + values[j] + i - j</code>: the sum of the values of the sightseeing spots, minus the distance between them.</p>  <p>Return <em>the maximum score of a pair of sightseeing spots</em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> values = [8,1,5,2,6] <br/> <strong>Output:</strong> 11 <br/> <strong>Explanation:</strong> i = 0, j = 2, values[i] + values[j] + i - j = 8 + 5 + 0 - 2 = 11   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> values = [1,2] <br/> <strong>Output:</strong> 2    <p><strong>Constraints:</strong></p>  <ul>  <li><code>2 &lt;= values.length &lt;= 5 * 10<sup>4</sup></code></li>  <li><code>1 &lt;= values[i] &lt;= 1000</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      For the pair, the values[i] + i  is the left element. Right element is values[j] -j. Consider each element to be the right element, to pick best left keep a track of maximum of values[i] + i till that value. And keep track of score and max_score considering each element as right element.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Best Sightseeing Pair" lines
+# @param {Integer[]} values
+# @return {Integer}
+def max_score_sightseeing_pair(values)
+  max_left_score = values[0] + 0
+  max_pair_score = -1
+  (1...values.size).each do |j|
+    max_right_score = values[j] - j
+    max_pair_score = [max_pair_score, max_left_score + max_right_score].max
+    max_left_score = [max_left_score, values[j]+j ].max # update left for the next iteration
+  end
+  max_pair_score
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,38 @@
+---
+title: '🧀 Unique Length-3 Palindromic Subsequences'
+description: '[leetcode link](https://leetcode.com/problems/unique-length-3-palindromic-subsequences/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a string <code>s</code>, return <em>the number of <strong>unique palindromes of length three</strong> that are a <strong>subsequence</strong> of </em><code>s</code>.</p>  <p>Note that even if there are multiple ways to obtain the same subsequence, it is still only counted <strong>once</strong>.</p>  <p>A <strong>palindrome</strong> is a string that reads the same forwards and backwards.</p>  <p>A <strong>subsequence</strong> of a string is a new string generated from the original string with some characters (can be none) deleted without changing the relative order of the remaining characters.</p>  <ul>  <li>For example, <code>&quot;ace&quot;</code> is a subsequence of <code>&quot;<u>a</u>b<u>c</u>d<u>e</u>&quot;</code>.</li> </ul>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> s = &quot;aabca&quot; <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> The 3 palindromic subsequences of length 3 are: - &quot;aba&quot; (subsequence of &quot;<u>a</u>a<u>b</u>c<u>a</u>&quot;) - &quot;aaa&quot; (subsequence of &quot;<u>aa</u>bc<u>a</u>&quot;) - &quot;aca&quot; (subsequence of &quot;<u>a</u>ab<u>ca</u>&quot;)   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> s = &quot;adc&quot; <br/> <strong>Output:</strong> 0 <br/> <strong>Explanation:</strong> There are no palindromic subsequences of length 3 in &quot;adc&quot;.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> s = &quot;bbcbaba&quot; <br/> <strong>Output:</strong> 4 <br/> <strong>Explanation:</strong> The 4 palindromic subsequences of length 3 are: - &quot;bbb&quot; (subsequence of &quot;<u>bb</u>c<u>b</u>aba&quot;) - &quot;bcb&quot; (subsequence of &quot;<u>b</u>b<u>cb</u>aba&quot;) - &quot;bab&quot; (subsequence of &quot;<u>b</u>bcb<u>ab</u>a&quot;) - &quot;aba&quot; (subsequence of &quot;bbcb<u>aba</u>&quot;)    <p><strong>Constraints:</strong></p>  <ul>  <li><code>3 &lt;= s.length &lt;= 10<sup>5</sup></code></li>  <li><code>s</code> consists of only lowercase English letters.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Possible subsequence is limited by no. of chars(26^2). Each subsequence is composed of side and mid char with the format side-mid-side. Store first and last idxs for each char. Now for each char, assuming it is the side char, take all distinct occurences between first and last idx of side char, all these chars can be mid. possible side chars are 26, and even if we do complete left to right for each char, its O(26 * N) max.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Unique Length-3 Palindromic Subsequences" lines
+# @param {String} s
+# @return {Integer}
+def count_palindromic_subsequence(s)
+  p_sub_count = 0
+  first_idx = {}; last_idx = Hash.new(-1)
+  chars = s.chars
+  chars.each_with_index {|ch,i| first_idx[ch]||=i; last_idx[ch]=i; }
+
+  first_idx.each do |side_ch, first_i|
+    ss = Set.new
+    ((first_i+1)...(last_idx[side_ch])).each {|i| ss.add(chars[i]) }
+    p_sub_count += ss.size
+  end
+  p_sub_count
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

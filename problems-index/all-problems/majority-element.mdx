@@ -1,0 +1,41 @@
+---
+title: '🧩 Majority Element'
+description: '[leetcode link](https://leetcode.com/problems/majority-element/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an array <code>nums</code> of size <code>n</code>, return <em>the majority element</em>.</p>  <p>The majority element is the element that appears more than <code>&lfloor;n / 2&rfloor;</code> times. You may assume that the majority element always exists in the array.</p>   <p><strong class="example">Example 1:</strong></p> <strong>Input:</strong> nums = [3,2,3] <br/> <strong>Output:</strong> 3 <p><strong class="example">Example 2:</strong></p> <strong>Input:</strong> nums = [2,2,1,1,1,2,2] <br/> <strong>Output:</strong> 2   <p><strong>Constraints:</strong></p>  <ul>  <li><code>n == nums.length</code></li>  <li><code>1 &lt;= n &lt;= 5 * 10<sup>4</sup></code></li>  <li><code>-10<sup>9</sup> &lt;= nums[i] &lt;= 10<sup>9</sup></code></li> </ul>   <strong>Follow-up:</strong> Could you solve the problem in linear time and in <code>O(1)</code> space?
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```cpp title="Majority Element" lines
+class Solution {
+public:
+    int majorityElement(vector<int> &num) {
+    int majority;
+    int cnt = 0;
+    for(int i=0; i<num.size(); i++){
+        if ( cnt ==0 ){
+            majority = num[i];
+            cnt++;
+        }else{
+            majority == num[i] ? cnt++ : cnt --;
+            if (cnt > num.size()/2) return majority;
+        }
+    }
+    return majority;
+
+}
+};
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,41 @@
+---
+title: '🧀 Delete and Earn'
+description: '[leetcode link](https://leetcode.com/problems/delete-and-earn/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer array <code>nums</code>. You want to maximize the number of points you get by performing the following operation any number of times:</p>  <ul>  <li>Pick any <code>nums[i]</code> and delete it to earn <code>nums[i]</code> points. Afterwards, you must delete <b>every</b> element equal to <code>nums[i] - 1</code> and <strong>every</strong> element equal to <code>nums[i] + 1</code>.</li> </ul>  <p>Return <em>the <strong>maximum number of points</strong> you can earn by applying the above operation some number of times</em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [3,4,2] <br/> <strong>Output:</strong> 6 <br/> <strong>Explanation:</strong> You can perform the following operations: - Delete 4 to earn 4 points. Consequently, 3 is also deleted. nums = [2]. - Delete 2 to earn 2 points. nums = []. You earn a total of 6 points.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [2,2,3,3,3,4] <br/> <strong>Output:</strong> 9 <br/> <strong>Explanation:</strong> You can perform the following operations: - Delete a 3 to earn 3 points. All 2&#39;s and 4&#39;s are also deleted. nums = [3,3]. - Delete a 3 again to earn 3 points. nums = [3]. - Delete a 3 once more to earn 3 points. nums = []. You earn a total of 9 points.   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 2 * 10<sup>4</sup></code></li>  <li><code>1 &lt;= nums[i] &lt;= 10<sup>4</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Kind of like house-robber, where adjacent nums cant be stolen together. But, here, first of all, we club the nums together, and put them on a number line, the adjacent thing only comes in play if we have adjacent nums, we might not even have them in first place.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Delete and Earn" lines
+# @param {Integer[]} nums
+# @return {Integer}
+def delete_and_earn(nums)
+  freq = nums.tally
+  prev_num = nil
+  take = skip = 0
+
+  freq.keys.sort.each do |num|
+    max_till_prev = [skip, take].max # max till prev_num is max of both options
+    
+    # if prev_num == num-1, you have to use skip, else you can take max_till_prev(both options)
+    take = num * freq[num] + (prev_num == num-1 ? skip : max_till_prev)
+    skip = max_till_prev # we are extending the max till prev_numious by skipping
+    
+    prev_num = num
+  end
+  [skip, take].max
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

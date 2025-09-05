@@ -1,0 +1,35 @@
+---
+title: '🧩 Climbing Stairs'
+description: '[leetcode link](https://leetcode.com/problems/climbing-stairs/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are climbing a staircase. It takes <code>n</code> steps to reach the top.</p>  <p>Each time you can either climb <code>1</code> or <code>2</code> steps. In how many distinct ways can you climb to the top?</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> n = 2 <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> There are two ways to climb to the top. 1. 1 step + 1 step 2. 2 steps   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> n = 3 <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> There are three ways to climb to the top. 1. 1 step + 1 step + 1 step 2. 1 step + 2 steps 3. 2 steps + 1 step    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= n &lt;= 45</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Climbing Stairs" lines
+# @param {Integer} n
+# @return {Integer}
+def climb_stairs(n)
+  arr = [1, 2]
+
+  return arr[n-1] if n <3
+
+  (n-2).times do
+    arr = [arr.last, arr.sum]
+  end
+  arr.last
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

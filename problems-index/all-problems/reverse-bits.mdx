@@ -1,0 +1,41 @@
+---
+title: '🧩 Reverse Bits'
+description: '[leetcode link](https://leetcode.com/problems/reverse-bits/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Reverse bits of a given 32 bits signed integer.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">n = 43261596</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">964176192</span></p>  <p><br/> <strong>Explanation:</strong></p>  <table>  <tbody>   <tr>    <th>Integer</th>    <th>Binary</th>   </tr>   <tr>    <td>43261596</td>    <td>00000010100101000001111010011100</td>   </tr>   <tr>    <td>964176192</td>    <td>00111001011110000010100101000000</td>   </tr>  </tbody> </table> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">n = 2147483644</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">1073741822</span></p>  <p><br/> <strong>Explanation:</strong></p>  <table>  <tbody>   <tr>    <th>Integer</th>    <th>Binary</th>   </tr>   <tr>    <td>2147483644</td>    <td>01111111111111111111111111111100</td>   </tr>   <tr>    <td>1073741822</td>    <td>00111111111111111111111111111110</td>   </tr>  </tbody> </table> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>0 &lt;= n &lt;= 2<sup>31</sup> - 2</code></li>  <li><code>n</code> is even.</li> </ul>   <p><strong>Follow up:</strong> If this function is called many times, how would you optimize it?</p> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```cpp title="Reverse Bits" lines
+class Solution {
+public:
+    uint32_t reverseBits(uint32_t A) {
+     unsigned int msb=1;
+    unsigned int lsb=1;
+    unsigned int ans=0;
+    int i;
+    for(i=0;i<31;i++)
+        msb=msb<<1;
+    for(i=0;i<32;i++){
+       if(msb&A)
+        ans=ans|(lsb);
+       lsb=lsb<<1;
+       msb=msb>>1;
+    }
+    return ans;   
+    }
+};
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,85 @@
+---
+title: '❗️ Maximize Subarrays After Removing One Conflicting Pair'
+description: '[leetcode link](https://leetcode.com/problems/maximize-subarrays-after-removing-one-conflicting-pair/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer <code>n</code> which represents an array <code>nums</code> containing the numbers from 1 to <code>n</code> in order. Additionally, you are given a 2D array <code>conflictingPairs</code>, where <code>conflictingPairs[i] = [a, b]</code> indicates that <code>a</code> and <code>b</code> form a conflicting pair.</p>  <p>Remove <strong>exactly</strong> one element from <code>conflictingPairs</code>. Afterward, count the number of <span data-keyword="subarray-nonempty">non-empty subarrays</span> of <code>nums</code> which do not contain both <code>a</code> and <code>b</code> for any remaining conflicting pair <code>[a, b]</code>.</p>  <p>Return the <strong>maximum</strong> number of subarrays possible after removing <strong>exactly</strong> one conflicting pair.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">n = 4, conflictingPairs = [[2,3],[1,4]]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">9</span></p>  <p><br/> <strong>Explanation:</strong></p>  <ul>  <li>Remove <code>[2, 3]</code> from <code>conflictingPairs</code>. Now, <code>conflictingPairs = [[1, 4]]</code>.</li>  <li>There are 9 subarrays in <code>nums</code> where <code>[1, 4]</code> do not appear together. They are <code>[1]</code>, <code>[2]</code>, <code>[3]</code>, <code>[4]</code>, <code>[1, 2]</code>, <code>[2, 3]</code>, <code>[3, 4]</code>, <code>[1, 2, 3]</code> and <code>[2, 3, 4]</code>.</li>  <li>The maximum number of subarrays we can achieve after removing one element from <code>conflictingPairs</code> is 9.</li> </ul> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">n = 5, conflictingPairs = [[1,2],[2,5],[3,5]]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">12</span></p>  <p><br/> <strong>Explanation:</strong></p>  <ul>  <li>Remove <code>[1, 2]</code> from <code>conflictingPairs</code>. Now, <code>conflictingPairs = [[2, 5], [3, 5]]</code>.</li>  <li>There are 12 subarrays in <code>nums</code> where <code>[2, 5]</code> and <code>[3, 5]</code> do not appear together.</li>  <li>The maximum number of subarrays we can achieve after removing one element from <code>conflictingPairs</code> is 12.</li> </ul> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>2 &lt;= n &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= conflictingPairs.length &lt;= 2 * n</code></li>  <li><code>conflictingPairs[i].length == 2</code></li>  <li><code>1 &lt;= conflictingPairs[i][j] &lt;= n</code></li>  <li><code>conflictingPairs[i][0] != conflictingPairs[i][1]</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Total sub-arrays is n*(n+1)/2. If there are p conflicting pairs, the main thing to see is how can we avoid calculating number of sub-arrays after each removal of conflicting pair, i.e p times.
+
+So, instead of calculating effect of p-1 pairs, p times. Is there a way we can calculate effect of p pairs, and use that in calculating the effect of removal of a pair.
+
+First lets calculate how many valid sub-arrays are possible if no removal was allowed.
+We can calculate non-valid for each pair, and then subtract it, but this way, we will have to think of overlaps in non-valid subarrays. For example, for conflict pair (3,6), non-valid subarrays are ones which left &lt;=3 and right &gt;=6. Similarly, for (2,5), for these 2 pairs there will be common section which will have to be counted for etc. 
+Hence, we try a way where overlaps like these wont happen. We will look at all sub-arrays ending at a particular index r. And check this for all indexes. r = 1 to N.
+
+At a particular r, if there were no conflicting pairs, there are r starting points, hence r sub-arrays ending at r.
+With 1 conflicting pair say (u,v), if v &gt; r, then valid sub-array count remains r.
+But if v &lt;= r, then starting should be &gt;u, else it will conflict. So valid sub-array count ending at r is r-u.
+
+With p conflicting pairs, valid sub-array count ending at r would be
+F(r) = r - Umax;    Umax is maximum(rightmost) u value amongst all (u,v) such that v &lt;= r
+
+Now that we have this value for all indexes, we have just calculated the no. of valid sub-arrays given p conflicting pairs.
+
+Now to think about the removal, suppose the Umax being considered at each idx, was like this 
+[u1, u1, u2, u1, u3, u5, u1] etc. When u1, is removed 4 idxs will see an increase in valid sub-array count.
+It doesnt make sense to remove any u,v pair which is not considered Umax in any of the idx, it doesn't effect the result.
+
+What is that increase in sub-array count ? It is Umax - Umax2, where Umax2 is the 2nd maximum u value at that idx.
+F(r) goes from r-Umax to r - Umax2, so increase is Umax - Umax2. 
+
+So, at each idx, if we record the increase that it will have given Umax was removed, and store it against Umax in a hash, 
+by the end, we can see removal of which pair would give us the best increase overall, and what that would be.
+
+https://leetcode.com/problems/maximize-subarrays-after-removing-one-conflicting-pair/solutions/7005546/beginner-friendly-explanation-an-intuitive-single-pass-solution-python-c-java
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Maximize Subarrays After Removing One Conflicting Pair" lines
+# @param {Integer} n
+# @param {Integer[][]} conflicting_pairs
+# @return {Integer}
+def max_subarrays(n, conflicting_pairs)
+  # ensure (u,v) v>u, and then sort by asc v, then asc u
+  cp = conflicting_pairs.map(&:sort).sort_by(&:reverse)
+  cp_size = cp.size
+  gains_for_removed_u = Hash.new(0)
+
+  base_sb_count = cp_ptr = curr_u_max = curr_u_2nd_max = 0
+
+  (1..n).each do |i|
+    # move cp_ptr to include all valid pairs till a v
+    while cp_ptr < cp_size && cp[cp_ptr][1] <= i
+      u_val = cp[cp_ptr][0]
+      # update umax and u2ndmax
+      if u_val > curr_u_max
+        curr_u_2nd_max = curr_u_max
+        curr_u_max = u_val
+      else
+        curr_u_2nd_max = [curr_u_2nd_max, u_val].max
+      end
+      cp_ptr+=1
+    end
+
+    # update base, and gains, and record it
+    base_sb_count += (i-curr_u_max)
+    gains_for_removed_u[curr_u_max] += (curr_u_max-curr_u_2nd_max)
+  end
+  
+  base_sb_count + gains_for_removed_u.values.max
+end
+
+
+
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

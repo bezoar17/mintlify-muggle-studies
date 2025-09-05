@@ -1,0 +1,40 @@
+---
+title: '🧩 Same Tree'
+description: '[leetcode link](https://leetcode.com/problems/same-tree/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given the roots of two binary trees <code>p</code> and <code>q</code>, write a function to check if they are the same or not.</p>  <p>Two binary trees are considered the same if they are structurally identical, and the nodes have the same value.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/12/20/ex1.jpg" style="width: 622px; height: 182px;" />  <strong>Input:</strong> p = [1,2,3], q = [1,2,3] <br/> <strong>Output:</strong> true   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/12/20/ex2.jpg" style="width: 382px; height: 182px;" />  <strong>Input:</strong> p = [1,2], q = [1,null,2] <br/> <strong>Output:</strong> false   <p><strong class="example">Example 3:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/12/20/ex3.jpg" style="width: 622px; height: 182px;" />  <strong>Input:</strong> p = [1,2,1], q = [1,1,2] <br/> <strong>Output:</strong> false    <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in both trees is in the range <code>[0, 100]</code>.</li>  <li><code>-10<sup>4</sup> &lt;= Node.val &lt;= 10<sup>4</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Same Tree" lines
+# Definition for a binary tree node.
+# class TreeNode
+#     attr_accessor :val, :left, :right
+#     def initialize(val = 0, left = nil, right = nil)
+#         @val = val
+#         @left = left
+#         @right = right
+#     end
+# end
+# @param {TreeNode} p
+# @param {TreeNode} q
+# @return {Boolean}
+def is_same_tree(p, q)
+  return true if p.nil? && q.nil?
+  return false if p.nil? || q.nil?
+  p.val == q.val && is_same_tree(p.left, q.left) && is_same_tree(p.right, q.right)
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

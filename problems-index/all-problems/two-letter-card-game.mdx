@@ -1,0 +1,66 @@
+---
+title: '🧀 Two-Letter Card Game'
+description: '[leetcode link](https://leetcode.com/problems/two-letter-card-game/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a deck of cards represented by a string array <code>cards</code>, and each card displays two lowercase letters.</p>  <p>You are also given a letter <code>x</code>. You play a game with the following rules:</p>  <ul>  <li>Start with 0 points.</li>  <li>On each turn, you must find two <strong>compatible</strong> cards from the deck that both contain the letter <code>x</code> in any position.</li>  <li>Remove the pair of cards and earn <strong>1 point</strong>.</li>  <li>The game ends when you can no longer find a pair of compatible cards.</li> </ul>  <p>Return the <strong>maximum</strong> number of points you can gain with optimal play.</p>  <p>Two cards are <strong>compatible</strong> if the strings differ in <strong>exactly</strong> 1 position.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">cards = [&quot;aa&quot;,&quot;ab&quot;,&quot;ba&quot;,&quot;ac&quot;], x = &quot;a&quot;</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">2</span></p>  <p><br/> <strong>Explanation:</strong></p>  <ul>  <li>On the first turn, select and remove cards <code>&quot;ab&quot;</code> and <code>&quot;ac&quot;</code>, which are compatible because they differ at only index 1.</li>  <li>On the second turn, select and remove cards <code>&quot;aa&quot;</code> and <code>&quot;ba&quot;</code>, which are compatible because they differ at only index 0.</li> </ul>  <p>Because there are no more compatible pairs, the total score is 2.</p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">cards = [&quot;aa&quot;,&quot;ab&quot;,&quot;ba&quot;], x = &quot;a&quot;</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">1</span></p>  <p><br/> <strong>Explanation:</strong></p>  <ul>  <li>On the first turn, select and remove cards <code>&quot;aa&quot;</code> and <code>&quot;ba&quot;</code>.</li> </ul>  <p>Because there are no more compatible pairs, the total score is 1.</p> </div>  <p><strong class="example">Example 3:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">cards = [&quot;aa&quot;,&quot;ab&quot;,&quot;ba&quot;,&quot;ac&quot;], x = &quot;b&quot;</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">0</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>The only cards that contain the character <code>&#39;b&#39;</code> are <code>&quot;ab&quot;</code> and <code>&quot;ba&quot;</code>. However, they differ in both indices, so they are not compatible. Thus, the output is 0.</p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>2 &lt;= cards.length &lt;= 10<sup>5</sup></code></li>  <li><code>cards[i].length == 2</code></li>  <li>Each <code>cards[i]</code> is composed of only lowercase English letters between <code>&#39;a&#39;</code> and <code>&#39;j&#39;</code>.</li>  <li><code>x</code> is a lowercase English letter between <code>&#39;a&#39;</code> and <code>&#39;j&#39;</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Cards belonging to following 3 types are valid, rest are invalid. 
+Type1 : x _
+Type2:  _ x
+Type3:  x x
+
+Type 3 only has 1 unique card value, so just keep count. For type1 and type2, each unique card value can be paired with another one from the same type, or with type3.
+
+Since type3 can be paired with both, that should always become 0 after all pairings have been done. Within type1, and type2, if we have counts like [a,b,c,d,e,f], the max pairings we can get from within a type is [sum/2, sum-max].min
+
+We can first pair within the 2 types, whatever count is remaining from both these types, all can be paired with type3. If even now type3 count is non-zero. We can break the exisitng pairs from types 1,2 to form them with type3, ensuring type3 is always utilized to max.
+
+
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Two-Letter Card Game" lines
+# @param {String[]} cards
+# @param {Character} x
+# @return {Integer}
+def score(cards, x)
+  char_1_cards = Hash.new(0)
+  char_2_cards = Hash.new(0)
+  common_card_count = 0
+
+  cards.each do |card|
+    (common_card_count+=1; next) if card[0] == x && card[1] ==x
+    char_1_cards[card]+=1 if card[0] == x
+    char_2_cards[card]+=1 if card[1] == x
+  end
+
+  card1_counts = char_1_cards.values; card1_sum = card1_counts.sum
+  card2_counts = char_2_cards.values; card2_sum = card2_counts.sum
+  
+  # pairs within each type
+  p1 = [card1_sum/2, card1_sum-card1_counts.max.to_i].min
+  p2 = [card2_sum/2, card2_sum-card2_counts.max.to_i].min
+
+  # pair remaining values with common type
+  remaining = card1_sum+card2_sum - 2*(p1+p2)
+  p3 = [remaining, common_card_count].min # pair remaining with type3
+
+  result = p1+p2+p3
+
+  # if still common types are remaining, those can be paired by breaking existing within type pairs
+  result += [(common_card_count-p3)/2, p1+p2].min if common_card_count-p3 > 0
+  result
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,40 @@
+---
+title: '🧀 Meeting Rooms II'
+description: '[leetcode link](https://leetcode.com/problems/meeting-rooms-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an array of meeting time intervals <code>intervals</code> where <code>intervals[i] = [start<sub>i</sub>, end<sub>i</sub>]</code>, return <em>the minimum number of conference rooms required</em>.</p>   <p><strong class="example">Example 1:</strong></p> <strong>Input:</strong> intervals = [[0,30],[5,10],[15,20]] <br/> <strong>Output:</strong> 2 <p><strong class="example">Example 2:</strong></p> <strong>Input:</strong> intervals = [[7,10],[2,4]] <br/> <strong>Output:</strong> 1   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;=&nbsp;intervals.length &lt;= 10<sup>4</sup></code></li>  <li><code>0 &lt;= start<sub>i</sub> &lt; end<sub>i</sub> &lt;= 10<sup>6</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Store all the start and ends of meetings from left to right into a map, and then calculate a running current counter, max value of this would be the answer. For a meeting [1,5] , we add room[1] += 1
+room[5]-=1. Indicating room needed for that meeting.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Meeting Rooms II" lines
+# @param {Integer[][]} intervals
+# @return {Integer}
+def min_meeting_rooms(intervals)
+  counter = Hash.new(0)
+  intervals.each {|st, ed| counter[st]+=1; counter[ed]-=1}
+
+  times = counter.keys.sort
+
+  result = curr = 0
+  times.each do |t|
+    curr+=counter[t]
+    result = [result, curr].max
+  end
+    
+  result
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

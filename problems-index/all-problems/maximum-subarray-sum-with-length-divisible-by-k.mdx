@@ -1,0 +1,60 @@
+---
+title: '🧀 Maximum Subarray Sum With Length Divisible by K'
+description: '[leetcode link](https://leetcode.com/problems/maximum-subarray-sum-with-length-divisible-by-k/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an array of integers <code>nums</code> and an integer <code>k</code>.</p>  <p>Return the <strong>maximum</strong> sum of a <span data-keyword="subarray-nonempty">subarray</span> of <code>nums</code>, such that the size of the subarray is <strong>divisible</strong> by <code>k</code>.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [1,2], k = 1</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">3</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>The subarray <code>[1, 2]</code> with sum 3 has length equal to 2 which is divisible by 1.</p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [-1,-2,-3,-4,-5], k = 4</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">-10</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>The maximum sum subarray is <code>[-1, -2, -3, -4]</code> which has length equal to 4 which is divisible by 4.</p> </div>  <p><strong class="example">Example 3:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [-5,1,2,-3,4], k = 2</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">4</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>The maximum sum subarray is <code>[1, 2, -3, 4]</code> which has length equal to 4 which is divisible by 2.</p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= k &lt;= nums.length &lt;= 2 * 10<sup>5</sup></code></li>  <li><code>-10<sup>9</sup> &lt;= nums[i] &lt;= 10<sup>9</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      value of sum of subarray ending at i.
+value for first k-1 will be 0
+now calculate this for all the idxs
+for 2k, just check if i-2k makes sense
+for first k-1 values different starting points are there
+for an i, check with i-k, what was the value there, if it makes sense to add it to current streak
+this part now is same as kadane's maximum subarray sum. 
+so instead of num, we here have sum of subarray of k as nums, and kadane can be applied.
+
+dp[i] = (sum of last k elements excluding i) + [0, dp[i-k]].max
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Maximum Subarray Sum With Length Divisible by K" lines
+# @param {Integer[]} nums
+# @param {Integer} k
+# @return {Integer}
+def max_subarray_sum(nums, k)
+  # value of sum of subarray ending at i.
+  # value for first k-1 will be 0
+  # now calculate this for all the idxs
+  # for 2k, just check if i-2k makes sense
+  # for first k-1 values different starting points are there
+  # for an i, check with i-k, what was the value there, if it makes sense to add it to current streak
+  # this part now is same as kadane's maximum subarray sum. 
+  # so instead of num, we here have sum of subarray of k as nums, and kadane can be applied.
+
+  n = nums.size
+
+  prefix_sums = [0] # prefix i, is sum of all elements [0,i-1] or [0,i)
+  (0...n).each {|i| prefix_sums<<(prefix_sums.last+nums[i]) }
+
+  dp = Array.new(n+1, -Float::INFINITY)
+  
+  (k..n).each do |i|
+    # calculate last k sum, then check if i-k should be added or not
+    # i-k is added, we are continuing the subarray to k->2k->3k, else we are not continuing it, and starting here again, kadane's logic
+    dp[i] = (prefix_sums[i] - prefix_sums[i-k]) + [0, dp[i-k]].max
+  end
+  dp.max
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

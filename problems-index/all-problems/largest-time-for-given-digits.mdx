@@ -1,0 +1,31 @@
+---
+title: '🧀 Largest Time for Given Digits'
+description: '[leetcode link](https://leetcode.com/problems/largest-time-for-given-digits/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an array <code>arr</code> of 4 digits, find the latest 24-hour time that can be made using each digit <strong>exactly once</strong>.</p>  <p>24-hour times are formatted as <code>&quot;HH:MM&quot;</code>, where <code>HH</code> is between <code>00</code> and <code>23</code>, and <code>MM</code> is between <code>00</code> and <code>59</code>. The earliest 24-hour time is <code>00:00</code>, and the latest is <code>23:59</code>.</p>  <p>Return <em>the latest 24-hour time in <code>&quot;HH:MM&quot;</code> format</em>. If no valid time can be made, return an empty string.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> arr = [1,2,3,4] <br/> <strong>Output:</strong> &quot;23:41&quot; <br/> <strong>Explanation:</strong> The valid 24-hour times are &quot;12:34&quot;, &quot;12:43&quot;, &quot;13:24&quot;, &quot;13:42&quot;, &quot;14:23&quot;, &quot;14:32&quot;, &quot;21:34&quot;, &quot;21:43&quot;, &quot;23:14&quot;, and &quot;23:41&quot;. Of these times, &quot;23:41&quot; is the latest.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> arr = [5,5,5,5] <br/> <strong>Output:</strong> &quot;&quot; <br/> <strong>Explanation:</strong> There are no valid 24-hour times as &quot;55:55&quot; is not valid.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>arr.length == 4</code></li>  <li><code>0 &lt;= arr[i] &lt;= 9</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Largest Time for Given Digits" lines
+# @param {Integer[]} arr
+# @return {String}
+def largest_time_from_digits(arr)
+  # 0-[0,2]  1-[[0-9], [0-9], [0-3]] 2-[0,5] 3-[0,9];   check for 0-9 is redundant
+  valid =->(x) { x[0].between?(0,2) && x[2].between?(0,5) && ((x[0] != 2)|| x[1].between?(0,3)) } 
+  
+  arr.permutation.select(&valid).map{|x| "#{x[0,2].join}:#{x[2,2].join}" }.sort&.last.to_s
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

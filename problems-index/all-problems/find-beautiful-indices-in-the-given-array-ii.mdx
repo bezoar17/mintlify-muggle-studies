@@ -1,0 +1,83 @@
+---
+title: '❗️ Find Beautiful Indices in the Given Array II'
+description: '[leetcode link](https://leetcode.com/problems/find-beautiful-indices-in-the-given-array-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a <strong>0-indexed</strong> string <code>s</code>, a string <code>a</code>, a string <code>b</code>, and an integer <code>k</code>.</p>  <p>An index <code>i</code> is <strong>beautiful</strong> if:</p>  <ul>  <li><code>0 &lt;= i &lt;= s.length - a.length</code></li>  <li><code>s[i..(i + a.length - 1)] == a</code></li>  <li>There exists an index <code>j</code> such that:  <ul>   <li><code>0 &lt;= j &lt;= s.length - b.length</code></li>   <li><code>s[j..(j + b.length - 1)] == b</code></li>   <li><code>|j - i| &lt;= k</code></li>  </ul>  </li> </ul>  <p>Return <em>the array that contains beautiful indices in <strong>sorted order from smallest to largest</strong></em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> s = &quot;isawsquirrelnearmysquirrelhouseohmy&quot;, a = &quot;my&quot;, b = &quot;squirrel&quot;, k = 15 <br/> <strong>Output:</strong> [16,33] <br/> <strong>Explanation:</strong> There are 2 beautiful indices: [16,33]. - The index 16 is beautiful as s[16..17] == &quot;my&quot; and there exists an index 4 with s[4..11] == &quot;squirrel&quot; and |16 - 4| &lt;= 15. - The index 33 is beautiful as s[33..34] == &quot;my&quot; and there exists an index 18 with s[18..25] == &quot;squirrel&quot; and |33 - 18| &lt;= 15. Thus we return [16,33] as the result.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> s = &quot;abcd&quot;, a = &quot;a&quot;, b = &quot;a&quot;, k = 4 <br/> <strong>Output:</strong> [0] <br/> <strong>Explanation:</strong> There is 1 beautiful index: [0]. - The index 0 is beautiful as s[0..0] == &quot;a&quot; and there exists an index 0 with s[0..0] == &quot;a&quot; and |0 - 0| &lt;= 4. Thus we return [0] as the result.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= k &lt;= s.length &lt;= 5 * 10<sup>5</sup></code></li>  <li><code>1 &lt;= a.length, b.length &lt;= 5 * 10<sup>5</sup></code></li>  <li><code>s</code>, <code>a</code>, and <code>b</code> contain only lowercase English letters.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Rabin-Karp Implementation
+For rabin-karp, important thing is while calculating hash, base ** i, should also be modded, and not the final result, because this itself can become huge.
+
+Even after that, had to play around with base and mod values to get it accepted, and not TLE. 26, and 1e9+7 wasnt working, gave collisions, 1e10+7 didnt have them, but gave tle. Then 31 with 1e9+7 worked, for python, for ruby still gave tle.
+
+Rabin-Karp or KMP can be used.
+
+Rabin-Karp has collisions, but for a small set, like 26 chars, if we choose base as 27, then every pattern will have a unique no., hence no collisions, but the hash space will be huge. For small sets, we can use this, but in reality it is used with a modulus to keep hash space low. And due to this collisions can happen, so, after a match, we have to do a exact match again. To reduce collisions, we can use 2 hash fns with 2 different mod values, but again can't guarantee no-collision so we have to do the exact match anyway, in real world. in this question, we can use rabin-karp.
+
+Rabin-Karp cant be directly used as pattern length can be huge, so numbers get huge, we have to use the mod functionality here. But with mod, we usually have collisions and need to check for it, but here testcases are such that that doesnt happen.
+
+KMP has no such issues, and algo is intuitive, but hard to layout exactly, and implement. It preprocesses pattern, so that as soon as we get a mismatch, we dont start from the next char in hay, but use the patterns characteristic to start from some further idx. 
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```python3 title="Find Beautiful Indices in the Given Array II" lines
+class Solution:
+    def rabin_karp(self, haystack, needle):
+        base = 31
+        mod = 1_000_000_000 + 7
+        n = len(needle)
+        
+        # Calculate needle hash
+        needle_hash = 0
+        for i, ch in enumerate(reversed(needle)):
+            needle_hash = (needle_hash + (ord(ch) - ord('a')) * pow(base, i, mod)) % mod
+        
+        # Calculate current window hash
+        curr_hash = 0
+        for i, ch in enumerate(reversed(haystack[:n])):
+            curr_hash = (curr_hash + (ord(ch) - ord('a')) * pow(base, i, mod)) % mod
+        
+        result = []
+        base_power = pow(base, n - 1, mod)
+        
+        for i in range(len(haystack) - n + 1):
+            if needle_hash == curr_hash:
+                result.append(i)
+            if i + n < len(haystack):
+                curr_hash = ((curr_hash - (ord(haystack[i]) - ord('a')) * base_power) * base + (ord(haystack[i + n]) - ord('a'))) % mod
+        
+        return result
+    
+    def beautifulIndices(self, s: str, a: str, b: str, k: int) -> List[int]:
+        if len(a) > len(s) or len(b) > len(s):
+            return []
+        
+        # Create prefix sum array for b indices
+        b_idxs = [0] * len(s)
+        for i in self.rabin_karp(s, b):
+            b_idxs[i] = 1
+        
+        prefix_sum = [0]
+        for i in range(len(s)):
+            prefix_sum.append(prefix_sum[-1] + b_idxs[i])
+        
+        # Check each a index
+        result = []
+        for i in self.rabin_karp(s, a):
+            l = max(i - k, 0)
+            r = min(i + k + 1, len(s))
+            if prefix_sum[r] - prefix_sum[l] > 0:
+                result.append(i)
+        
+        return result
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

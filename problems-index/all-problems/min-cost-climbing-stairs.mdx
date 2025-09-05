@@ -1,0 +1,38 @@
+---
+title: '🧩 Min Cost Climbing Stairs'
+description: '[leetcode link](https://leetcode.com/problems/min-cost-climbing-stairs/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer array <code>cost</code> where <code>cost[i]</code> is the cost of <code>i<sup>th</sup></code> step on a staircase. Once you pay the cost, you can either climb one or two steps.</p>  <p>You can either start from the step with index <code>0</code>, or the step with index <code>1</code>.</p>  <p>Return <em>the minimum cost to reach the top of the floor</em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> cost = [10,<u>15</u>,20] <br/> <strong>Output:</strong> 15 <br/> <strong>Explanation:</strong> You will start at index 1. - Pay 15 and climb two steps to reach the top. The total cost is 15.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> cost = [<u>1</u>,100,<u>1</u>,1,<u>1</u>,100,<u>1</u>,<u>1</u>,100,<u>1</u>] <br/> <strong>Output:</strong> 6 <br/> <strong>Explanation:</strong> You will start at index 0. - Pay 1 and climb two steps to reach index 2. - Pay 1 and climb two steps to reach index 4. - Pay 1 and climb two steps to reach index 6. - Pay 1 and climb one step to reach index 7. - Pay 1 and climb two steps to reach index 9. - Pay 1 and climb one step to reach the top. The total cost is 6.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>2 &lt;= cost.length &lt;= 1000</code></li>  <li><code>0 &lt;= cost[i] &lt;= 999</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Min Cost Climbing Stairs" lines
+# @param {Integer[]} cost
+# @return {Integer}
+def min_cost_climbing_stairs(cost)
+  return cost.min if cost.size < 3
+
+  cost_n_1 = 0 # min cost to reach n-1
+  cost_n_2 = 0 # min cost to reach n-2
+  cost_n = nil
+  # top step is not last element, it is beyond that, hence we got till cost.size including it
+  (2..cost.size).each do |i|
+    cost_n = [(cost_n_1 + cost[i-1]), cost_n_2 + cost[i-2]].min # either jump from n-1 or n-2, and take that cost
+    cost_n_2, cost_n_1 = cost_n_1, cost_n # switch n-1 and n-2 values
+  end
+  cost_n
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

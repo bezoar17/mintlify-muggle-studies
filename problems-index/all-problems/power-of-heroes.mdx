@@ -1,0 +1,60 @@
+---
+title: '❗️ Power of Heroes'
+description: '[leetcode link](https://leetcode.com/problems/power-of-heroes/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a <strong>0-indexed</strong> integer array <code>nums</code> representing the strength of some heroes. The<b> power</b> of a group of heroes is defined as follows:</p>  <ul>  <li>Let <code>i<sub>0</sub></code>, <code>i<sub>1</sub></code>, ... ,<code>i<sub>k</sub></code> be the indices of the heroes in a group. Then, the power of this group is <code>max(nums[i<sub>0</sub>], nums[i<sub>1</sub>], ... ,nums[i<sub>k</sub>])<sup>2</sup> * min(nums[i<sub>0</sub>], nums[i<sub>1</sub>], ... ,nums[i<sub>k</sub>])</code>.</li> </ul>  <p>Return <em>the sum of the <strong>power</strong> of all <strong>non-empty</strong> groups of heroes possible.</em> Since the sum could be very large, return it <strong>modulo</strong> <code>10<sup>9 </sup>+ 7</code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [2,1,4] <br/> <strong>Output:</strong> 141 <br/> <strong>Explanation:</strong>  1<sup>st</sup>&nbsp;group: [2] has power = 2<sup>2</sup>&nbsp;* 2 = 8. 2<sup>nd</sup>&nbsp;group: [1] has power = 1<sup>2</sup> * 1 = 1.  3<sup>rd</sup>&nbsp;group: [4] has power = 4<sup>2</sup> * 4 = 64.  4<sup>th</sup>&nbsp;group: [2,1] has power = 2<sup>2</sup> * 1 = 4.  5<sup>th</sup>&nbsp;group: [2,4] has power = 4<sup>2</sup> * 2 = 32.  6<sup>th</sup>&nbsp;group: [1,4] has power = 4<sup>2</sup> * 1 = 16.  ​​​​​​​7<sup>th</sup>&nbsp;group: [2,1,4] has power = 4<sup>2</sup>​​​​​​​ * 1 = 16.  The sum of powers of all groups is 8 + 1 + 64 + 4 + 32 + 16 + 16 = 141.    <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [1,1,1] <br/> <strong>Output:</strong> 7 <br/> <strong>Explanation:</strong> A total of 7 groups are possible, and the power of each group will be 1. Therefore, the sum of the powers of all groups is 7.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Subset Gen understan
+
+max^2 * min of all subsets, except empty one. So 2^n-1 subsets power score summed up.
+First, we sort the array, and go from L-&gt;R, [1,2,4]
+for ith no.
+i^2, ie. max squared appears in 1 + last_subset_count subsets, the 1 is one where i appears alone, here min will be nums[i] itself and in all last_subset_count subsets, min will be different, sum of min of each last_subset will be multiplied to get power for all subsets where i is max value.
+For i=0, M=1, all_last_sub_sets = [];  current_sub_sets = [[1]], min_sum = 1
+For i=1, M=2, all_last_sub_sets = [[1]];  current_sub_sets =[[2], [1,2]], min_sum = [2 + 1]
+For i=2,M=4,  all_last_sub_sets = [[1],[1,2],[2]], current_sub_sets = [[4], [4,1],[4,1,2],[4,2]], , min_sum=[4 + 1 + 1+ 2]
+all_last_sub_sets[i+1] = all_last_sub_sets[i] + current_sub_sets[i]
+current_sub_sets[i] = [nums[i]] +  all_last_sub_sets[i].map {|arr| arr &lt;&lt; nums[i]}
+
+power[i] = (min_sum[i-1] + nums[i])
+min_sum[i] = 2 * min_sum[i-1] + nums[i]
+min value of subsets dont change from L-R, so min_sum keeps getting doubled
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Power of Heroes" lines
+# @param {Integer[]} nums
+# @return {Integer}
+def sum_of_power(nums)
+  # max^2 * min of all subsets
+  # [1,2,4]
+  # for ith no.
+  # i^2 appears in 1 + last_subset_count values, min is of each last_subset
+  # For i=0, last_sub_sets = []; M=1, min_sum = 1
+  # For i=1, last_sub_sets = [[1]], M=2, min_sum = [2 + 1]
+  # For i=2, last_sub_sets = [[1],[1,2],[2]], M=4, min_sum=[4 + 1 + 1+ 2]
+  # For any i, min_sum is min of all last_sub_sets and i itself
+  # min of all last_subsets has a pattern, keeps getting doubled, and is basically prefix sum kinda thing
+  
+  big_mod = 1_000_000_000 + 7
+  
+  nums.sort.reduce([0,0]) do |(power, last_min_sum),num|
+    [
+      (power + num**2 * (last_min_sum + num)) % big_mod, # M^2 * current_min_sum
+      (last_min_sum + (last_min_sum + num)) % big_mod # effectively last + current sum
+    ]
+  end[0]%big_mod
+  
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

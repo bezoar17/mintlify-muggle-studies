@@ -1,0 +1,44 @@
+---
+title: '❗️ Dungeon Game'
+description: '[leetcode link](https://leetcode.com/problems/dungeon-game/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>The demons had captured the princess and imprisoned her in <strong>the bottom-right corner</strong> of a <code>dungeon</code>. The <code>dungeon</code> consists of <code>m x n</code> rooms laid out in a 2D grid. Our valiant knight was initially positioned in <strong>the top-left room</strong> and must fight his way through <code>dungeon</code> to rescue the princess.</p>  <p>The knight has an initial health point represented by a positive integer. If at any point his health point drops to <code>0</code> or below, he dies immediately.</p>  <p>Some of the rooms are guarded by demons (represented by negative integers), so the knight loses health upon entering these rooms; other rooms are either empty (represented as 0) or contain magic orbs that increase the knight&#39;s health (represented by positive integers).</p>  <p>To reach the princess as quickly as possible, the knight decides to move only <strong>rightward</strong> or <strong>downward</strong> in each step.</p>  <p>Return <em>the knight&#39;s minimum initial health so that he can rescue the princess</em>.</p>  <p><strong>Note</strong> that any room can contain threats or power-ups, even the first room the knight enters and the bottom-right room where the princess is imprisoned.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/03/13/dungeon-grid-1.jpg" style="width: 253px; height: 253px;" />  <strong>Input:</strong> dungeon = [[-2,-3,3],[-5,-10,1],[10,30,-5]] <br/> <strong>Output:</strong> 7 <br/> <strong>Explanation:</strong> The initial health of the knight must be at least 7 if he follows the optimal path: RIGHT-&gt; RIGHT -&gt; DOWN -&gt; DOWN.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> dungeon = [[0]] <br/> <strong>Output:</strong> 1    <p><strong>Constraints:</strong></p>  <ul>  <li><code>m == dungeon.length</code></li>  <li><code>n == dungeon[i].length</code></li>  <li><code>1 &lt;= m, n &lt;= 200</code></li>  <li><code>-1000 &lt;= dungeon[i][j] &lt;= 1000</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Calculation has to be done from bottom-right to top-left. The other way doesnt work, dont fully understand why yet, but here's an attempt. https://leetcode.com/problems/dungeon-game/solutions/1500016/why-you-can-t-go-from-top-left-to-bottom-right-explained
+
+
+Once you go from bottom-right to top-left, best explanation is https://leetcode.com/problems/dungeon-game/solutions/698271/python-short-dp-7-lines-o-mn-top-down-explained.
+
+Calculate both options of going right and down, and pick the min value according to the result. 
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Dungeon Game" lines
+# @param {Integer[][]} dungeon
+# @return {Integer}
+def calculate_minimum_hp(dungeon)
+  m = dungeon.size
+  n = dungeon[0].size
+  dp = Array.new(m+1) { Array.new(n+1, Float::INFINITY) }
+  dp[m-1][n] = dp[m][n-1] = 1
+  
+  (m-1).downto(0).each do |i|
+    (n-1).downto(0).each do |j|
+      dp[i][j] = [1, [dp[i+1][j], dp[i][j+1]].min - dungeon[i][j]].max
+    end
+  end
+  
+  dp[0][0]
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

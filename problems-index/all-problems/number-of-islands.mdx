@@ -1,0 +1,54 @@
+---
+title: '🧀 Number of Islands'
+description: '[leetcode link](https://leetcode.com/problems/number-of-islands/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an <code>m x n</code> 2D binary grid <code>grid</code> which represents a map of <code>&#39;1&#39;</code>s (land) and <code>&#39;0&#39;</code>s (water), return <em>the number of islands</em>.</p>  <p>An <strong>island</strong> is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> grid = [   [&quot;1&quot;,&quot;1&quot;,&quot;1&quot;,&quot;1&quot;,&quot;0&quot;],   [&quot;1&quot;,&quot;1&quot;,&quot;0&quot;,&quot;1&quot;,&quot;0&quot;],   [&quot;1&quot;,&quot;1&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;],   [&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;] ] <br/> <strong>Output:</strong> 1   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> grid = [   [&quot;1&quot;,&quot;1&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;],   [&quot;1&quot;,&quot;1&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;],   [&quot;0&quot;,&quot;0&quot;,&quot;1&quot;,&quot;0&quot;,&quot;0&quot;],   [&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;1&quot;,&quot;1&quot;] ] <br/> <strong>Output:</strong> 3    <p><strong>Constraints:</strong></p>  <ul>  <li><code>m == grid.length</code></li>  <li><code>n == grid[i].length</code></li>  <li><code>1 &lt;= m, n &lt;= 300</code></li>  <li><code>grid[i][j]</code> is <code>&#39;0&#39;</code> or <code>&#39;1&#39;</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Dfs or BFS to mark visited, can travel through 1s.
+No. of connected components is the answer.
+Can do inplace by marking 1 as 2 to indicate visited
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Number of Islands" lines
+# @param {Character[][]} grid
+# @return {Integer}
+def num_islands(grid)
+  # VISITED = 2; ISLAND = 1; WATER = 0
+  island_count = 0
+  r,c = grid.size, grid[0].size
+
+  (0...r).each do |i|
+    (0...c).each do |j|
+      if grid[i][j] == "1"
+        island_count+=1
+        dfs(grid, i, j)
+      end
+    end
+  end
+  island_count
+end
+
+def dfs(grid, i, j)
+  grid[i][j] = "2"
+  directions = [[1,0],[-1,0],[0,1],[0,-1]]
+
+  for dx, dy in directions do
+    x = i+dx; y= j+dy
+    if x.between?(0, grid.size-1) && y.between?(0, grid[0].size-1) && grid[x][y] == "1"
+      dfs(grid, x, y)
+    end
+  end
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

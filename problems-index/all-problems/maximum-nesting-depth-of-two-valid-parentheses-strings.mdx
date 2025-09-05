@@ -1,0 +1,52 @@
+---
+title: '🧀 Maximum Nesting Depth of Two Valid Parentheses Strings'
+description: '[leetcode link](https://leetcode.com/problems/maximum-nesting-depth-of-two-valid-parentheses-strings/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>A string is a <em>valid parentheses string</em>&nbsp;(denoted VPS) if and only if it consists of <code>&quot;(&quot;</code> and <code>&quot;)&quot;</code> characters only, and:</p>  <ul>  <li>It is the empty string, or</li>  <li>It can be written as&nbsp;<code>AB</code>&nbsp;(<code>A</code>&nbsp;concatenated with&nbsp;<code>B</code>), where&nbsp;<code>A</code>&nbsp;and&nbsp;<code>B</code>&nbsp;are VPS&#39;s, or</li>  <li>It can be written as&nbsp;<code>(A)</code>, where&nbsp;<code>A</code>&nbsp;is a VPS.</li> </ul>  <p>We can&nbsp;similarly define the <em>nesting depth</em> <code>depth(S)</code> of any VPS <code>S</code> as follows:</p>  <ul>  <li><code>depth(&quot;&quot;) = 0</code></li>  <li><code>depth(A + B) = max(depth(A), depth(B))</code>, where <code>A</code> and <code>B</code> are VPS&#39;s</li>  <li><code>depth(&quot;(&quot; + A + &quot;)&quot;) = 1 + depth(A)</code>, where <code>A</code> is a VPS.</li> </ul>  <p>For example,&nbsp; <code>&quot;&quot;</code>,&nbsp;<code>&quot;()()&quot;</code>, and&nbsp;<code>&quot;()(()())&quot;</code>&nbsp;are VPS&#39;s (with nesting depths 0, 1, and 2), and <code>&quot;)(&quot;</code> and <code>&quot;(()&quot;</code> are not VPS&#39;s.</p>    <p>Given a VPS <font face="monospace">seq</font>, split it into two disjoint subsequences <code>A</code> and <code>B</code>, such that&nbsp;<code>A</code> and <code>B</code> are VPS&#39;s (and&nbsp;<code>A.length + B.length = seq.length</code>).</p>  <p>Now choose <strong>any</strong> such <code>A</code> and <code>B</code> such that&nbsp;<code>max(depth(A), depth(B))</code> is the minimum possible value.</p>  <p>Return an <code>answer</code> array (of length <code>seq.length</code>) that encodes such a&nbsp;choice of <code>A</code> and <code>B</code>:&nbsp; <code>answer[i] = 0</code> if <code>seq[i]</code> is part of <code>A</code>, else <code>answer[i] = 1</code>.&nbsp; Note that even though multiple answers may exist, you may return any of them.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> seq = &quot;(()())&quot; <br/> <strong>Output:</strong> [0,1,1,1,1,0]   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> seq = &quot;()(())()&quot; <br/> <strong>Output:</strong> [0,0,0,1,1,0,1,1]    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= seq.size &lt;= 10000</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Overall, string is already balanced. We have to split it into 2 valid strings such that depth of both are close, if they are not as close as possible, then max(depth a, depth b) will not be minimum.
+
+As original str is valid for every ( we have a ), so we just keep assigning starting ( to A and B alternatively, and its corresponding ) to A and B. 
+
+Samples
+
+1.         ( ( ( ( ( ) ) ) ) )
+   level   1 2 3 4 5 5 4 3 2 1  
+   A takes level 1,3,5 and B takes level 2,4 ==&gt; A : ( ( ( ) ) ) , B : ( ( ) )
+2.         ( ( ) ) ( ( ( ) ) )
+   level   1 2 2 1 1 2 3 3 2 1
+   A takes level 1,3 and B takes level 2 ==&gt; A : ( ) ( ( ) ) , B : ( ) ( )
+   
+when to increase/decrese level ?
+1. meet a new '(' level up
+2. meet a new ')' level down
+
+If you can understand the level conception, coding is easy.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Maximum Nesting Depth of Two Valid Parentheses Strings" lines
+# @param {String} seq
+# @return {Integer[]}
+def max_depth_after_split(seq)
+  depth = 0
+  answer = []
+  seq.chars.each do |ch|
+    depth -= (ch == ')' ? 1 : 0)
+    answer << depth%2
+    depth += (ch == '(' ? 1 : 0)
+  end
+  answer
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

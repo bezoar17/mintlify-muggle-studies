@@ -1,0 +1,72 @@
+---
+title: '❗️ Minimum Time to Finish the Race'
+description: '[leetcode link](https://leetcode.com/problems/minimum-time-to-finish-the-race/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a <strong>0-indexed</strong> 2D integer array <code>tires</code> where <code>tires[i] = [f<sub>i</sub>, r<sub>i</sub>]</code> indicates that the <code>i<sup>th</sup></code> tire can finish its <code>x<sup>th</sup></code> successive lap in <code>f<sub>i</sub> * r<sub>i</sub><sup>(x-1)</sup></code> seconds.</p>  <ul>  <li>For example, if <code>f<sub>i</sub> = 3</code> and <code>r<sub>i</sub> = 2</code>, then the tire would finish its <code>1<sup>st</sup></code> lap in <code>3</code> seconds, its <code>2<sup>nd</sup></code> lap in <code>3 * 2 = 6</code> seconds, its <code>3<sup>rd</sup></code> lap in <code>3 * 2<sup>2</sup> = 12</code> seconds, etc.</li> </ul>  <p>You are also given an integer <code>changeTime</code> and an integer <code>numLaps</code>.</p>  <p>The race consists of <code>numLaps</code> laps and you may start the race with <strong>any</strong> tire. You have an <strong>unlimited</strong> supply of each tire and after every lap, you may <strong>change</strong> to any given tire (including the current tire type) if you wait <code>changeTime</code> seconds.</p>  <p>Return<em> the <strong>minimum</strong> time to finish the race.</em></p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> tires = [[2,3],[3,4]], changeTime = 5, numLaps = 4 <br/> <strong>Output:</strong> 21 <br/> <strong>Explanation:</strong>  Lap 1: Start with tire 0 and finish the lap in 2 seconds. Lap 2: Continue with tire 0 and finish the lap in 2 * 3 = 6 seconds. Lap 3: Change tires to a new tire 0 for 5 seconds and then finish the lap in another 2 seconds. Lap 4: Continue with tire 0 and finish the lap in 2 * 3 = 6 seconds. Total time = 2 + 6 + 5 + 2 + 6 = 21 seconds. The minimum time to complete the race is 21 seconds.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> tires = [[1,10],[2,2],[3,4]], changeTime = 6, numLaps = 5 <br/> <strong>Output:</strong> 25 <br/> <strong>Explanation:</strong>  Lap 1: Start with tire 1 and finish the lap in 2 seconds. Lap 2: Continue with tire 1 and finish the lap in 2 * 2 = 4 seconds. Lap 3: Change tires to a new tire 1 for 6 seconds and then finish the lap in another 2 seconds. Lap 4: Continue with tire 1 and finish the lap in 2 * 2 = 4 seconds. Lap 5: Change tires to tire 0 for 6 seconds then finish the lap in another 1 second. Total time = 2 + 4 + 6 + 2 + 4 + 6 + 1 = 25 seconds. The minimum time to complete the race is 25 seconds.     <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= tires.length &lt;= 10<sup>5</sup></code></li>  <li><code>tires[i].length == 2</code></li>  <li><code>1 &lt;= f<sub>i</sub>, changeTime &lt;= 10<sup>5</sup></code></li>  <li><code>2 &lt;= r<sub>i</sub> &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= numLaps &lt;= 1000</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      https://leetcode.com/problems/minimum-time-to-finish-the-race/solutions/1804216/easy-to-understand-clean-c-code-dp-greedy
+
+https://leetcode.com/problems/minimum-time-to-finish-the-race/solutions/4556214/python-o-n-top-down-dp-18-lap-insight-not-needed
+
+dp[i] is min time needed for i laps. Suppose change tire option was not there. Then we can calculate dp[i] for all i values. For every lap, we have to compare cumulative value till that time, gm sum, so has to be calculated for each i, comparing all tire options and taking min.
+
+In our case, we cant compare each tire for each numlap. But we can build up each tire laps up to the point where a switch makes more sense(since we're first calculating max laps if no tire was changed), this way, after a few laps on a tire max_lap, we wont be affecting any num_lap value higher than max_lap, which is technically also less than 18.
+
+Rest of the dp after is calculating with tire change. For this, read following.
+
+Assume change is done at some j lap in between, then with_change_dp[i] = dp[j] + changeCost + dp[i-j] ; We calculate this value for j values in between, to update the min value for dp[i]. For each i, it is only dependent on its values below it, so bottom up is also easy. 
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Minimum Time to Finish the Race" lines
+# @param {Integer[][]} tires
+# @param {Integer} change_time
+# @param {Integer} num_laps
+# @return {Integer}
+def minimum_finish_time(tires, change_time, num_laps)
+  tire_count = tires.size
+  dp = Array.new(num_laps+1, Float::INFINITY)
+
+  # dp[i] is min time required for i laps.
+  
+  # First fill each i, if no tire change is done
+  # for this, for each tire, we compute upto a num_lap
+  # after which it is better to change and start, (f+c)
+  # this way we only update num_laps for a tire where no change has been done
+  # for with change, we will calculate later, read notes and other solutions.
+  dp[0]=0;
+  dp[1] = tires.map(&:first).max # base case for 1 lap, min amongst all f
+  
+  tires.each do |f,r|
+    cumulative_lap_time = 0;
+    # will only run max 18, after which it is always better to change
+    (1..num_laps).each do |lap_count|
+      lap_time = f * (r**(lap_count-1))
+      break if lap_time > change_time + dp[1] # better to change this lap
+      cumulative_lap_time+=lap_time;
+      dp[lap_count] = [dp[lap_count], cumulative_lap_time].min
+    end
+  end
+
+  (1..num_laps).each do |i|
+    # (1..i).each do |j|
+    #   dp[i] = [dp[i], dp[j]+change_time + dp[i-j]].min
+    # end
+    dp[i] = [dp[i], (1..i).map { |j| dp[j]+change_time+ dp[i-j] }.min ].min
+  end
+  
+  dp[num_laps]
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

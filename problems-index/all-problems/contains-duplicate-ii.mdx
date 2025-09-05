@@ -1,0 +1,41 @@
+---
+title: '🧩 Contains Duplicate II'
+description: '[leetcode link](https://leetcode.com/problems/contains-duplicate-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an integer array <code>nums</code> and an integer <code>k</code>, return <code>true</code> <em>if there are two <strong>distinct indices</strong> </em><code>i</code><em> and </em><code>j</code><em> in the array such that </em><code>nums[i] == nums[j]</code><em> and </em><code>abs(i - j) &lt;= k</code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [1,2,3,1], k = 3 <br/> <strong>Output:</strong> true   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [1,0,1,1], k = 1 <br/> <strong>Output:</strong> true   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> nums = [1,2,3,1,2,3], k = 2 <br/> <strong>Output:</strong> false    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>-10<sup>9</sup> &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>  <li><code>0 &lt;= k &lt;= 10<sup>5</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```cpp title="Contains Duplicate II" lines
+class Solution {
+public:
+    bool containsNearbyDuplicate(vector<int>& nums, int k) {
+        map<int,int> hash;bool flag=0;
+        for(int i=0;i<nums.size();i++){
+            if(hash.find(nums[i])==hash.end())
+                hash[nums[i]]=i;
+            else
+            { 
+                if(i-hash[nums[i]] <=k)
+                flag=1;
+                hash[nums[i]]=i;
+            }
+            
+        }
+        return flag;
+    }
+};
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

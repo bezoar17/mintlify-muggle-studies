@@ -1,0 +1,53 @@
+---
+title: '🧀 Find Minimum Time to Reach Last Room I'
+description: '[leetcode link](https://leetcode.com/problems/find-minimum-time-to-reach-last-room-i/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>There is a dungeon with <code>n x m</code> rooms arranged as a grid.</p>  <p>You are given a 2D array <code>moveTime</code> of size <code>n x m</code>, where <code>moveTime[i][j]</code> represents the <strong>minimum</strong> time in seconds <strong>after</strong> which the room opens and can be moved to. You start from the room <code>(0, 0)</code> at time <code>t = 0</code> and can move to an <strong>adjacent</strong> room. Moving between adjacent rooms takes <em>exactly</em> one second.</p>  <p>Return the <strong>minimum</strong> time to reach the room <code>(n - 1, m - 1)</code>.</p>  <p>Two rooms are <strong>adjacent</strong> if they share a common wall, either <em>horizontally</em> or <em>vertically</em>.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">moveTime = [[0,4],[4,4]]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">6</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>The minimum time required is 6 seconds.</p>  <ul>  <li>At time <code>t == 4</code>, move from room <code>(0, 0)</code> to room <code>(1, 0)</code> in one second.</li>  <li>At time <code>t == 5</code>, move from room <code>(1, 0)</code> to room <code>(1, 1)</code> in one second.</li> </ul> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">moveTime = [[0,0,0],[0,0,0]]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">3</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>The minimum time required is 3 seconds.</p>  <ul>  <li>At time <code>t == 0</code>, move from room <code>(0, 0)</code> to room <code>(1, 0)</code> in one second.</li>  <li>At time <code>t == 1</code>, move from room <code>(1, 0)</code> to room <code>(1, 1)</code> in one second.</li>  <li>At time <code>t == 2</code>, move from room <code>(1, 1)</code> to room <code>(1, 2)</code> in one second.</li> </ul> </div>  <p><strong class="example">Example 3:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">moveTime = [[0,1],[1,2]]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">3</span></p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>2 &lt;= n == moveTime.length &lt;= 50</code></li>  <li><code>2 &lt;= m == moveTime[i].length &lt;= 50</code></li>  <li><code>0 &lt;= moveTime[i][j] &lt;= 10<sup>9</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Djikstra, starting from 0,0 with dist 0. Dist of neighbor of i is 1+[dist_i, move_time[neighbor]].max
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Find Minimum Time to Reach Last Room I" lines
+# @param {Integer[][]} move_time
+# @return {Integer}
+def min_time_to_reach(move_time)
+  n = move_time.size; m = move_time[0].size
+  visited = Array.new(n) { Array.new(m, false) }
+  dist = Array.new(n) { Array.new(m, Float::INFINITY) }
+  
+  dj_pq = Containers::MinHeap.new
+  dj_pq << [0,[0,0]]
+
+  neighbors=->(x,y){
+    directions = [[0,1],[1,0],[-1,0],[0,-1]]
+    directions.map{|dx, dy|
+      (x+dx).between?(0,n-1) && (y+dy).between?(0,m-1) && !visited[x+dx][y+dy] ? [x+dx, y+dy] : nil
+    }.compact
+  }
+  
+  until dj_pq.empty?
+    curr_time, (i,j) = dj_pq.pop
+    next if visited[i][j]
+    visited[i][j]=true
+    dist[i][j]=curr_time
+    return curr_time if i == n-1 && j ==m-1
+
+    neighbors.call(i,j).each do |ni, nj|
+      neighbor_time = 1 + [curr_time, move_time[ni][nj]].max
+      dj_pq.push([neighbor_time, [ni,nj]])
+    end
+  end
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

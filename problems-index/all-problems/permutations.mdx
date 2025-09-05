@@ -1,0 +1,35 @@
+---
+title: '🧀 Permutations'
+description: '[leetcode link](https://leetcode.com/problems/permutations/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an array <code>nums</code> of distinct integers, return all the possible <span data-keyword="permutation-array">permutations</span>. You can return the answer in <strong>any order</strong>.</p>   <p><strong class="example">Example 1:</strong></p> <strong>Input:</strong> nums = [1,2,3] <br/> <strong>Output:</strong> [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]] <p><strong class="example">Example 2:</strong></p> <strong>Input:</strong> nums = [0,1] <br/> <strong>Output:</strong> [[0,1],[1,0]] <p><strong class="example">Example 3:</strong></p> <strong>Input:</strong> nums = [1] <br/> <strong>Output:</strong> [[1]]   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 6</code></li>  <li><code>-10 &lt;= nums[i] &lt;= 10</code></li>  <li>All the integers of <code>nums</code> are <strong>unique</strong>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Permutations" lines
+# @param {Integer[]} nums
+# @return {Integer[][]}
+def permute(nums)
+  return [nums] if nums.size == 1
+  return [nums, nums.reverse] if nums.size == 2
+  
+  results = []
+  nums.each_with_index do |n,i|
+    permute(nums - [nums[i]]).each { |arr| results << arr.unshift(nums[i]) }
+  end
+  results
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,70 @@
+---
+title: '🧀 Reschedule Meetings for Maximum Free Time II'
+description: '[leetcode link](https://leetcode.com/problems/reschedule-meetings-for-maximum-free-time-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer <code>eventTime</code> denoting the duration of an event. You are also given two integer arrays <code>startTime</code> and <code>endTime</code>, each of length <code>n</code>.</p>  <p>These represent the start and end times of <code>n</code> <strong>non-overlapping</strong> meetings that occur during the event between time <code>t = 0</code> and time <code>t = eventTime</code>, where the <code>i<sup>th</sup></code> meeting occurs during the time <code>[startTime[i], endTime[i]].</code></p>  <p>You can reschedule <strong>at most </strong>one meeting by moving its start time while maintaining the <strong>same duration</strong>, such that the meetings remain non-overlapping, to <strong>maximize</strong> the <strong>longest</strong> <em>continuous period of free time</em> during the event.</p>  <p>Return the <strong>maximum</strong> amount of free time possible after rearranging the meetings.</p>  <p><strong>Note</strong> that the meetings can <strong>not</strong> be rescheduled to a time outside the event and they should remain non-overlapping.</p>  <p><strong>Note:</strong> <em>In this version</em>, it is <strong>valid</strong> for the relative ordering of the meetings to change after rescheduling one meeting.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">eventTime = 5, startTime = [1,3], endTime = [2,5]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">2</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2024/12/22/example0_rescheduled.png" style="width: 375px; height: 123px;" /></p>  <p>Reschedule the meeting at <code>[1, 2]</code> to <code>[2, 3]</code>, leaving no meetings during the time <code>[0, 2]</code>.</p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">eventTime = 10, startTime = [0,7,9], endTime = [1,8,10]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">7</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2024/12/22/rescheduled_example0.png" style="width: 375px; height: 125px;" /></p>  <p>Reschedule the meeting at <code>[0, 1]</code> to <code>[8, 9]</code>, leaving no meetings during the time <code>[0, 7]</code>.</p> </div>  <p><strong class="example">Example 3:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">eventTime = 10, startTime = [0,3,7,9], endTime = [1,4,8,10]</span></p>  <p><br/> <strong>Output:</strong> 6</p>  <p><br/> <strong>Explanation:</strong></p>  <p><strong><img alt="" src="https://assets.leetcode.com/uploads/2025/01/28/image3.png" style="width: 375px; height: 125px;" /></strong></p>  <p>Reschedule the meeting at <code>[3, 4]</code> to <code>[8, 9]</code>, leaving no meetings during the time <code>[1, 7]</code>.</p> </div>  <p><strong class="example">Example 4:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">eventTime = 5, startTime = [0,1,2,3,4], endTime = [1,2,3,4,5]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">0</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>There is no time during the event not occupied by meetings.</p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= eventTime &lt;= 10<sup>9</sup></code></li>  <li><code>n == startTime.length == endTime.length</code></li>  <li><code>2 &lt;= n &lt;= 10<sup>5</sup></code></li>  <li><code>0 &lt;= startTime[i] &lt; endTime[i] &lt;= eventTime</code></li>  <li><code>endTime[i] &lt;= startTime[i + 1]</code> where <code>i</code> lies in the range <code>[0, n - 2]</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Our array looks like f1,d1,f2,d2,f3,d3,f4, here f can be 0 also. f is free time, d is meeting duration.
+Imagine these on a line like blocks occupying an axis. We can move pick 1 element, and place it anywhere space is free, thereby increasing max size of any free space. If we go from from Left to right and consider moving each element, d1 can be moved anywhere in the space, if some f value apart from neighboring f values of d1 is &gt;=d1, we have new free space as f1+d1+f2, Similarly for other d2, d3 etc. 
+
+Where there is no f value for a particular d1, then it can be only be shifted so f1+f2 can be the answer in any case. So, our base case is shifting each of the d values, so sum of neighboring f values. 
+
+For scenario of f1+d1+f2, we need some f &gt;=d before d0 or after d2. Prefix and suffix max we can store from left to right for f.
+
+Implementation notes, 
+d size is n, f size is n+1. We have durations and free_times arrays.
+for each d at i, we have neighboring f  in i and i+1 in free_times arr.
+we need to maintain max f before d at i-1, and after d at i+1
+For any d(i), we can get f(i)+d(i)+f(i+1) value if
+```
+if max of all f before d(i-1)=prefifx_max_till_i f(i-1) or
+max of all f after d(i+1)= suffix_max_from_i f(i+2)
+```
+if any of the max values if &gt;= d(i)
+i can be from 0...n; -&gt;calculate for each duration
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Reschedule Meetings for Maximum Free Time II" lines
+# @param {Integer} event_time
+# @param {Integer[]} start_time
+# @param {Integer[]} end_time
+# @return {Integer}
+Meeting = Struct.new(:start_time, :end_time)
+def max_free_time(event_time, start_time, end_time)
+  meetings = start_time.zip(end_time).map {|a,b|Meeting.new(a,b) }
+  n = meetings.size
+  durations = meetings.map {|x| x.end_time-x.start_time }
+  free_times = [meetings[0].start_time-0]
+  (1...n).each {|i| free_times << meetings[i].start_time-meetings[i-1].end_time }
+  free_times << (event_time - meetings[-1].end_time)
+  
+  sliding_max = 0;
+  pre_max_till_i = [free_times[0]]
+  (1..n).each { |i| pre_max_till_i<<[free_times[i], pre_max_till_i[-1]].max; sliding_max=[sliding_max, free_times[i]+free_times[i-1]].max  }
+
+  suf_max_from_i = [free_times[-1]]
+  (n-1).downto(0).each { |i| suf_max_from_i.unshift([free_times[i], suf_max_from_i[0]].max) }
+  
+  result = sliding_max;
+
+  # calculate for d, if f+d+f is possible
+  durations.each_with_index do |duration, i|
+    non_neighbor_free_times = [ i>=1 ? pre_max_till_i[i-1] : -Float::INFINITY,  i+2<=n ? suf_max_from_i[i+2] : -Float::INFINITY]
+    result = [result, free_times[i]+duration+free_times[i+1]].max  if non_neighbor_free_times.max >= duration
+  end
+
+  result
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

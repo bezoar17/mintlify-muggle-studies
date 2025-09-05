@@ -1,0 +1,50 @@
+---
+title: '🧩 Diameter of Binary Tree'
+description: '[leetcode link](https://leetcode.com/problems/diameter-of-binary-tree/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given the <code>root</code> of a binary tree, return <em>the length of the <strong>diameter</strong> of the tree</em>.</p>  <p>The <strong>diameter</strong> of a binary tree is the <strong>length</strong> of the longest path between any two nodes in a tree. This path may or may not pass through the <code>root</code>.</p>  <p>The <strong>length</strong> of a path between two nodes is represented by the number of edges between them.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/03/06/diamtree.jpg" style="width: 292px; height: 302px;" />  <strong>Input:</strong> root = [1,2,3,4,5] <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> 3 is the length of the path [4,2,1,3] or [5,2,1,3].   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> root = [1,2] <br/> <strong>Output:</strong> 1    <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in the tree is in the range <code>[1, 10<sup>4</sup>]</code>.</li>  <li><code>-100 &lt;= Node.val &lt;= 100</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Diameter of Binary Tree" lines
+# Definition for a binary tree node.
+# class TreeNode
+#     attr_accessor :val, :left, :right
+#     def initialize(val = 0, left = nil, right = nil)
+#         @val = val
+#         @left = left
+#         @right = right
+#     end
+# end
+# @param {TreeNode} root
+# @return {Integer}
+def diameter_of_binary_tree(root)
+  @diameter = 0
+  
+  def depth_of_tree(root)
+    return 0 if root.nil?
+    left_depth = depth_of_tree(root.left)
+    right_depth = depth_of_tree(root.right)
+
+    @diameter = [@diameter , left_depth + right_depth].max
+    return 1 + [ left_depth, right_depth ].max
+  end
+
+  depth_of_tree(root)
+  return @diameter
+end
+
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

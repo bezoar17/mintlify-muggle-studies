@@ -1,0 +1,55 @@
+---
+title: '❗️ Selling Pieces of Wood'
+description: '[leetcode link](https://leetcode.com/problems/selling-pieces-of-wood/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given two integers <code>m</code> and <code>n</code> that represent the height and width of a rectangular piece of wood. You are also given a 2D integer array <code>prices</code>, where <code>prices[i] = [h<sub>i</sub>, w<sub>i</sub>, price<sub>i</sub>]</code> indicates you can sell a rectangular piece of wood of height <code>h<sub>i</sub></code> and width <code>w<sub>i</sub></code> for <code>price<sub>i</sub></code> dollars.</p>  <p>To cut a piece of wood, you must make a vertical or horizontal cut across the <strong>entire</strong> height or width of the piece to split it into two smaller pieces. After cutting a piece of wood into some number of smaller pieces, you can sell pieces according to <code>prices</code>. You may sell multiple pieces of the same shape, and you do not have to sell all the shapes. The grain of the wood makes a difference, so you <strong>cannot</strong> rotate a piece to swap its height and width.</p>  <p>Return <em>the <strong>maximum</strong> money you can earn after cutting an </em><code>m x n</code><em> piece of wood</em>.</p>  <p>Note that you can cut the piece of wood as many times as you want.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2022/04/27/ex1.png" style="width: 239px; height: 150px;" />  <strong>Input:</strong> m = 3, n = 5, prices = [[1,4,2],[2,2,7],[2,1,3]] <br/> <strong>Output:</strong> 19 <br/> <strong>Explanation:</strong> The diagram above shows a possible scenario. It consists of: - 2 pieces of wood shaped 2 x 2, selling for a price of 2 * 7 = 14. - 1 piece of wood shaped 2 x 1, selling for a price of 1 * 3 = 3. - 1 piece of wood shaped 1 x 4, selling for a price of 1 * 2 = 2. This obtains a total of 14 + 3 + 2 = 19 money earned. It can be shown that 19 is the maximum amount of money that can be earned.   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2022/04/27/ex2new.png" style="width: 250px; height: 175px;" />  <strong>Input:</strong> m = 4, n = 6, prices = [[3,2,10],[1,4,2],[4,1,3]] <br/> <strong>Output:</strong> 32 <br/> <strong>Explanation:</strong> The diagram above shows a possible scenario. It consists of: - 3 pieces of wood shaped 3 x 2, selling for a price of 3 * 10 = 30. - 1 piece of wood shaped 1 x 4, selling for a price of 1 * 2 = 2. This obtains a total of 30 + 2 = 32 money earned. It can be shown that 32 is the maximum amount of money that can be earned. Notice that we cannot rotate the 1 x 4 piece of wood to obtain a 4 x 1 piece of wood.   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= m, n &lt;= 200</code></li>  <li><code>1 &lt;= prices.length &lt;= 2 * 10<sup>4</sup></code></li>  <li><code>prices[i].length == 3</code></li>  <li><code>1 &lt;= h<sub>i</sub> &lt;= m</code></li>  <li><code>1 &lt;= w<sub>i</sub> &lt;= n</code></li>  <li><code>1 &lt;= price<sub>i</sub> &lt;= 10<sup>6</sup></code></li>  <li>All the shapes of wood <code>(h<sub>i</sub>, w<sub>i</sub>)</code> are pairwise <strong>distinct</strong>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Matrix-DP
+What is the answer for wood of dimensions same as one of the smallest(dimension-wise, cant be broken into smaller piece in prices arr) ones given in prices ? It is equal to the given price value. So, this forms the starting value for wood pieces. 
+
+If we store our result in a 2D dp array, for a wood with dimensions (w,h). Answer for woods of dimensions equal to one of the prices, is equal to the given price. Now, imagine if 2 pieces from prices array can merge to form a larger piece of wood also present in prices array, but merging gives you larger value, then that should be updated. This is how bottom-up approach will work. The array prices will form the starting state of the dp array.
+
+For a larger piece of wood, there are multiple ways for building from smaller pieces. For that, we can make cuts column and row-wise, and take max from all possibilities. The column and row cuts are independent, as cuts are always made across entire height or width of the piece.
+
+For a piece of w * h,
+we can make a vertical cut to split it into c * h and (w - c) * h
+So we can update dp[w][h] = max(dp[w][h], dp[c][h] + dp[w - c][h]).
+
+we can make a horizontal cut to split it into w * c and w * (h - c)
+So we can update dp[w][h] = max(dp[w][h], dp[w][c] + dp[w][h - c]).
+
+And also, if you have to calculate m cuts for m columns, we can evaluate till m/2, as that gives all possible cuts into 2 smaller pieces, going beyond m/2 will only repeat the calculations.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Selling Pieces of Wood" lines
+# @param {Integer} m
+# @param {Integer} n
+# @param {Integer[][]} prices
+# @return {Integer}
+def selling_wood(m, n, prices)
+  dp = Array.new(m+1) { Array.new(n+1, 0) }
+  prices.each {|w,h,price| dp[w][h]=price } # starting state acc. to prices
+
+  # bottom-up, for each dimension, take max of all combos of merge(all cut possibilities)  
+  (1..m).each do |w|
+    (1..n).each do |h| # cut is done at c, check col and row wise cuts
+      (1..w/2).each { |c| dp[w][h] = [dp[w][h], dp[c][h] + dp[w-c][h]].max }
+      (1..h/2).each { |c| dp[w][h] = [dp[w][h], dp[w][c] + dp[w][h-c]].max }
+    end
+  end
+
+  dp[m][n]
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

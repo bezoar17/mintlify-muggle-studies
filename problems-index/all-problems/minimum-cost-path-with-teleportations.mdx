@@ -1,0 +1,114 @@
+---
+title: '❗️ Minimum Cost Path with Teleportations'
+description: '[leetcode link](https://leetcode.com/problems/minimum-cost-path-with-teleportations/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a <code>m x n</code> 2D integer array <code>grid</code> and an integer <code>k</code>. You start at the top-left cell <code>(0, 0)</code> and your goal is to reach the bottom‐right cell <code>(m - 1, n - 1)</code>.</p>  <p>There are two types of moves available:</p>  <ul>  <li>  <p><strong>Normal move</strong>: You can move right or down from your current cell <code>(i, j)</code>, i.e. you can move to <code>(i, j + 1)</code> (right) or <code>(i + 1, j)</code> (down). The cost is the value of the destination cell.</p>  </li>  <li>  <p><strong>Teleportation</strong>: You can teleport from any cell <code>(i, j)</code>, to any cell <code>(x, y)</code> such that <code>grid[x][y] &lt;= grid[i][j]</code>; the cost of this move is 0. You may teleport at most <code>k</code> times.</p>  </li> </ul>  <p>Return the <strong>minimum</strong> total cost to reach cell <code>(m - 1, n - 1)</code> from <code>(0, 0)</code>.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">grid = [[1,3,3],[2,5,4],[4,3,5]], k = 2</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">7</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>Initially we are at (0, 0) and cost is 0.</p>  <table style="border: 1px solid black;">  <tbody>   <tr>    <th style="border: 1px solid black;">Current Position</th>    <th style="border: 1px solid black;">Move</th>    <th style="border: 1px solid black;">New Position</th>    <th style="border: 1px solid black;">Total Cost</th>   </tr>   <tr>    <td style="border: 1px solid black;"><code>(0, 0)</code></td>    <td style="border: 1px solid black;">Move Down</td>    <td style="border: 1px solid black;"><code>(1, 0)</code></td>    <td style="border: 1px solid black;"><code>0 + 2 = 2</code></td>   </tr>   <tr>    <td style="border: 1px solid black;"><code>(1, 0)</code></td>    <td style="border: 1px solid black;">Move Right</td>    <td style="border: 1px solid black;"><code>(1, 1)</code></td>    <td style="border: 1px solid black;"><code>2 + 5 = 7</code></td>   </tr>   <tr>    <td style="border: 1px solid black;"><code>(1, 1)</code></td>    <td style="border: 1px solid black;">Teleport to <code>(2, 2)</code></td>    <td style="border: 1px solid black;"><code>(2, 2)</code></td>    <td style="border: 1px solid black;"><code>7 + 0 = 7</code></td>   </tr>  </tbody> </table>  <p>The minimum cost to reach bottom-right cell is 7.</p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">grid = [[1,2],[2,3],[3,4]], k = 1</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">9</span></p>  <p><strong>Explanation: </strong></p>  <p>Initially we are at (0, 0) and cost is 0.</p>  <table style="border: 1px solid black;">  <tbody>   <tr>    <th style="border: 1px solid black;">Current Position</th>    <th style="border: 1px solid black;">Move</th>    <th style="border: 1px solid black;">New Position</th>    <th style="border: 1px solid black;">Total Cost</th>   </tr>   <tr>    <td style="border: 1px solid black;"><code>(0, 0)</code></td>    <td style="border: 1px solid black;">Move Down</td>    <td style="border: 1px solid black;"><code>(1, 0)</code></td>    <td style="border: 1px solid black;"><code>0 + 2 = 2</code></td>   </tr>   <tr>    <td style="border: 1px solid black;"><code>(1, 0)</code></td>    <td style="border: 1px solid black;">Move Right</td>    <td style="border: 1px solid black;"><code>(1, 1)</code></td>    <td style="border: 1px solid black;"><code>2 + 3 = 5</code></td>   </tr>   <tr>    <td style="border: 1px solid black;"><code>(1, 1)</code></td>    <td style="border: 1px solid black;">Move Down</td>    <td style="border: 1px solid black;"><code>(2, 1)</code></td>    <td style="border: 1px solid black;"><code>5 + 4 = 9</code></td>   </tr>  </tbody> </table>  <p>The minimum cost to reach bottom-right cell is 9.</p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>2 &lt;= m, n &lt;= 80</code></li>  <li><code>m == grid.length</code></li>  <li><code>n == grid[i].length</code></li>  <li><code>0 &lt;= grid[i][j] &lt;= 10<sup>4</sup></code></li>  <li><code>0 &lt;= k &lt;= 10</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      If k = 0, simple dp. For each cell, take best of top or left cells, from where you can arrive here.
+
+If k = 1, 3rd option is arriving from all cells whose value is &gt;= value in current cell and who have not used their 1 unit of teleport, i.e the above base case of k=0 , and cost for this is 0.
+
+Formally, lets keep dp[i][j][k] as cost to reach (i,j) from (0,0) using k at maxt jumps. Base case is dp[i][j][0].
+
+Now once this is calculated, we can easily calculate the whole matrix for k = 1, i,e just the next one using the last state. Effectively, only 2 matrix are needed.
+
+```ruby
+
+dp[i][j][k] = [ 
+	grid[i][j] + dp[i][j-1][k],  # left 
+	grid[i][j] + dp[i-1][j-1][k], # top
+  Min of dp[x][y][k-1] for all (x,y) which can jump to (i,j) # teleporting
+].min
+```
+
+From implementation pov, with only 2 matrix of dp,  as we can get dp_curr from dp_prev.
+For dp_curr, we can calculte the 3rd case completely, before we write code for case 1,2, which will be very similar to the base case code. As we are taking minimum of all three, the 3rd case can be isolated and done first.
+
+The whole problem is about optimizing for the 3rd case, how do we calculate min cost of teleporting to a cell from all possible cells, and calculate this for all cells.
+
+From a state of dp_prev, where we have cost to reach (i,j) with k-1 steps. The 3rd case scenario for any (x,y) is when jump happens from (i,j) to (x,y), and we have dp[x][y][k] = dp[i][j][k-1].
+Hint for this is to get prefix min for all descending sorted grid values. 
+
+If all the grid values are sorted in an arr in descending order, along with their current cost in ascending order, and their i,j values are stored. 
+
+For a given idx in this array, all values before it are valid grid values which can jump to this idx's coordinates, hence getting minimum amongst these is the best option for teleportation, which can be stored in a prefix array kind of thing.
+
+So, we just have to process all elements once, i.e sort and go through them to calculate the 3rd case scenario.
+
+
+
+
+
+
+
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```csharp title="Minimum Cost Path with Teleportations" lines
+public class Solution {
+    public int MinCost(int[][] grid, int k) {
+        int m = grid.Length, n = grid[0].Length;
+        int[,] dp = new int[m, n];
+        
+        for (int i = 0; i < m; i++)
+            for (int j = 0; j < n; j++)
+                dp[i, j] = int.MaxValue;
+        
+        // Initial DP without jumps
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == 0 && j == 0) { dp[i, j] = 0; continue; }
+                int left = j > 0 ? dp[i, j-1] : int.MaxValue;
+                int top = i > 0 ? dp[i-1, j] : int.MaxValue;
+                dp[i, j] = grid[i][j] + Math.Min(left, top);
+            }
+        }
+        
+        // Process k jumps
+        for (int jump = 1; jump <= k; jump++) {
+            var cells = new List<(int val, int cost, int i, int j)>();
+            for (int i = 0; i < m; i++)
+                for (int j = 0; j < n; j++)
+                    cells.Add((grid[i][j], dp[i, j], i, j));
+            
+            cells.Sort((a, b) => b.val != a.val ? b.val.CompareTo(a.val) : a.cost.CompareTo(b.cost));
+            
+            int[,] dpNext = new int[m, n];
+            for (int i = 0; i < m; i++)
+                for (int j = 0; j < n; j++)
+                    dpNext[i, j] = int.MaxValue;
+            
+            int currMin = int.MaxValue;
+            foreach (var c in cells) {
+                currMin = Math.Min(currMin, c.cost);
+                dpNext[c.i, c.j] = currMin;
+            }
+            
+            for (int i = 0; i < m; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (i == 0 && j == 0) { dpNext[i, j] = 0; continue; }
+                    int left = j > 0 ? dpNext[i, j-1] : int.MaxValue;
+                    int top = i > 0 ? dpNext[i-1, j] : int.MaxValue;
+                    dpNext[i, j] = Math.Min(grid[i][j] + Math.Min(left, top), dpNext[i, j]);
+                }
+            }
+            
+            dp = dpNext;
+        }
+        
+        return dp[m-1, n-1];
+    }
+}
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

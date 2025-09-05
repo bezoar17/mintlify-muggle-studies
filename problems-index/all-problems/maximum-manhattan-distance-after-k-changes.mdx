@@ -1,0 +1,71 @@
+---
+title: '🧀 Maximum Manhattan Distance After K Changes'
+description: '[leetcode link](https://leetcode.com/problems/maximum-manhattan-distance-after-k-changes/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a string <code>s</code> consisting of the characters <code>&#39;N&#39;</code>, <code>&#39;S&#39;</code>, <code>&#39;E&#39;</code>, and <code>&#39;W&#39;</code>, where <code>s[i]</code> indicates movements in an infinite grid:</p>  <ul>  <li><code>&#39;N&#39;</code> : Move north by 1 unit.</li>  <li><code>&#39;S&#39;</code> : Move south by 1 unit.</li>  <li><code>&#39;E&#39;</code> : Move east by 1 unit.</li>  <li><code>&#39;W&#39;</code> : Move west by 1 unit.</li> </ul>  <p>Initially, you are at the origin <code>(0, 0)</code>. You can change <strong>at most</strong> <code>k</code> characters to any of the four directions.</p>  <p>Find the <strong>maximum</strong> <strong>Manhattan distance</strong> from the origin that can be achieved <strong>at any time</strong> while performing the movements <strong>in order</strong>.</p> The <strong>Manhattan Distance</strong> between two cells <code>(x<sub>i</sub>, y<sub>i</sub>)</code> and <code>(x<sub>j</sub>, y<sub>j</sub>)</code> is <code>|x<sub>i</sub> - x<sub>j</sub>| + |y<sub>i</sub> - y<sub>j</sub>|</code>.  <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">s = &quot;NWSE&quot;, k = 1</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">3</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>Change <code>s[2]</code> from <code>&#39;S&#39;</code> to <code>&#39;N&#39;</code>. The string <code>s</code> becomes <code>&quot;NWNE&quot;</code>.</p>  <table style="border: 1px solid black;">  <thead>   <tr>    <th style="border: 1px solid black;">Movement</th>    <th style="border: 1px solid black;">Position (x, y)</th>    <th style="border: 1px solid black;">Manhattan Distance</th>    <th style="border: 1px solid black;">Maximum</th>   </tr>  </thead>  <tbody>   <tr>    <td style="border: 1px solid black;">s[0] == &#39;N&#39;</td>    <td style="border: 1px solid black;">(0, 1)</td>    <td style="border: 1px solid black;">0 + 1 = 1</td>    <td style="border: 1px solid black;">1</td>   </tr>   <tr>    <td style="border: 1px solid black;">s[1] == &#39;W&#39;</td>    <td style="border: 1px solid black;">(-1, 1)</td>    <td style="border: 1px solid black;">1 + 1 = 2</td>    <td style="border: 1px solid black;">2</td>   </tr>   <tr>    <td style="border: 1px solid black;">s[2] == &#39;N&#39;</td>    <td style="border: 1px solid black;">(-1, 2)</td>    <td style="border: 1px solid black;">1 + 2 = 3</td>    <td style="border: 1px solid black;">3</td>   </tr>   <tr>    <td style="border: 1px solid black;">s[3] == &#39;E&#39;</td>    <td style="border: 1px solid black;">(0, 2)</td>    <td style="border: 1px solid black;">0 + 2 = 2</td>    <td style="border: 1px solid black;">3</td>   </tr>  </tbody> </table>  <p>The maximum Manhattan distance from the origin that can be achieved is 3. Hence, 3 is the output.</p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">s = &quot;NSWWEW&quot;, k = 3</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">6</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>Change <code>s[1]</code> from <code>&#39;S&#39;</code> to <code>&#39;N&#39;</code>, and <code>s[4]</code> from <code>&#39;E&#39;</code> to <code>&#39;W&#39;</code>. The string <code>s</code> becomes <code>&quot;NNWWWW&quot;</code>.</p>  <p>The maximum Manhattan distance from the origin that can be achieved is 6. Hence, 6 is the output.</p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= s.length &lt;= 10<sup>5</sup></code></li>  <li><code>0 &lt;= k &lt;= s.length</code></li>  <li><code>s</code> consists of only <code>&#39;N&#39;</code>, <code>&#39;S&#39;</code>, <code>&#39;E&#39;</code>, and <code>&#39;W&#39;</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      **Final Notes**
+For a path,that is defined by set of points travelled, given by an order of directions, DIR, manhattan_dist of the path is manhattan distance
+of the final point of the path. max_manhattan_dist is defined as the maximum manhattan distance of any point in the path. So, for this we will
+find manhattan_dist of all points P$i$, where their path is DIR[0,i], up until final point of the path. And keep track of the max value we could achieve.
+
+If k was equal to 0, how would you calculate this value ?
+
+So, for this, as we cant change any directions, we just have to calculate $manhattan_dist$ of point P$i$, given it has seen DIR[0..i] directions, for i (0...n).
+Directions affect the x-axis part and y-axis part of the distance, in independent groups. Like, N,S affect the y-axis, and E,W affect the x-axis. Both their calculations can be done independently, assuming the array was partitioned so that x-axis array contained only E,W and y-axis array contained only N,S. And also, the logic for 
+calculation of the manhattan distance, is also same for both the axes. 
+
+Now, for a given axis, x, manhattan distance for  $x\_directions$ of length $N$, with $freq[E]+freq[W]=N$, is $max(freq[E], freq[W]) - min(freq[E], freq[W])$. Since we also have $max(freq[E], freq[W]) + min(freq[E], freq[W])$ = $N$, so it follows that 
+$max(freq[E], freq[W]) - min(freq[E], freq[W])$ = $N-2*min(freq[E], freq[W])$. The manhattan distance.
+
+This can be seen as for $N$ directions, if there are $X$ opposing pairs, of $E,W$ or $W,E$, we have $manhattan\_dist = N - 2 * X$.
+
+Now, for a given value k, we have to find max_manhattan_dist of path in DIR, where we can change k directions. 
+In each operation out of k, we can $fix$ a pair, by changing one of the directions. 
+
+So, if we have k operations to perform for N directions with X opposing pairs, the final count of opposing pairs is $X-K$  and the manhattan distance becomes $manhattan\_dist = N - 2 * [X-K, 0].max$.
+
+So, now that we have $manhattan distance$ of a point, we find it for all the points,i.e, after applying each direction one by one and take the max to find the answer. 
+
+**Implementation Time Notes**
+x -&gt; E,W; y-&gt; N,S
+NS -&gt;y
+WWEW -&gt; x
+At any point if directions have cancelled each other out, possible dist reduces by 2.
+For x(also for y, but with N,S), if we have WE, possible_dist is 2, actual_dist = possible_dist- 2*(pairs formed of opposing)
+To correct this opposing pair, we need only 1 action. So, pairs is [freq[dir], freq[opposing_dir]].min
+and to correct 1 pair, we need one action from k available.
+now, this calculation, has to be done, not only on the final array, but at each point while processing the order
+Whatever max manhattan_dist we have at any point in the order is the answer.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Maximum Manhattan Distance After K Changes" lines
+# @param {String} s
+# @param {Integer} k
+# @return {Integer}
+def max_distance(s, k)
+  freq_h = Hash.new(0)
+  s.chars.each_with_index.map do |direction, i|
+    total_direction_count= i+1
+    freq_h[direction]+=1
+
+    opposing_pairs = [freq_h['N'], freq_h['S']].min + [freq_h['W'], freq_h['E']].min
+    opposing_pairs -=k # k opposing pairs have been corrected
+
+    # each opposing pair of direction reduces possible dist by 2
+    manhattan_dist = total_direction_count - 2*[opposing_pairs,0].max
+  end.max
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

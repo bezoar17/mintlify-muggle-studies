@@ -1,0 +1,48 @@
+---
+title: '❗️ Maximum Score Of Spliced Array'
+description: '[leetcode link](https://leetcode.com/problems/maximum-score-of-spliced-array/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given two <strong>0-indexed</strong> integer arrays <code>nums1</code> and <code>nums2</code>, both of length <code>n</code>.</p>  <p>You can choose two integers <code>left</code> and <code>right</code> where <code>0 &lt;= left &lt;= right &lt; n</code> and <strong>swap</strong> the subarray <code>nums1[left...right]</code> with the subarray <code>nums2[left...right]</code>.</p>  <ul>  <li>For example, if <code>nums1 = [1,2,3,4,5]</code> and <code>nums2 = [11,12,13,14,15]</code> and you choose <code>left = 1</code> and <code>right = 2</code>, <code>nums1</code> becomes <code>[1,<strong><u>12,13</u></strong>,4,5]</code> and <code>nums2</code> becomes <code>[11,<strong><u>2,3</u></strong>,14,15]</code>.</li> </ul>  <p>You may choose to apply the mentioned operation <strong>once</strong> or not do anything.</p>  <p>The <strong>score</strong> of the arrays is the <strong>maximum</strong> of <code>sum(nums1)</code> and <code>sum(nums2)</code>, where <code>sum(arr)</code> is the sum of all the elements in the array <code>arr</code>.</p>  <p>Return <em>the <strong>maximum possible score</strong></em>.</p>  <p>A <strong>subarray</strong> is a contiguous sequence of elements within an array. <code>arr[left...right]</code> denotes the subarray that contains the elements of <code>nums</code> between indices <code>left</code> and <code>right</code> (<strong>inclusive</strong>).</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums1 = [60,60,60], nums2 = [10,90,10] <br/> <strong>Output:</strong> 210 <br/> <strong>Explanation:</strong> Choosing left = 1 and right = 1, we have nums1 = [60,<u><strong>90</strong></u>,60] and nums2 = [10,<u><strong>60</strong></u>,10]. The score is max(sum(nums1), sum(nums2)) = max(210, 80) = 210.  <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums1 = [20,40,20,70,30], nums2 = [50,20,50,40,20] <br/> <strong>Output:</strong> 220 <br/> <strong>Explanation:</strong> Choosing left = 3, right = 4, we have nums1 = [20,40,20,<u><strong>40,20</strong></u>] and nums2 = [50,20,50,<u><strong>70,30</strong></u>]. The score is max(sum(nums1), sum(nums2)) = max(140, 220) = 220.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> nums1 = [7,11,13], nums2 = [1,1,1] <br/> <strong>Output:</strong> 31 <br/> <strong>Explanation:</strong> We choose not to swap any subarray. The score is max(sum(nums1), sum(nums2)) = max(31, 3) = 31.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>n == nums1.length == nums2.length</code></li>  <li><code>1 &lt;= n &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= nums1[i], nums2[i] &lt;= 10<sup>4</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      If [L,R] is switched, reward for 1 is all elements from [L,R] are lost and from arr 2 are included. If all these values are greater in 2, then its benefit for 1. Else its benefit for 2. If we calculate difference of all elements in 2 and 1, indicating elements going from 2 to 1. The maximum sub-array sum in this difference is the max reward for arr1. Same we can find for arr2, and check which one is maximum out of these 2. Also the case where no switch should happen is checked if we check the max of original sums too.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Maximum Score Of Spliced Array" lines
+# @param {Integer[]} nums1
+# @param {Integer[]} nums2
+# @return {Integer}
+def maximums_spliced_array(nums1, nums2)
+  orig_sum_1 = nums1.sum; orig_sum_2 = nums2.sum;
+  max_orig_sum = [orig_sum_1, orig_sum_2].max;
+  difference_arr = nums2.zip(nums1).map {|a,b| a-b} # no.s from 2 to 1, cost/reward for 1
+  max_reward_1 = max_sub_array(difference_arr) 
+  max_reward_2 = max_sub_array(difference_arr.map{|x| -x})
+  [orig_sum_1 + max_reward_1, orig_sum_2 + max_reward_2, max_orig_sum].max
+end
+
+def max_sub_array(nums)
+  res = nums[0]
+  max_ending_at_i = nums[0]
+
+  nums[1, nums.size].each do |n|
+    # Find the maximum sum ending at index i by either extending 
+    # the maximum sum subarray ending at index i - 1 or by
+    # starting a new subarray from index i
+    max_ending_at_i = [max_ending_at_i + n, n].max
+    res = [max_ending_at_i, res].max
+  end
+  res
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

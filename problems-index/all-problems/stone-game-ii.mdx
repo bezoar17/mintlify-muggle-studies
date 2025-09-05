@@ -1,0 +1,72 @@
+---
+title: '🧀 Stone Game II'
+description: '[leetcode link](https://leetcode.com/problems/stone-game-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Alice and Bob continue their games with piles of stones. There are a number of piles <strong>arranged in a row</strong>, and each pile has a positive integer number of stones <code>piles[i]</code>. The objective of the game is to end with the most stones.</p>  <p>Alice and Bob take turns, with Alice starting first.</p>  <p>On each player&#39;s turn, that player can take <strong>all the stones</strong> in the <strong>first</strong> <code>X</code> remaining piles, where <code>1 &lt;= X &lt;= 2M</code>. Then, we set <code>M = max(M, X)</code>. Initially, M = 1.</p>  <p>The game continues until all the stones have been taken.</p>  <p>Assuming Alice and Bob play optimally, return the maximum number of stones Alice can get.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">piles = [2,7,9,4,4]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">10</span></p>  <p><br/> <strong>Explanation:</strong></p>  <ul>  <li>If Alice takes one pile at the beginning, Bob takes two piles, then Alice takes 2 piles again. Alice can get <code>2 + 4 + 4 = 10</code> stones in total.</li>  <li>If Alice takes two piles at the beginning, then Bob can take all three piles left. In this case, Alice get <code>2 + 7 = 9</code> stones in total.</li> </ul>  <p>So we return 10 since it&#39;s larger.</p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">piles = [1,2,3,4,5,100]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">104</span></p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= piles.length &lt;= 100</code></li>  <li><code>1 &lt;= piles[i]&nbsp;&lt;= 10<sup>4</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Can become same as stone game 1, if we do a max_diff and just calculate that.
+sum = a+b, diff = a-b, stones by a = sum+diff / 2, to get max, we maximize max_diff of a-b
+
+For max_diff, both optimal is both trying to minimize max_diff, so logic is easier.
+
+In our turn, we pick elements, so sum, then in remaining array if opponent managed to get a diff of x, our actual diff is sum - x.
+
+Or else, we simulate like picking x elements and do a min max based on a's turn.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Stone Game II" lines
+# @param {Integer[]} piles
+# @return {Integer}
+class PseudoSumSegTree
+  def initialize(arr)
+    @n = arr.size # size of the source array
+    # query can have r till n, so sum of all elements is at prefix[n]
+    @prefix_sum_arr = (1..@n).reduce([0]) {|res, i| res << res.last + arr[i-1]; res } # sum till i-1
+  end
+  
+  # [l,r)
+  def query(l,r)
+    @prefix_sum_arr[r] - @prefix_sum_arr[l]
+  end
+end
+
+def stone_game_ii(piles)
+  @piles = piles
+  @nn = piles.size
+  @cache = {}
+  @seg_tree = PseudoSumSegTree.new(piles)
+  
+  diff = max_diff(0, 1)
+  #  sum = a+b, diff = a-b, stones by a = sum+diff / 2, to get max, we maximize max_diff of a-b
+
+  (@seg_tree.query(0,@nn) + diff) / 2
+end
+
+def max_diff(idx, m)
+  return 0 if idx > @nn-1
+
+  return @cache[[idx, m]] unless @cache[[idx, m]].nil?
+
+  remaining_stones = @nn-idx; max_pickup = 2*m
+  return @cache[[idx, m]] = @seg_tree.query(idx, @nn) if remaining_stones <= max_pickup
+  
+  @cache[[idx, m]] = (1..max_pickup).select{|p| idx+p < @nn}.map do |pickup|
+    # difference is sum by picking up, and then subtracting opponents max_diff attempt from remaining array
+    @seg_tree.query(idx, idx+pickup) - max_diff(idx+pickup, [m, pickup].max)
+    # @piles[idx,pickup].sum - max_diff(idx+pickup, [m, pickup].max)
+  end.max
+end
+
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

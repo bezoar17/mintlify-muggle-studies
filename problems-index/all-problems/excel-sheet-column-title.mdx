@@ -1,0 +1,51 @@
+---
+title: '🧩 Excel Sheet Column Title'
+description: '[leetcode link](https://leetcode.com/problems/excel-sheet-column-title/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an integer <code>columnNumber</code>, return <em>its corresponding column title as it appears in an Excel sheet</em>.</p>  <p>For example:</p>   A -&gt; 1 B -&gt; 2 C -&gt; 3 ... Z -&gt; 26 AA -&gt; 27 AB -&gt; 28  ...    <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> columnNumber = 1 <br/> <strong>Output:</strong> &quot;A&quot;   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> columnNumber = 28 <br/> <strong>Output:</strong> &quot;AB&quot;   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> columnNumber = 701 <br/> <strong>Output:</strong> &quot;ZY&quot;    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= columnNumber &lt;= 2<sup>31</sup> - 1</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```cpp title="Excel Sheet Column Title" lines
+class Solution {
+public:
+    string convertToTitle(int A) {
+        string str;
+    int i = 0;  // To store current index in str which is result
+ 
+    while (A>0)
+    {
+        // Find remainder
+        int rem = A%26;
+ 
+        // If remainder is 0, then a 'Z' must be there in output
+        if (rem==0)
+        {
+            str= 'Z'+str;
+            A = (A/26)-1;
+        }
+        else // If remainder is non-zero
+        {
+            str =char(64+rem)+str;
+            A = A/26;
+        }
+    }
+    
+    
+    return str;
+    }
+};
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

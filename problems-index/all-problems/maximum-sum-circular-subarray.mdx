@@ -1,0 +1,65 @@
+---
+title: '🧀 Maximum Sum Circular Subarray'
+description: '[leetcode link](https://leetcode.com/problems/maximum-sum-circular-subarray/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a <strong>circular integer array</strong> <code>nums</code> of length <code>n</code>, return <em>the maximum possible sum of a non-empty <strong>subarray</strong> of </em><code>nums</code>.</p>  <p>A <strong>circular array</strong> means the end of the array connects to the beginning of the array. Formally, the next element of <code>nums[i]</code> is <code>nums[(i + 1) % n]</code> and the previous element of <code>nums[i]</code> is <code>nums[(i - 1 + n) % n]</code>.</p>  <p>A <strong>subarray</strong> may only include each element of the fixed buffer <code>nums</code> at most once. Formally, for a subarray <code>nums[i], nums[i + 1], ..., nums[j]</code>, there does not exist <code>i &lt;= k1</code>, <code>k2 &lt;= j</code> with <code>k1 % n == k2 % n</code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [1,-2,3,-2] <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> Subarray [3] has maximum sum 3.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [5,-3,5] <br/> <strong>Output:</strong> 10 <br/> <strong>Explanation:</strong> Subarray [5,5] has maximum sum 5 + 5 = 10.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> nums = [-3,-2,-3] <br/> <strong>Output:</strong> -2 <br/> <strong>Explanation:</strong> Subarray [-2] has maximum sum -2.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>n == nums.length</code></li>  <li><code>1 &lt;= n &lt;= 3 * 10<sup>4</sup></code></li>  <li><code>-3 * 10<sup>4</sup> &lt;= nums[i] &lt;= 3 * 10<sup>4</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Maximum Sum Circular Subarray" lines
+# @param {Integer[]} nums
+# @return {Integer}
+# Read-Only for queries of sum of [l,r]
+# pseudo_tree.query(l, r+1)
+
+def max_subarray_sum_circular(nums)
+  opt1 = max_sub_array(nums)
+  opt2 = min_sub_array(nums)
+
+  return opt1 if opt2 == nums.sum
+
+  [nums.sum-opt2, opt1].max
+end
+
+
+def min_sub_array(nums)
+  res = nums[0]
+  max_ending_at_i = nums[0]
+
+  nums[1, nums.size].each do |n|
+    # Find the maximum sum ending at index i by either extending 
+    # the maximum sum subarray ending at index i - 1 or by
+    # starting a new subarray from index i
+    max_ending_at_i = [max_ending_at_i + n, n].min
+    res = [max_ending_at_i, res].min
+  end
+  res
+end
+
+def max_sub_array(nums)
+  res = nums[0]
+  max_ending_at_i = nums[0]
+
+  nums[1, nums.size].each do |n|
+    # Find the maximum sum ending at index i by either extending 
+    # the maximum sum subarray ending at index i - 1 or by
+    # starting a new subarray from index i
+    max_ending_at_i = [max_ending_at_i + n, n].max
+    res = [max_ending_at_i, res].max
+  end
+  res
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

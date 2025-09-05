@@ -1,0 +1,39 @@
+---
+title: '🧩 Longest Common Prefix'
+description: '[leetcode link](https://leetcode.com/problems/longest-common-prefix/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Write a function to find the longest common prefix string amongst an array of strings.</p>  <p>If there is no common prefix, return an empty string <code>&quot;&quot;</code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> strs = [&quot;flower&quot;,&quot;flow&quot;,&quot;flight&quot;] <br/> <strong>Output:</strong> &quot;fl&quot;   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> strs = [&quot;dog&quot;,&quot;racecar&quot;,&quot;car&quot;] <br/> <strong>Output:</strong> &quot;&quot; <br/> <strong>Explanation:</strong> There is no common prefix among the input strings.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= strs.length &lt;= 200</code></li>  <li><code>0 &lt;= strs[i].length &lt;= 200</code></li>  <li><code>strs[i]</code> consists of only lowercase English letters if it is non-empty.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Longest Common Prefix" lines
+# @param {String[]} strs
+# @return {String}
+def longest_common_prefix(strs)
+    strs_in_chars = strs.map{ |e| e.chars }
+    lowest_length = strs.map(&:size).min
+    return "" if lowest_length < 1
+    return strs[0] if strs.size == 1
+    
+    (0...lowest_length).each do |i|
+        ch = strs_in_chars[0][i]
+        strs_in_chars.each do |strch|
+           return strs_in_chars[0][0...i].join("") if strch[i] != ch
+        end
+    end
+    return strs_in_chars[0][0...lowest_length].join("")
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

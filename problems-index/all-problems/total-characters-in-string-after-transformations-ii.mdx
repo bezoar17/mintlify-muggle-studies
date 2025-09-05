@@ -1,0 +1,83 @@
+---
+title: '❗️ Total Characters in String After Transformations II'
+description: '[leetcode link](https://leetcode.com/problems/total-characters-in-string-after-transformations-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a string <code>s</code> consisting of lowercase English letters, an integer <code>t</code> representing the number of <strong>transformations</strong> to perform, and an array <code>nums</code> of size 26. In one <strong>transformation</strong>, every character in <code>s</code> is replaced according to the following rules:</p>  <ul>  <li>Replace <code>s[i]</code> with the <strong>next</strong> <code>nums[s[i] - &#39;a&#39;]</code> consecutive characters in the alphabet. For example, if <code>s[i] = &#39;a&#39;</code> and <code>nums[0] = 3</code>, the character <code>&#39;a&#39;</code> transforms into the next 3 consecutive characters ahead of it, which results in <code>&quot;bcd&quot;</code>.</li>  <li>The transformation <strong>wraps</strong> around the alphabet if it exceeds <code>&#39;z&#39;</code>. For example, if <code>s[i] = &#39;y&#39;</code> and <code>nums[24] = 3</code>, the character <code>&#39;y&#39;</code> transforms into the next 3 consecutive characters ahead of it, which results in <code>&quot;zab&quot;</code>.</li> </ul>  <p>Return the length of the resulting string after <strong>exactly</strong> <code>t</code> transformations.</p>  <p>Since the answer may be very large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">s = &quot;abcyy&quot;, t = 2, nums = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">7</span></p>  <p><br/> <strong>Explanation:</strong></p>  <ul>  <li>  <p><strong>First Transformation (t = 1):</strong></p>   <ul>   <li><code>&#39;a&#39;</code> becomes <code>&#39;b&#39;</code> as <code>nums[0] == 1</code></li>   <li><code>&#39;b&#39;</code> becomes <code>&#39;c&#39;</code> as <code>nums[1] == 1</code></li>   <li><code>&#39;c&#39;</code> becomes <code>&#39;d&#39;</code> as <code>nums[2] == 1</code></li>   <li><code>&#39;y&#39;</code> becomes <code>&#39;z&#39;</code> as <code>nums[24] == 1</code></li>   <li><code>&#39;y&#39;</code> becomes <code>&#39;z&#39;</code> as <code>nums[24] == 1</code></li>   <li>String after the first transformation: <code>&quot;bcdzz&quot;</code></li>  </ul>  </li>  <li>  <p><strong>Second Transformation (t = 2):</strong></p>   <ul>   <li><code>&#39;b&#39;</code> becomes <code>&#39;c&#39;</code> as <code>nums[1] == 1</code></li>   <li><code>&#39;c&#39;</code> becomes <code>&#39;d&#39;</code> as <code>nums[2] == 1</code></li>   <li><code>&#39;d&#39;</code> becomes <code>&#39;e&#39;</code> as <code>nums[3] == 1</code></li>   <li><code>&#39;z&#39;</code> becomes <code>&#39;ab&#39;</code> as <code>nums[25] == 2</code></li>   <li><code>&#39;z&#39;</code> becomes <code>&#39;ab&#39;</code> as <code>nums[25] == 2</code></li>   <li>String after the second transformation: <code>&quot;cdeabab&quot;</code></li>  </ul>  </li>  <li>  <p><strong>Final Length of the string:</strong> The string is <code>&quot;cdeabab&quot;</code>, which has 7 characters.</p>  </li> </ul> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">s = &quot;azbk&quot;, t = 1, nums = [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">8</span></p>  <p><br/> <strong>Explanation:</strong></p>  <ul>  <li>  <p><strong>First Transformation (t = 1):</strong></p>   <ul>   <li><code>&#39;a&#39;</code> becomes <code>&#39;bc&#39;</code> as <code>nums[0] == 2</code></li>   <li><code>&#39;z&#39;</code> becomes <code>&#39;ab&#39;</code> as <code>nums[25] == 2</code></li>   <li><code>&#39;b&#39;</code> becomes <code>&#39;cd&#39;</code> as <code>nums[1] == 2</code></li>   <li><code>&#39;k&#39;</code> becomes <code>&#39;lm&#39;</code> as <code>nums[10] == 2</code></li>   <li>String after the first transformation: <code>&quot;bcabcdlm&quot;</code></li>  </ul>  </li>  <li>  <p><strong>Final Length of the string:</strong> The string is <code>&quot;bcabcdlm&quot;</code>, which has 8 characters.</p>  </li> </ul> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= s.length &lt;= 10<sup>5</sup></code></li>  <li><code>s</code> consists only of lowercase English letters.</li>  <li><code>1 &lt;= t &lt;= 10<sup>9</sup></code></li>  <li><code><font face="monospace">nums.length == 26</font></code></li>  <li><code><font face="monospace">1 &lt;= nums[i] &lt;= 25</font></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Since we only have to get the length, we should only be looking at the count of each alphabet, and how that changes. Now, if we have count of each alphabet at particular state, we go to next state by applying 1 transformation. The change of counts due to 1 transformation can be modelled as a matrix, which is multiplied to current count state to get next state. So, we just do the matrix multiplication k times from starting state to get to end state.
+
+As the transformation is just coded  as a matrix, when applied k times, we can use exponentiation to get result of all transformations at once, instead of actually doing the transformation k times, as k is huge in the constraints.
+
+Once you understand this, its easy to figure out whats happening.
+
+Following questions have used this method, https://leetcode.com/problems/number-of-ways-to-build-sturdy-brick-wall/, collate write up.
+This question has a TLE ruby version with linear transformation matrix applied, but it is only for implementation, in this question its not optimal to apply,
+as matrix size can be huge, and no. of states is the limiting factor, not the no. of operations( rows).
+
+This is 1 more problem, where theoretically, it can be applied, as no. of states will be relatively small.
+https://leetcode.com/problems/painting-a-grid-with-three-different-colors/editorial/?envType=problem-list-v2&envId=dynamic-programming
+https://leetcode.com/problems/number-of-ways-to-paint-n-3-grid/
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Total Characters in String After Transformations II" lines
+# @param {String} s
+# @param {Integer} t
+# @param {Integer[]} nums
+# @return {Integer}
+def length_after_transformations(s, t, nums)
+  mod = 10**9 + 7
+  k = 26
+  freq = Array.new(k, 0); s.each_byte { |b| freq[b - 97] += 1 }
+  transformation_matrix = Array.new(k) { Array.new(k, 0) }
+  (0...k).each { |i| (1..nums[i]).each { |d| transformation_matrix[i][(i + d) % k] += 1 } }
+
+  multiply =->(a_mat, b_mat) {
+    c = Array.new(k) { Array.new(k, 0) }
+    (0...k).each do |i|
+      (0...k).each do |r|
+        a_val = a_mat[i][r]
+        next if a_val.zero?
+        (0...k).each do |j|
+          c[i][j] = (c[i][j] + a_val * b_mat[r][j]) % mod
+        end
+      end
+    end
+    c
+  }
+  
+  fast_pow =->(mat, exp) {
+    res  = Array.new(k) { |i| Array.new(k) { |j| i == j ? 1 : 0 } }
+    base = mat
+    while exp > 0
+      res  = multiply.call(res, base) if (exp & 1) == 1
+      base = multiply.call(base, base)
+      exp >>= 1
+    end
+    res
+  }
+  
+  final_transformation_matrix = fast_pow.call(transformation_matrix, t)
+  
+  ans = 0
+  (0...k).each do |i|
+    next if freq[i].zero?
+    (0...k).each do |j|
+      ans = (ans + freq[i] * final_transformation_matrix[i][j]) % mod
+    end
+  end
+  ans
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

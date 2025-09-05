@@ -1,0 +1,48 @@
+---
+title: '🧀 Most Frequent Subtree Sum'
+description: '[leetcode link](https://leetcode.com/problems/most-frequent-subtree-sum/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given the <code>root</code> of a binary tree, return the most frequent <strong>subtree sum</strong>. If there is a tie, return all the values with the highest frequency in any order.</p>  <p>The <strong>subtree sum</strong> of a node is defined as the sum of all the node values formed by the subtree rooted at that node (including the node itself).</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/04/24/freq1-tree.jpg" style="width: 207px; height: 183px;" />  <strong>Input:</strong> root = [5,2,-3] <br/> <strong>Output:</strong> [2,-3,4]   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/04/24/freq2-tree.jpg" style="width: 207px; height: 183px;" />  <strong>Input:</strong> root = [5,2,-5] <br/> <strong>Output:</strong> [2]    <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in the tree is in the range <code>[1, 10<sup>4</sup>]</code>.</li>  <li><code>-10<sup>5</sup> &lt;= Node.val &lt;= 10<sup>5</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Note sub-tree sums in a freq hash. Pick sums with max freq.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Most Frequent Subtree Sum" lines
+# Definition for a binary tree node.
+# class TreeNode
+#     attr_accessor :val, :left, :right
+#     def initialize(val = 0, left = nil, right = nil)
+#         @val = val
+#         @left = left
+#         @right = right
+#     end
+# end
+# @param {TreeNode} root
+# @return {Integer[]}
+def find_frequent_tree_sum(root)
+  sb_sum_freq = Hash.new(0)
+
+  recurse=->(node) {
+    return 0 if node.nil?
+    sb_sum = recurse.call(node.left) + recurse.call(node.right) + node.val
+    sb_sum_freq[sb_sum]+=1
+    sb_sum
+  }
+  recurse.call(root)
+  max_val = sb_sum_freq.values.max
+  
+  sb_sum_freq.select {|k,v| v==max_val}.map(&:first)
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

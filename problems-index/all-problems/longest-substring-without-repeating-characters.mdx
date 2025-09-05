@@ -1,0 +1,45 @@
+---
+title: '🧀 Longest Substring Without Repeating Characters'
+description: '[leetcode link](https://leetcode.com/problems/longest-substring-without-repeating-characters/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a string <code>s</code>, find the length of the <strong>longest</strong> <span data-keyword="substring-nonempty"><strong>substring</strong></span> without duplicate characters.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> s = &quot;abcabcbb&quot; <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> The answer is &quot;abc&quot;, with the length of 3.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> s = &quot;bbbbb&quot; <br/> <strong>Output:</strong> 1 <br/> <strong>Explanation:</strong> The answer is &quot;b&quot;, with the length of 1.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> s = &quot;pwwkew&quot; <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> The answer is &quot;wke&quot;, with the length of 3. Notice that the answer must be a substring, &quot;pwke&quot; is a subsequence and not a substring.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>0 &lt;= s.length &lt;= 5 * 10<sup>4</sup></code></li>  <li><code>s</code> consists of English letters, digits, symbols and spaces.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Longest Substring Without Repeating Characters" lines
+# @param {String} s
+# @return {Integer}
+def length_of_longest_substring(s)
+    seen_ = Hash.new;
+    size = s.size
+    lp = 0; rp = 0;
+    max_len = 0
+
+    while(rp < size)
+      idx = seen_[s[rp]];
+      # lp<=idx means char is present and within current substring, so update left pointer
+      # else, repeated is outside of current lp - rp substring, so just update max_len
+      if !idx.nil? && lp <= idx
+        lp = idx+1
+      else
+        max_len = [max_len, rp-lp+1].max
+      end
+      seen_[s[rp]] = rp;
+      rp+=1
+    end
+    max_len
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

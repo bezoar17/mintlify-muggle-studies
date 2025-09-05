@@ -1,0 +1,75 @@
+---
+title: '❗️ Subarrays with K Different Integers'
+description: '[leetcode link](https://leetcode.com/problems/subarrays-with-k-different-integers/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an integer array <code>nums</code> and an integer <code>k</code>, return <em>the number of <strong>good subarrays</strong> of </em><code>nums</code>.</p>  <p>A <strong>good array</strong> is an array where the number of different integers in that array is exactly <code>k</code>.</p>  <ul>  <li>For example, <code>[1,2,3,1,2]</code> has <code>3</code> different integers: <code>1</code>, <code>2</code>, and <code>3</code>.</li> </ul>  <p>A <strong>subarray</strong> is a <strong>contiguous</strong> part of an array.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [1,2,1,2,3], k = 2 <br/> <strong>Output:</strong> 7 <br/> <strong>Explanation:</strong> Subarrays formed with exactly 2 different integers: [1,2], [2,1], [1,2], [2,3], [1,2,1], [2,1,2], [1,2,1,2]   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [1,2,1,3,4], k = 3 <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> Subarrays formed with exactly 3 different integers: [1,2,1,3], [2,1,3], [1,3,4].    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 2 * 10<sup>4</sup></code></li>  <li><code>1 &lt;= nums[i], k &lt;= nums.length</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Two pointer, freq mastery.
+
+We can maintain a freq hash ensuring it always has k elements at max. And update the two pointers accordingly. 
+We initialize left and right pointers. To count sub-arrays, we do the standard thing of calculating sub-arrays with right as end boundary, and seeing how many left idxs are valid starting points. The condition here is to have k distinct elements in between. We maintain a freq hash. Now there are 3 cases.
+
+First of all, at each idx, we will first update the freq_hash.
+
+Case 1: freq_hash size &lt; k, just move right pointer
+Case 2: freq_hash size == k, When this happens the first time, all idxs from 0 to x, where freq[nums[x]] is 1, all are valid starting points.(Also, x+1 is not, as the distinct size would become &lt;k after x) So, we can add x+1 to result, as for this right idx, these are valid starting points.
+
+It is possible, that for the next right idx, freq_hash size remains k, so for that idx also we will add x+1, or all valid starting points.
+
+Next time this can happen when freq_hash_size becomes &gt;k, and we shrink the window. For that time, the new valid idxs would be from x+1 to some y, so valid idxs would be y-(x+1)+1. Essentially, we will have to store the count of valid idxs instead of it always being counted from 0, it will be counted from the last left pointer. 
+
+Case 3: freq_hash &gt; k, When this happens, it means freq_hash size was k, and the next right idx introduced a new element to the window. As the last freq_hash size was k, left pointer was already at an element whose freq was 1. So, we just move that to the next pointer, and then evaluate Case 2. For the valid starting points, we reset that counter.
+
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Subarrays with K Different Integers" lines
+# @param {Integer[]} nums
+# @param {Integer} k
+# @return {Integer}
+def subarrays_with_k_distinct(nums, k)
+  freq = Hash.new(0)
+  left = result = valid_starting_pts = 0
+
+  (0...nums.size).each do |right|
+    freq[nums[right]]+=1 # update freq of current element
+    next if freq.size < k
+    
+    # this has to be before ==k, as when size is >k, both are evaluated
+    # when this happens, left pointer is already at value where freq of num is 1, so just move it 1 idx, and reset
+    if freq.size > k
+      valid_starting_pts = 0
+      freq.delete(nums[left]) # this value would have been 1, now has to be removed
+      left+=1
+    end
+    
+    if freq.size == k
+      # if we reach an element with freq == 1, then we stop
+      while freq[nums[left]] > 1 
+        freq[nums[left]]-=1
+        # each idx is a valid starting point; if for next right idx, size remains k, all starting points are still valid
+        # it will be added again, it will reset when freq size becomes > k, code for which is above
+        valid_starting_pts+=1
+        left+=1
+      end
+
+      # for idx, starting points can be idx+1, The +1 is for when freq[nums[left]] is 1, its a valid pt, but counter didnt count it 
+      result += valid_starting_pts + 1 
+    end
+  end
+
+  result
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

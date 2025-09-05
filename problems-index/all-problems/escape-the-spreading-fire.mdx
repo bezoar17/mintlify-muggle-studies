@@ -1,0 +1,74 @@
+---
+title: '❗️ Escape the Spreading Fire'
+description: '[leetcode link](https://leetcode.com/problems/escape-the-spreading-fire/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a <strong>0-indexed</strong> 2D integer array <code>grid</code> of size <code>m x n</code> which represents a field. Each cell has one of three values:</p>  <ul>  <li><code>0</code> represents grass,</li>  <li><code>1</code> represents fire,</li>  <li><code>2</code> represents a wall that you and fire cannot pass through.</li> </ul>  <p>You are situated in the top-left cell, <code>(0, 0)</code>, and you want to travel to the safehouse at the bottom-right cell, <code>(m - 1, n - 1)</code>. Every minute, you may move to an <strong>adjacent</strong> grass cell. <strong>After</strong> your move, every fire cell will spread to all <strong>adjacent</strong> cells that are not walls.</p>  <p>Return <em>the <strong>maximum</strong> number of minutes that you can stay in your initial position before moving while still safely reaching the safehouse</em>. If this is impossible, return <code>-1</code>. If you can <strong>always</strong> reach the safehouse regardless of the minutes stayed, return <code>10<sup>9</sup></code>.</p>  <p>Note that even if the fire spreads to the safehouse immediately after you have reached it, it will be counted as safely reaching the safehouse.</p>  <p>A cell is <strong>adjacent</strong> to another cell if the former is directly north, east, south, or west of the latter (i.e., their sides are touching).</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2022/03/10/ex1new.jpg" style="width: 650px; height: 404px;" />  <strong>Input:</strong> grid = [[0,2,0,0,0,0,0],[0,0,0,2,2,1,0],[0,2,0,0,1,2,0],[0,0,2,2,2,0,2],[0,0,0,0,0,0,0]] <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> The figure above shows the scenario where you stay in the initial position for 3 minutes. You will still be able to safely reach the safehouse. Staying for more than 3 minutes will not allow you to safely reach the safehouse.  <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2022/03/10/ex2new2.jpg" style="width: 515px; height: 150px;" />  <strong>Input:</strong> grid = [[0,0,0,0],[0,1,2,0],[0,2,0,0]] <br/> <strong>Output:</strong> -1 <br/> <strong>Explanation:</strong> The figure above shows the scenario where you immediately move towards the safehouse. Fire will spread to any cell you move towards and it is impossible to safely reach the safehouse. Thus, -1 is returned.   <p><strong class="example">Example 3:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2022/03/10/ex3new.jpg" style="width: 174px; height: 150px;" />  <strong>Input:</strong> grid = [[0,0,0],[2,2,0],[1,2,0]] <br/> <strong>Output:</strong> 1000000000 <br/> <strong>Explanation:</strong> The figure above shows the initial grid. Notice that the fire is contained by walls and you will always be able to safely reach the safehouse. Thus, 10<sup>9</sup> is returned.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>m == grid.length</code></li>  <li><code>n == grid[i].length</code></li>  <li><code>2 &lt;= m, n &lt;= 300</code></li>  <li><code>4 &lt;= m * n &lt;= 2 * 10<sup>4</sup></code></li>  <li><code>grid[i][j]</code> is either <code>0</code>, <code>1</code>, or <code>2</code>.</li>  <li><code>grid[0][0] == grid[m - 1][n - 1] == 0</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Multi-Source BFS
+
+Use multi-source bfs to find time at which fire reaches the cell. Then starting from (0,0), check if there is a path, such that we can reach (m-1,n-1) and nowhere in the path our reaching time is &gt;= fire reaching time, except last cell, there we can reach at same time as fire. For each path we only have to do visit a cell once, and find shortest dist for each cell, because we are essentially trying to maximize the minimum difference between fire and person time in a path. So, we want person time to be as low as possible so difference is maximized, as fire time is constant.
+
+Starting from 0 time, consider all cells, at each cell, if we arrive after fire, that cell cant be used, if we arrive before a fire, and fire reaches say 2 minutes later. Now, whatever path includes this cell, and reaches (m-1,n-1) cell, the fire can also take the same path, i.e we are chased by the fire. So, from this cell onwards in this particular path, the difference of fire vs us, can only decrease due to some other fire, it can never increase. By, this logic, whatever the difference is at the last cell, which is the last of the path will be the minimum difference of fire vs us reaching a cell.
+
+So, just record our arriving time, and fires arriving time(using multi-source bfs), to get min arrival time for each cell for fire/person. Whatever the difference is for the last cell is our answer, that amount of time we can wait, say it is X. Now here there are 2 cases, if we were being chased by the fire, i.e, shortest path for fire and person has a common node, node at after fire follows us, we can only wait for X-1 days, so that fire doesnt destroy us on that common node. If that common node is last cell itself, we can wait the full X days, as when fire catches up with us at common node, i.e last, we have already arrived, and thats valid.
+
+Now, the check for common node, is very clever. If fire follows person to the last cell, both come from left or both from top to the last cell, then delta value is non-increasing throughtout the path. If delta was 5, at some point, and another fire joined the persons path, delta can become 3 etc, can decrease, but never increase. But if both followed separate paths, and meet AT the last cell, one coming from left will continue to top, and vice-versa. So, for either of the adjacent cell, the delta in time for fire and person would increase wrt to the last cell, as they cross from last cell. Up until the last cell it was non-increasing, but after that it increases. In this case, we can wait the whole delta value, and arrive to last cell just in time. But in the other case where both fire and person follow the same path, both come from left or both from top, the adjacent cells will not have higher delta. And, we can only wait delta-1 minutes extra, so that fire doesnt catch up to person in the common node.
+
+If they met at last cell first, then since they now cross, either one of the adjacent cell will now have a difference which is greater than this minimum. Violating the ever decreasing constraint in the following path thing, so here fire didnt follow.
+
+See 2nd example here, https://leetcode.com/problems/escape-the-spreading-fire/solutions/2016835/no-bs
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Escape the Spreading Fire" lines
+# @param {Integer[][]} grid
+# @return {Integer}
+def maximum_minutes(grid)
+  inf = 1_000_000_000
+  m = grid.size; n = grid[0].size
+  cells = (0...m).to_a.product((0...n).to_a)
+  dir = [[0,1], [0,-1], [1,0], [-1,0]]
+
+  bfs=->(starting_cells){
+    dist = Array.new(m) { Array.new(n, inf) }
+    queue = Queue.new(starting_cells)
+    time = 0
+    until queue.empty?
+      queue.size.times do
+        i,j = queue.pop; dist[i][j] = time
+        dir.each do |di, dj|
+          ni = i+di; nj = j+dj;
+          queue.push([ni,nj]) if ni.between?(0,m-1) && nj.between?(0,n-1) && (dist[ni][nj] == inf) && grid[ni][nj]==0
+        end
+      end
+      time+=1
+    end
+    dist
+  }
+  
+  arrv_time = bfs.call([cells.first])
+  return -1 if arrv_time[-1][-1] == inf
+  
+  burn_time = bfs.call(cells.select { |i,j| grid[i][j] == 1 })
+  return inf if burn_time[-1][-1] == inf
+  
+  delta = burn_time[-1][-1] - arrv_time[-1][-1]
+  return -1 if delta < 0
+  
+  adjacent_cells = [[m-1, n-2], [m-2,n-1]]
+  met_at_last_cell = adjacent_cells.any? { |cell| (burn_time.dig(*cell) - arrv_time.dig(*cell)).abs > delta }
+
+  met_at_last_cell ? delta : delta-1
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

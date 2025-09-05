@@ -1,0 +1,84 @@
+---
+title: '🧀 Redundant Connection'
+description: '[leetcode link](https://leetcode.com/problems/redundant-connection/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>In this problem, a tree is an <strong>undirected graph</strong> that is connected and has no cycles.</p>  <p>You are given a graph that started as a tree with <code>n</code> nodes labeled from <code>1</code> to <code>n</code>, with one additional edge added. The added edge has two <strong>different</strong> vertices chosen from <code>1</code> to <code>n</code>, and was not an edge that already existed. The graph is represented as an array <code>edges</code> of length <code>n</code> where <code>edges[i] = [a<sub>i</sub>, b<sub>i</sub>]</code> indicates that there is an edge between nodes <code>a<sub>i</sub></code> and <code>b<sub>i</sub></code> in the graph.</p>  <p>Return <em>an edge that can be removed so that the resulting graph is a tree of </em><code>n</code><em> nodes</em>. If there are multiple answers, return the answer that occurs last in the input.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/05/02/reduntant1-1-graph.jpg" style="width: 222px; height: 222px;" />  <strong>Input:</strong> edges = [[1,2],[1,3],[2,3]] <br/> <strong>Output:</strong> [2,3]   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/05/02/reduntant1-2-graph.jpg" style="width: 382px; height: 222px;" />  <strong>Input:</strong> edges = [[1,2],[2,3],[3,4],[1,4],[1,5]] <br/> <strong>Output:</strong> [1,4]    <p><strong>Constraints:</strong></p>  <ul>  <li><code>n == edges.length</code></li>  <li><code>3 &lt;= n &lt;= 1000</code></li>  <li><code>edges[i].length == 2</code></li>  <li><code>1 &lt;= a<sub>i</sub> &lt; b<sub>i</sub> &lt;= edges.length</code></li>  <li><code>a<sub>i</sub> != b<sub>i</sub></code></li>  <li>There are no repeated edges.</li>  <li>The given graph is connected.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      for n vertices, there are n edges. 
+
+Every graph with V vertices, and v-1 edges is a tree, so we need to remove 1 only. 
+
+First time we encounter an edge where both vertices lie in the same connected component, this edge is extraneous, so that is the answer(will be last in the input). 
+
+Also, every acylic connected graph is a tree, so other option would be to find the cycle and edges in that, and pick the last from the input.
+
+UnionFind method is better in this case, as automatically the last input will be the one contributing to the cycle.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Redundant Connection" lines
+# @param {Integer[][]} edges
+# @return {Integer[]}
+def find_redundant_connection(edges)
+  n = edges.size
+  uf = UnionFind.new((1..n).to_a)
+
+  edges.each do |a,b|
+    return [a,b] unless uf.union(a,b)
+  end
+end
+
+class UnionFind
+  attr_accessor :nodes, :sizes
+  attr_reader :max_set_size
+
+  def initialize(node_keys=[])
+    @nodes = {}
+    @sizes = {}
+    @max_set_size = 0
+    node_keys.each { |i| root(i) }
+  end
+
+  # this will create a node key if it doesnt exist
+  def root(i)
+    nodes[i] ||= i; sizes[i] ||= 1; # create node if it doesnt exist
+
+    while nodes[i] != i
+      nodes[i] = nodes[nodes[i]] # path compression
+      i = nodes[i]
+    end
+    i
+  end
+
+  def size_for(i)
+    sizes[root(i)]
+  end
+
+  def union(i, j)
+    root_of_i = root(i)
+    root_of_j = root(j)
+
+    return false if root_of_i == root_of_j
+
+    if sizes[root_of_j] > sizes[root_of_i]
+      nodes[root_of_i] = root_of_j
+      sizes[root_of_j] += sizes[root_of_i]
+    else
+      nodes[root_of_j] = root_of_i
+      sizes[root_of_i] += sizes[root_of_j]
+    end
+    @max_set_size = [@max_set_size, sizes[root_of_i], sizes[root_of_j]].max
+  end
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

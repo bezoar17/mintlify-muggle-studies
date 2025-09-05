@@ -1,0 +1,57 @@
+---
+title: '🧩 Find Common Characters'
+description: '[leetcode link](https://leetcode.com/problems/find-common-characters/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a string array <code>words</code>, return <em>an array of all characters that show up in all strings within the </em><code>words</code><em> (including duplicates)</em>. You may return the answer in <strong>any order</strong>.</p>   <p><strong class="example">Example 1:</strong></p> <strong>Input:</strong> words = ["bella","label","roller"] <br/> <strong>Output:</strong> ["e","l","l"] <p><strong class="example">Example 2:</strong></p> <strong>Input:</strong> words = ["cool","lock","cook"] <br/> <strong>Output:</strong> ["c","o"]   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= words.length &lt;= 100</code></li>  <li><code>1 &lt;= words[i].length &lt;= 100</code></li>  <li><code>words[i]</code> consists of lowercase English letters.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Find Common Characters" lines
+# @param {String[]} a
+# @return {String[]}
+# def common_chars(a)
+#   hash_ = Hash.new([])
+#   a.each do |str|
+#     h_ = str.each_char.inject(Hash.new(0)) {|h,i| h[i]+=1;h}
+#     h_.each do |key, value|
+#       hash_[key] += [value]
+#     end
+#   end
+#   result = [] 
+#   hash_.each do |key, value|
+#     if value.size == a.size
+#       result += [key] * value.min
+#     end
+#   end
+#   result
+# end
+
+def common_chars(a)
+  hash_ = a[0].each_char.inject(Hash.new(0)) {|h,i| h[i]+=1;h}    
+  a[1, a.size].each do |str|
+    h_ = str.each_char.inject(Hash.new(0)) {|h,i| h[i]+=1;h}
+    (hash_.keys - h_.keys).each {|i| hash_.delete(i)}
+    h_.keys.each do |key, value|
+      hash_[key]= [ hash_[key], h_[key]].min
+    end
+  end
+  result = [] 
+  hash_.each do |key, value|
+      result += [key] * value
+  end
+  result
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

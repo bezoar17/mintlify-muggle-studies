@@ -1,0 +1,32 @@
+---
+title: '🧩   Count Symmetric Integers'
+description: '[leetcode link](https://leetcode.com/problems/count-symmetric-integers/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given two positive integers <code>low</code> and <code>high</code>.</p>  <p>An integer <code>x</code> consisting of <code>2 * n</code> digits is <strong>symmetric</strong> if the sum of the first <code>n</code> digits of <code>x</code> is equal to the sum of the last <code>n</code> digits of <code>x</code>. Numbers with an odd number of digits are never symmetric.</p>  <p>Return <em>the <strong>number of symmetric</strong> integers in the range</em> <code>[low, high]</code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> low = 1, high = 100 <br/> <strong>Output:</strong> 9 <br/> <strong>Explanation:</strong> There are 9 symmetric integers between 1 and 100: 11, 22, 33, 44, 55, 66, 77, 88, and 99.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> low = 1200, high = 1230 <br/> <strong>Output:</strong> 4 <br/> <strong>Explanation:</strong> There are 4 symmetric integers between 1200 and 1230: 1203, 1212, 1221, and 1230.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= low &lt;= high &lt;= 10<sup>4</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Simple to_s and calculate for each number
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="  Count Symmetric Integers" lines
+# @param {Integer} low
+# @param {Integer} high
+# @return {Integer}
+def count_symmetric_integers(low, high)
+  (low..high).count {|i| 
+    s = i.to_s.chars
+    s.size.even? && s.first(s.size/2).map(&:to_i).sum == s.last(s.size/2).map(&:to_i).sum  
+  }
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

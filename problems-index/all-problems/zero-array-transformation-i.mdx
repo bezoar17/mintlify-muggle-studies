@@ -1,0 +1,47 @@
+---
+title: '🧀 Zero Array Transformation I'
+description: '[leetcode link](https://leetcode.com/problems/zero-array-transformation-i/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer array <code>nums</code> of length <code>n</code> and a 2D array <code>queries</code>, where <code>queries[i] = [l<sub>i</sub>, r<sub>i</sub>]</code>.</p>  <p>For each <code>queries[i]</code>:</p>  <ul>  <li>Select a <span data-keyword="subset">subset</span> of indices within the range <code>[l<sub>i</sub>, r<sub>i</sub>]</code> in <code>nums</code>.</li>  <li>Decrement the values at the selected indices by 1.</li> </ul>  <p>A <strong>Zero Array</strong> is an array where all elements are equal to 0.</p>  <p>Return <code>true</code> if it is <em>possible</em> to transform <code>nums</code> into a <strong>Zero Array </strong>after processing all the queries sequentially, otherwise return <code>false</code>.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [1,0,1], queries = [[0,2]]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">true</span></p>  <p><br/> <strong>Explanation:</strong></p>  <ul>  <li><strong>For i = 0:</strong>   <ul>   <li>Select the subset of indices as <code>[0, 2]</code> and decrement the values at these indices by 1.</li>   <li>The array will become <code>[0, 0, 0]</code>, which is a Zero Array.</li>  </ul>  </li> </ul> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [4,3,2,1], queries = [[1,3],[0,2]]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">false</span></p>  <p><br/> <strong>Explanation:</strong></p>  <ul>  <li><strong>For i = 0:</strong>   <ul>   <li>Select the subset of indices as <code>[1, 2, 3]</code> and decrement the values at these indices by 1.</li>   <li>The array will become <code>[4, 2, 1, 0]</code>.</li>  </ul>  </li>  <li><strong>For i = 1:</strong>  <ul>   <li>Select the subset of indices as <code>[0, 1, 2]</code> and decrement the values at these indices by 1.</li>   <li>The array will become <code>[3, 1, 0, 0]</code>, which is not a Zero Array.</li>  </ul>  </li> </ul> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>0 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= queries.length &lt;= 10<sup>5</sup></code></li>  <li><code>queries[i].length == 2</code></li>  <li><code>0 &lt;= l<sub>i</sub> &lt;= r<sub>i</sub> &lt; nums.length</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Intialize a transformations array to store the no. of transformations for each index
+Mark the queries onto transformations array, for each query l,r, mark l as +1, and r+1 as -1.
+
+Suppose only 1 query was there, then go from left to right in transformations array, and accumulate the transformations for each index, if only 1 query was there, only l index would have +1, which will remain till r index, and after r it will become 0.
+
+We are essentially capturing the transformations, instead of applying it for each query, we just store the affected range by mapping the start and end points of the query.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Zero Array Transformation I" lines
+# @param {Integer[]} nums
+# @param {Integer[][]} queries
+# @return {Boolean}
+def is_zero_array(nums, queries)
+  n = nums.size
+  transformation_markers = Array.new(n+1, 0)
+  queries.each do |left, right|
+    transformation_markers[left] += 1
+    transformation_markers[right+1] -= 1 if right+1 <= n
+  end
+
+  current_deficit = 0
+
+  transformation_markers[0..-2].each_with_index do |deficit, idx|
+    current_deficit += deficit
+    return false if nums[idx] > current_deficit
+  end
+  true
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

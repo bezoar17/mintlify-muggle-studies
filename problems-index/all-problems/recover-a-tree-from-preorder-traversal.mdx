@@ -1,0 +1,69 @@
+---
+title: '❗️ Recover a Tree From Preorder Traversal'
+description: '[leetcode link](https://leetcode.com/problems/recover-a-tree-from-preorder-traversal/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>We run a&nbsp;preorder&nbsp;depth-first search (DFS) on the <code>root</code> of a binary tree.</p>  <p>At each node in this traversal, we output <code>D</code> dashes (where <code>D</code> is the depth of this node), then we output the value of this node.&nbsp; If the depth of a node is <code>D</code>, the depth of its immediate child is <code>D + 1</code>.&nbsp; The depth of the <code>root</code> node is <code>0</code>.</p>  <p>If a node has only one child, that child is guaranteed to be <strong>the left child</strong>.</p>  <p>Given the output <code>traversal</code> of this traversal, recover the tree and return <em>its</em> <code>root</code>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2024/09/10/recover_tree_ex1.png" style="width: 423px; height: 200px;" />  <strong>Input:</strong> traversal = &quot;1-2--3--4-5--6--7&quot; <br/> <strong>Output:</strong> [1,2,5,3,4,6,7]   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2024/09/10/recover_tree_ex2.png" style="width: 432px; height: 250px;" />  <strong>Input:</strong> traversal = &quot;1-2--3---4-5--6---7&quot; <br/> <strong>Output:</strong> [1,2,5,3,null,6,null,4,null,7]   <p><strong class="example">Example 3:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2024/09/10/recover_tree_ex3.png" style="width: 305px; height: 250px;" />  <strong>Input:</strong> traversal = &quot;1-401--349---90--88&quot; <br/> <strong>Output:</strong> [1,401,null,349,88,90]    <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in the original tree is in the range <code>[1, 1000]</code>.</li>  <li><code>1 &lt;= Node.val &lt;= 10<sup>9</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Convert traversal into [val, depth] tvd array. Process each value tvd, push each node into the stack along with its depth. Initial state of stack has root and 0 as depth. Before pushing each node on the stack, update the left/right for previous node. For this, pop everything from stack till top of stack has &gt;=depth than current. When everything is popped, top of stack has parent node, update left/right, left first if its nil, else right pointer.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Recover a Tree From Preorder Traversal" lines
+# Definition for a binary tree node.
+# class TreeNode
+#     attr_accessor :val, :left, :right
+#     def initialize(val = 0, left = nil, right = nil)
+#         @val = val
+#         @left = left
+#         @right = right
+#     end
+# end
+# @param {String} traversal
+# @return {TreeNode}
+def recover_from_preorder(traversal)
+  # if we go from d to d+1, and then a no. it its the left node
+  # then if we encounter d again, it is right child of that node
+
+  # use a stack for this
+  t_chars = traversal.chars
+  len = t_chars.size
+  tvd = []
+  i = 0
+
+  c_d = 0; num_s = ""
+  while i < len
+    (i+=1; c_d+=1) while i < len && t_chars[i]=='-'
+    (num_s+=t_chars[i]; i+=1) while i < len && t_chars[i]!='-'
+    tvd << [num_s.to_i, c_d]
+    c_d = 1; num_s = ""; i+=1
+  end
+
+  root = TreeNode.new(tvd.first.first)
+  stack = [[root, 0]]
+
+  tvd[1..].each do |value, depth|
+    stack.pop while !stack.empty? && stack.last[1] >= depth
+    last_node, last_depth = stack.last
+    node = TreeNode.new(value)
+    if last_node.left.nil?
+      last_node.left = node
+    else
+      last_node.right = node
+    end
+    stack << [node, depth]
+  end
+
+  root
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

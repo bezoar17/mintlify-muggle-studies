@@ -1,0 +1,37 @@
+---
+title: '🧩 Determine if String Halves Are Alike'
+description: '[leetcode link](https://leetcode.com/problems/determine-if-string-halves-are-alike/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a string <code>s</code> of even length. Split this string into two halves of equal lengths, and let <code>a</code> be the first half and <code>b</code> be the second half.</p>  <p>Two strings are <strong>alike</strong> if they have the same number of vowels (<code>&#39;a&#39;</code>, <code>&#39;e&#39;</code>, <code>&#39;i&#39;</code>, <code>&#39;o&#39;</code>, <code>&#39;u&#39;</code>, <code>&#39;A&#39;</code>, <code>&#39;E&#39;</code>, <code>&#39;I&#39;</code>, <code>&#39;O&#39;</code>, <code>&#39;U&#39;</code>). Notice that <code>s</code> contains uppercase and lowercase letters.</p>  <p>Return <code>true</code><em> if </em><code>a</code><em> and </em><code>b</code><em> are <strong>alike</strong></em>. Otherwise, return <code>false</code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> s = &quot;book&quot; <br/> <strong>Output:</strong> true <br/> <strong>Explanation:</strong> a = &quot;b<u>o</u>&quot; and b = &quot;<u>o</u>k&quot;. a has 1 vowel and b has 1 vowel. Therefore, they are alike.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> s = &quot;textbook&quot; <br/> <strong>Output:</strong> false <br/> <strong>Explanation:</strong> a = &quot;t<u>e</u>xt&quot; and b = &quot;b<u>oo</u>k&quot;. a has 1 vowel whereas b has 2. Therefore, they are not alike. Notice that the vowel o is counted twice.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>2 &lt;= s.length &lt;= 1000</code></li>  <li><code>s.length</code> is even.</li>  <li><code>s</code> consists of <strong>uppercase and lowercase</strong> letters.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Determine if String Halves Are Alike" lines
+# @param {String} s
+# @return {Boolean}
+def halves_are_alike(s)
+  s=s.downcase
+  vowels = ['a', 'e','i', 'o', 'u']
+  v_h = vowels.map{|e| [e,0] }.to_h
+  n = s.size/2
+  
+  a_1, a_2 = [s.each_char.to_a[0...n], s.each_char.to_a[n..]].map do |arr|
+    arr.select {|c| v_h.has_key?(c)}
+  end
+  
+  a_1.size == a_2.size
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

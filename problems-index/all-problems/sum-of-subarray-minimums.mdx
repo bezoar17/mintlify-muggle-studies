@@ -1,0 +1,68 @@
+---
+title: '🧀 Sum of Subarray Minimums'
+description: '[leetcode link](https://leetcode.com/problems/sum-of-subarray-minimums/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an array of integers arr, find the sum of <code>min(b)</code>, where <code>b</code> ranges over every (contiguous) subarray of <code>arr</code>. Since the answer may be large, return the answer <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> arr = [3,1,2,4] <br/> <strong>Output:</strong> 17 <br/> <strong>Explanation:</strong>  Subarrays are [3], [1], [2], [4], [3,1], [1,2], [2,4], [3,1,2], [1,2,4], [3,1,2,4].  Minimums are 3, 1, 2, 4, 1, 1, 2, 1, 1, 1. Sum is 17.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> arr = [11,81,94,43,3] <br/> <strong>Output:</strong> 444    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= arr.length &lt;= 3 * 10<sup>4</sup></code></li>  <li><code>1 &lt;= arr[i] &lt;= 3 * 10<sup>4</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      to handle duplicates, update one of the prev, next to non-strict.
+
+So, same value will not be counted in the sub-array extension on one side.
+
+rest is simple subarray calculation for a particular index.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Sum of Subarray Minimums" lines
+# @param {Integer[]} arr
+# @return {Integer}
+def sum_subarray_mins(arr)
+
+  strict_discard =-> (top,num) {top>=num}
+  non_strict_discard =-> (top,num) {top>num}
+
+  prev_smaller = smaller_idx(arr, -1, strict_discard)
+  next_smaller = smaller_idx(arr, 1, non_strict_discard)
+
+  # to handle duplicates, update one of the prev, next to non-strict.
+  # weird ass logic.
+
+  seen = Set.new()
+  
+  n = arr.size
+  mod = 1_000_000_000 + 7
+
+  (0...n).reduce(0) do |res, i|
+    left_ext = i-prev_smaller[i]
+    right_ext = next_smaller[i]-i
+    num_sub_arrays = (right_ext * left_ext) %mod
+    (res + (arr[i] * num_sub_arrays)%mod)%mod
+  end
+end
+
+def smaller_idx(nums, direction, discard_fn)
+  n = nums.size
+  calculate_previous = direction == -1;
+  default, index_range = calculate_previous ? [-1, (0...n)] : [n, (n-1).downto(0)]
+
+  result = Array.new(nums.size, default)
+  stack = [] # stores only the index of element, not [element, idx]
+
+  index_range.each do |idx|
+    stack.pop while !stack.empty? && discard_fn.call(nums[stack.last], nums[idx])
+    result[idx] = stack.last unless stack.empty?
+    stack << idx
+  end
+  result
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

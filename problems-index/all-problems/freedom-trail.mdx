@@ -1,0 +1,65 @@
+---
+title: '❗️ Freedom Trail'
+description: '[leetcode link](https://leetcode.com/problems/freedom-trail/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>In the video game Fallout 4, the quest <strong>&quot;Road to Freedom&quot;</strong> requires players to reach a metal dial called the <strong>&quot;Freedom Trail Ring&quot;</strong> and use the dial to spell a specific keyword to open the door.</p>  <p>Given a string <code>ring</code> that represents the code engraved on the outer ring and another string <code>key</code> that represents the keyword that needs to be spelled, return <em>the minimum number of steps to spell all the characters in the keyword</em>.</p>  <p>Initially, the first character of the ring is aligned at the <code>&quot;12:00&quot;</code> direction. You should spell all the characters in <code>key</code> one by one by rotating <code>ring</code> clockwise or anticlockwise to make each character of the string key aligned at the <code>&quot;12:00&quot;</code> direction and then by pressing the center button.</p>  <p>At the stage of rotating the ring to spell the key character <code>key[i]</code>:</p>  <ol>  <li>You can rotate the ring clockwise or anticlockwise by one place, which counts as <strong>one step</strong>. The final purpose of the rotation is to align one of <code>ring</code>&#39;s characters at the <code>&quot;12:00&quot;</code> direction, where this character must equal <code>key[i]</code>.</li>  <li>If the character <code>key[i]</code> has been aligned at the <code>&quot;12:00&quot;</code> direction, press the center button to spell, which also counts as <strong>one step</strong>. After the pressing, you could begin to spell the next character in the key (next stage). Otherwise, you have finished all the spelling.</li> </ol>   <p><strong class="example">Example 1:</strong></p> <img src="https://assets.leetcode.com/uploads/2018/10/22/ring.jpg" style="width: 450px; height: 450px;" />  <strong>Input:</strong> ring = &quot;godding&quot;, key = &quot;gd&quot; <br/> <strong>Output:</strong> 4 <br/> <strong>Explanation:</strong> For the first key character &#39;g&#39;, since it is already in place, we just need 1 step to spell this character.  For the second key character &#39;d&#39;, we need to rotate the ring &quot;godding&quot; anticlockwise by two steps to make it become &quot;ddinggo&quot;. Also, we need 1 more step for spelling. So the final output is 4.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> ring = &quot;godding&quot;, key = &quot;godding&quot; <br/> <strong>Output:</strong> 13    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= ring.length, key.length &lt;= 100</code></li>  <li><code>ring</code> and <code>key</code> consist of only lower case English letters.</li>  <li>It is guaranteed that <code>key</code> could always be spelled by rotating <code>ring</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Suppose the key was only 1 letter. Store steps needed for each letter in ring for that 1 letter in key in a step_count array of ring size.
+For all the letters that are not the key, value is nil, as that are out of scope. For the key char in ring, values would be their distance from 0 + 1. For the next char in key, for all positions of this char in ring. We again calculate the steps needed to reach this position in ring. We will come from any of the last char positions, and update the minimum in the new step count array. So, two 1D arrays of ring size can be used to calculate the min steps for a char in key. Only last step count is needed for the current key char evaluation.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Freedom Trail" lines
+# @param {String} ring
+# @param {String} key
+# @return {Integer}
+def find_rotate_steps(ring, key)
+  key_n = key.size
+  ring_n = ring.size
+  ring_min_dist = Array.new(ring_n) { Array.new(ring_n, 0) } # pre-calculate min dist to go from i to j, clock or anticlock
+  (0...ring_n).each { |i| (0...ring_n).each { |j| ring_min_dist[i][j] = [(i-j).abs, ring_n-(i-j).abs ].min } }
+
+  key_chars = key.chars.to_set
+  char_positions_in_ring = Hash.new{|h,k| h[k]=[]} # pre-calculate positions in ring for key chars
+  last_step_counts = Array.new(ring_n) # initialize all as unreachable
+
+  # initialize for first char minimum steps required to dial this char, and key char positions to be used later
+  ring.chars.each_with_index do |ring_ch, idx| 
+    last_step_counts[idx] = ring_min_dist[0][idx] if ring_ch == key[0]
+    char_positions_in_ring[ring_ch] << idx if key_chars.include?(ring_ch)
+  end
+  
+  # for each char in key, calculate steps needed to arrive at it, from any of the last_char positions
+  (1...key_n).each do |key_idx|
+    last_key_ch = key[key_idx-1]
+    current_key_ch = key[key_idx]
+    
+    # initialize to all unreachable, all current_char positions will have value after iterations
+    current_step_counts = Array.new(ring_n) 
+    
+    # for each current char in ring, try ways to get to this from each last_char in ring
+    # steps to reach current char is steps to reach last_ch_idx + steps to reach current idx from last_idx
+    char_positions_in_ring[current_key_ch].each do |ch_idx|
+      current_step_counts[ch_idx] = char_positions_in_ring[last_key_ch].map do |last_ch_idx|
+        last_step_counts[last_ch_idx] + ring_min_dist[last_ch_idx][ch_idx]
+      end.min
+    end
+
+    last_step_counts = current_step_counts # update the last step counts for next iteration
+  end
+
+  # ignore 1 button press in jump calculation, and add all button press steps in the end
+  last_step_counts.compact.min + key.size 
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

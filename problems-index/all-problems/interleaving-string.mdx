@@ -1,0 +1,57 @@
+---
+title: '🧀 Interleaving String'
+description: '[leetcode link](https://leetcode.com/problems/interleaving-string/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given strings <code>s1</code>, <code>s2</code>, and <code>s3</code>, find whether <code>s3</code> is formed by an <strong>interleaving</strong> of <code>s1</code> and <code>s2</code>.</p>  <p>An <strong>interleaving</strong> of two strings <code>s</code> and <code>t</code> is a configuration where <code>s</code> and <code>t</code> are divided into <code>n</code> and <code>m</code> <span data-keyword="substring-nonempty">substrings</span> respectively, such that:</p>  <ul>  <li><code>s = s<sub>1</sub> + s<sub>2</sub> + ... + s<sub>n</sub></code></li>  <li><code>t = t<sub>1</sub> + t<sub>2</sub> + ... + t<sub>m</sub></code></li>  <li><code>|n - m| &lt;= 1</code></li>  <li>The <strong>interleaving</strong> is <code>s<sub>1</sub> + t<sub>1</sub> + s<sub>2</sub> + t<sub>2</sub> + s<sub>3</sub> + t<sub>3</sub> + ...</code> or <code>t<sub>1</sub> + s<sub>1</sub> + t<sub>2</sub> + s<sub>2</sub> + t<sub>3</sub> + s<sub>3</sub> + ...</code></li> </ul>  <p><strong>Note:</strong> <code>a + b</code> is the concatenation of strings <code>a</code> and <code>b</code>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/09/02/interleave.jpg" style="width: 561px; height: 203px;" />  <strong>Input:</strong> s1 = &quot;aabcc&quot;, s2 = &quot;dbbca&quot;, s3 = &quot;aadbbcbcac&quot; <br/> <strong>Output:</strong> true <br/> <strong>Explanation:</strong> One way to obtain s3 is: Split s1 into s1 = &quot;aa&quot; + &quot;bc&quot; + &quot;c&quot;, and s2 into s2 = &quot;dbbc&quot; + &quot;a&quot;. Interleaving the two splits, we get &quot;aa&quot; + &quot;dbbc&quot; + &quot;bc&quot; + &quot;a&quot; + &quot;c&quot; = &quot;aadbbcbcac&quot;. Since s3 can be obtained by interleaving s1 and s2, we return true.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> s1 = &quot;aabcc&quot;, s2 = &quot;dbbca&quot;, s3 = &quot;aadbbbaccc&quot; <br/> <strong>Output:</strong> false <br/> <strong>Explanation:</strong> Notice how it is impossible to interleave s2 with any other string to obtain s3.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> s1 = &quot;&quot;, s2 = &quot;&quot;, s3 = &quot;&quot; <br/> <strong>Output:</strong> true    <p><strong>Constraints:</strong></p>  <ul>  <li><code>0 &lt;= s1.length, s2.length &lt;= 100</code></li>  <li><code>0 &lt;= s3.length &lt;= 200</code></li>  <li><code>s1</code>, <code>s2</code>, and <code>s3</code> consist of lowercase English letters.</li> </ul>   <p><strong>Follow up:</strong> Could you solve it using only <code>O(s2.length)</code> additional memory space?</p> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      n-m &lt; 1 is to throw us off ? 
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Interleaving String" lines
+# @param {String} s1
+# @param {String} s2
+# @param {String} s3
+# @return {Boolean}
+def is_interleave(s1, s2, s3)
+  # take s1 first, or s2 first alternatively, and apply on remaining strings
+  @s1 = s1; @s2 = s2; @s3= s3;
+  return false if s1.size + s2.size != s3.size
+  @cache = {}
+
+  recur(0, 0, 0)
+end
+
+# call further only if it is matching
+def recur(s1_idx, s2_idx, s3_idx)
+  return true if s3_idx == @s3.size && s1_idx == @s1.size && s2_idx == @s2.size
+  return false if s3_idx == @s3.size
+
+  return @cache[[s1_idx, s2_idx, s3_idx]] if !@cache[[s1_idx, s2_idx, s3_idx]].nil?
+  
+  take_s1 = false;
+  if @s1[s1_idx] == @s3[s3_idx]
+    @cache[[s1_idx, s2_idx, s3_idx]] = recur(s1_idx+1, s2_idx, s3_idx+1)
+    take_s1 = @cache[[s1_idx, s2_idx, s3_idx]]
+  end
+
+  take_s2 = false
+  if @s2[s2_idx] == @s3[s3_idx]
+    @cache[[s1_idx, s2_idx, s3_idx]] = recur(s1_idx, s2_idx+1, s3_idx+1)
+    take_s2 = @cache[[s1_idx, s2_idx, s3_idx]]
+  end
+
+  take_s1 || take_s2
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

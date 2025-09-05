@@ -1,0 +1,48 @@
+---
+title: '🧩 Balanced Binary Tree'
+description: '[leetcode link](https://leetcode.com/problems/balanced-binary-tree/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a binary tree, determine if it is <span data-keyword="height-balanced"><strong>height-balanced</strong></span>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/10/06/balance_1.jpg" style="width: 342px; height: 221px;" />  <strong>Input:</strong> root = [3,9,20,null,null,15,7] <br/> <strong>Output:</strong> true   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/10/06/balance_2.jpg" style="width: 452px; height: 301px;" />  <strong>Input:</strong> root = [1,2,2,3,3,null,null,4,4] <br/> <strong>Output:</strong> false   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> root = [] <br/> <strong>Output:</strong> true    <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in the tree is in the range <code>[0, 5000]</code>.</li>  <li><code>-10<sup>4</sup> &lt;= Node.val &lt;= 10<sup>4</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Balanced Binary Tree" lines
+# Definition for a binary tree node.
+# class TreeNode
+#     attr_accessor :val, :left, :right
+#     def initialize(val = 0, left = nil, right = nil)
+#         @val = val
+#         @left = left
+#         @right = right
+#     end
+# end
+# @param {TreeNode} root
+# @return {Boolean}
+def dfs(root)
+  return [true, 0] if root.nil?
+
+  left  = dfs(root.left)
+  right = dfs(root.right)
+
+  balanced = left.first && right.first && (left[1] - right[1]).abs <= 1
+
+  [balanced, 1 + [left[1], right[1]].max]
+end
+
+def is_balanced(root)
+  dfs(root).first
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

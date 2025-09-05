@@ -1,0 +1,99 @@
+---
+title: '❗️ Count Connected Components in LCM Graph'
+description: '[leetcode link](https://leetcode.com/problems/count-connected-components-in-lcm-graph/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an array of integers <code>nums</code> of size <code>n</code> and a <strong>positive</strong> integer <code>threshold</code>.</p>  <p>There is a graph consisting of <code>n</code> nodes with the&nbsp;<code>i<sup>th</sup></code>&nbsp;node having a value of <code>nums[i]</code>. Two nodes <code>i</code> and <code>j</code> in the graph are connected via an <strong>undirected</strong> edge if <code>lcm(nums[i], nums[j]) &lt;= threshold</code>.</p>  <p>Return the number of <strong>connected components</strong> in this graph.</p>  <p>A <strong>connected component</strong> is a subgraph of a graph in which there exists a path between any two vertices, and no vertex of the subgraph shares an edge with a vertex outside of the subgraph.</p>  <p>The term <code>lcm(a, b)</code> denotes the <strong>least common multiple</strong> of <code>a</code> and <code>b</code>.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [2,4,8,3,9], threshold = 5</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">4</span></p>  <p><br/> <strong>Explanation:</strong>&nbsp;</p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2024/10/31/example0.png" style="width: 250px; height: 251px;" /></p>    <p>The four connected components are <code>(2, 4)</code>, <code>(3)</code>, <code>(8)</code>, <code>(9)</code>.</p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [2,4,8,3,9,12], threshold = 10</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">2</span></p>  <p><br/> <strong>Explanation:</strong>&nbsp;</p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2024/10/31/example1.png" style="width: 250px; height: 252px;" /></p>  <p>The two connected components are <code>(2, 3, 4, 8, 9)</code>, and <code>(12)</code>.</p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>  <li>All elements of <code>nums</code> are unique.</li>  <li><code>1 &lt;= threshold &lt;= 2 * 10<sup>5</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Can a new node be added to component ?
+Take lcm with all nodes in component which are less than threshold. (lcm of a, b is atleast max(a,b)).
+For a new num, we cant check all numbers in component.
+But we can do reverse, if we get 2, then lcm for its multiples are those nums itself(4,6,8) and we can merge them.
+Now why should nums be sorted while processing it.
+For new no. N, if there is a no. in component X, such that X&lt;N, and such that L=lcm(X,N) &lt;=threshold;
+then this lcm L would already be in the component(X and L would be merged at some point), so when we merge
+L and N while processing it as a multiple of N, we effectively merge X and N, which is what is needed.
+Hence we should process the nums in sorted order
+for.e.g, 2,3 and threshold is 10, 2 wil merge with 6. And upcoming 3 will also merge with 6, and hence 2,3 are now connected, example no. 2 is a good example.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Count Connected Components in LCM Graph" lines
+# @param {Integer[]} nums
+# @param {Integer} threshold
+# @return {Integer}
+class UnionFind
+  attr_accessor :nodes, :sizes
+  attr_reader :max_set_size
+
+  def initialize(node_keys=[])
+    @nodes = {}
+    @sizes = {}
+    @max_set_size = 0
+    node_keys.each { |i| root(i) }
+  end
+
+  # this will create a node key if it doesnt exist
+  def root(i)
+    nodes[i] ||= i; sizes[i] ||= 1; # create node if it doesnt exist
+
+    while nodes[i] != i
+      nodes[i] = nodes[nodes[i]] # path compression
+      i = nodes[i]
+    end
+    i
+  end
+
+  def size_for(i)
+    sizes[root(i)]
+  end
+
+  def union(i, j)
+    root_of_i = root(i)
+    root_of_j = root(j)
+
+    return false if root_of_i == root_of_j
+
+    if sizes[root_of_j] > sizes[root_of_i]
+      nodes[root_of_i] = root_of_j
+      sizes[root_of_j] += sizes[root_of_i]
+    else
+      nodes[root_of_j] = root_of_i
+      sizes[root_of_i] += sizes[root_of_j]
+    end
+    @max_set_size = [@max_set_size, sizes[root_of_i], sizes[root_of_j]].max
+  end
+end
+
+def count_components(nums, threshold)
+  # see note for explanation
+  le_set = nums.select { |x| x<=threshold}.sort.to_set # only these can form a mergeable components
+  above_threshold_count = nums.size-le_set.size
+  return above_threshold_count if le_set.size == 0
+  return (above_threshold_count + 1) if le_set.first == 1 # all le values can be merged to form 1 component
+  
+  uf = UnionFind.new(le_set.to_a) # initially all nums are in their own component
+
+  until le_set.empty?
+    num = le_set.first; # set will remove duplicates, and maintains order
+    (1..).each do |i|
+      break if num*i > threshold
+      uf.union(num, num*i) 
+      le_set.delete(num*i) # if multiple was present, it will not be processed, assume to be merged in component already
+    end
+  end
+  no_of_components = uf.nodes.keys.count {|i| i==uf.root(i)}
+  
+  above_threshold_count + no_of_components
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

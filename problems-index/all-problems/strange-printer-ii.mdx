@@ -1,0 +1,77 @@
+---
+title: '❗️ Strange Printer II'
+description: '[leetcode link](https://leetcode.com/problems/strange-printer-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>There is a strange printer with the following two special requirements:</p>  <ul>  <li>On each turn, the printer will print a solid rectangular pattern of a single color on the grid. This will cover up the existing colors in the rectangle.</li>  <li>Once the printer has used a color for the above operation, <strong>the same color cannot be used again</strong>.</li> </ul>  <p>You are given a <code>m x n</code> matrix <code>targetGrid</code>, where <code>targetGrid[row][col]</code> is the color in the position <code>(row, col)</code> of the grid.</p>  <p>Return <code>true</code><em> if it is possible to print the matrix </em><code>targetGrid</code><em>,</em><em> otherwise, return </em><code>false</code>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/12/23/print1.jpg" style="width: 600px; height: 175px;" />  <strong>Input:</strong> targetGrid = [[1,1,1,1],[1,2,2,1],[1,2,2,1],[1,1,1,1]] <br/> <strong>Output:</strong> true   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/12/23/print2.jpg" style="width: 600px; height: 367px;" />  <strong>Input:</strong> targetGrid = [[1,1,1,1],[1,1,3,3],[1,1,3,4],[5,5,1,4]] <br/> <strong>Output:</strong> true   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> targetGrid = [[1,2,1],[2,1,2],[1,2,1]] <br/> <strong>Output:</strong> false <br/> <strong>Explanation:</strong> It is impossible to form targetGrid because it is not allowed to print the same color in different turns.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>m == targetGrid.length</code></li>  <li><code>n == targetGrid[i].length</code></li>  <li><code>1 &lt;= m, n &lt;= 60</code></li>  <li><code>1 &lt;= targetGrid[row][col] &lt;= 60</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      For a particular color, only 1 operation is done. With that operation we have to cover all cells in the grid, painted area for a color. So for the color, the limits of rectangle can be found by recording the min left, max right, min top and max bottom position seen in the grid.
+
+Now, each cell will be part of some operations, to get to final state. But the grid has the final state already, so for a particular, current_color, we process the painted area, if we find an element with color grid_color not same as current_color, means that cell was painted over, and we have a relation that grid_color should be painted after current_color.
+
+For the last painted color, whole rectangle will have same colors, and we wont derive any relation. 
+
+Now, once we process painted areas of all the colors, we will have some dependency edges saying a depends on b. If resulting graph from these edges forms a dag with no cycle we're good else we're not. 
+In last test case, within the rectange, we have reversal, 1 cell has 1-&gt;2, other cell has 2-&gt;1. 
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Strange Printer II" lines
+# @param {Integer[][]} target_grid
+# @return {Boolean}
+def is_printable(target_grid)
+  # m,n 60 
+  m = target_grid.size; n = target_grid[0].size
+  # limits of l,r,t,b; rectangle for a color is from (l,t) to (r,b)
+  color_limits = Hash.new {|h,k| h[k]={left: n+1, right:-1, top:m+1, bottom:-1}}
+  
+  (0...m).each do |i|
+    (0...n).each do |j|
+      color=target_grid[i][j]
+      color_limits[color][:left]=[color_limits[color][:left], j].min
+      color_limits[color][:right]=[color_limits[color][:right], j].max
+      color_limits[color][:top]=[color_limits[color][:top], i].min
+      color_limits[color][:bottom]=[color_limits[color][:bottom], i].max
+    end
+  end
+
+  all_colors = color_limits.keys
+  color_edges = Set.new
+  
+  derive_edges=->(current_color){
+    limits = color_limits[current_color]
+    (limits[:top]..limits[:bottom]).each do |r|
+      (limits[:left]..limits[:right]).each do |c|
+        color_edges << [current_color, target_grid[r][c]] if target_grid[r][c]!=current_color
+      end
+    end
+  }
+  all_colors.each(&derive_edges)
+  
+  color_ideg = all_colors.map {|c| [c,0]}.to_h
+  color_graph = Hash.new {|h,k| h[k]=[] }
+  color_edges.each {|u,v| color_ideg[v]+=1; color_graph[u]<<v }
+  
+  # now check if valid topological sort can be done
+  queue = color_ideg.select{|k,v| v==0}.map(&:first)
+  return false if queue.empty?
+  
+  until queue.empty?
+    color = queue.shift
+    color_graph[color].each { |next_color| color_ideg[next_color]-=1; queue << next_color if color_ideg[next_color]==0 }
+  end
+
+  color_ideg.values.all? {|x| x==0}
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

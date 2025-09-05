@@ -1,0 +1,55 @@
+---
+title: '❗️ Couples Holding Hands'
+description: '[leetcode link](https://leetcode.com/problems/couples-holding-hands/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>There are <code>n</code> couples sitting in <code>2n</code> seats arranged in a row and want to hold hands.</p>  <p>The people and seats are represented by an integer array <code>row</code> where <code>row[i]</code> is the ID of the person sitting in the <code>i<sup>th</sup></code> seat. The couples are numbered in order, the first couple being <code>(0, 1)</code>, the second couple being <code>(2, 3)</code>, and so on with the last couple being <code>(2n - 2, 2n - 1)</code>.</p>  <p>Return <em>the minimum number of swaps so that every couple is sitting side by side</em>. A swap consists of choosing any two people, then they stand up and switch seats.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> row = [0,2,1,3] <br/> <strong>Output:</strong> 1 <br/> <strong>Explanation:</strong> We only need to swap the second (row[1]) and third (row[2]) person.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> row = [3,2,0,1] <br/> <strong>Output:</strong> 0 <br/> <strong>Explanation:</strong> All couples are already seated side by side.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>2n == row.length</code></li>  <li><code>2 &lt;= n &lt;= 30</code></li>  <li><code>n</code> is even.</li>  <li><code>0 &lt;= row[i] &lt; 2n</code></li>  <li>All the elements of <code>row</code> are <strong>unique</strong>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Greedy swapping works, just simulate.
+
+For finding partner for p, p^1 is partner, if 2, it gives3, if 3 gives 2
+Going L-&gt;R, when you encounter p, if next position has p^1, no swap needed
+Else, no matter what, 1 swap would be needed to get p^1 to correct position.
+Then go to the next position, and keep checking, whatever swaps we do keep a count.
+By the end, think is there a shorter way ? no, as for each member out of position, atleast
+1 swap will be needed. By directly swapping with the correct partner, we minimize the number of swaps.
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Couples Holding Hands" lines
+# @param {Integer[]} row
+# @return {Integer}
+def min_swaps_couples(row)
+  positions = row.each_with_index.to_h
+  n = row.size/2 # number of couples
+  swap_count = 0
+
+  swap=->(l,r) {
+    row[r], row[l] = row[l], row[r]
+    positions[row[r]] = r; positions[row[l]] = l; # update new positions
+  }
+
+  (0...n).each do |idx|
+    c_f = row[idx*2]
+    c_s = c_f^1
+    target_pos = idx*2+1
+    next if row[target_pos] == c_s # swap not needed
+    # just swap them
+    swap_count+=1
+    swap.call(positions[c_s], target_pos)
+  end
+
+  swap_count
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

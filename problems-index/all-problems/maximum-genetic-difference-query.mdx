@@ -1,0 +1,117 @@
+---
+title: '❗️ Maximum Genetic Difference Query'
+description: '[leetcode link](https://leetcode.com/problems/maximum-genetic-difference-query/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>There is a rooted tree consisting of <code>n</code> nodes numbered <code>0</code> to <code>n - 1</code>. Each node&#39;s number denotes its <strong>unique genetic value</strong> (i.e. the genetic value of node <code>x</code> is <code>x</code>). The <strong>genetic difference</strong> between two genetic values is defined as the <strong>bitwise-</strong><strong>XOR</strong> of their values. You are given the integer array <code>parents</code>, where <code>parents[i]</code> is the parent for node <code>i</code>. If node <code>x</code> is the <strong>root</strong> of the tree, then <code>parents[x] == -1</code>.</p>  <p>You are also given the array <code>queries</code> where <code>queries[i] = [node<sub>i</sub>, val<sub>i</sub>]</code>. For each query <code>i</code>, find the <strong>maximum genetic difference</strong> between <code>val<sub>i</sub></code> and <code>p<sub>i</sub></code>, where <code>p<sub>i</sub></code> is the genetic value of any node that is on the path between <code>node<sub>i</sub></code> and the root (including <code>node<sub>i</sub></code> and the root). More formally, you want to maximize <code>val<sub>i</sub> XOR p<sub>i</sub></code>.</p>  <p>Return <em>an array </em><code>ans</code><em> where </em><code>ans[i]</code><em> is the answer to the </em><code>i<sup>th</sup></code><em> query</em>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/06/29/c1.png" style="width: 118px; height: 163px;" />  <strong>Input:</strong> parents = [-1,0,1,1], queries = [[0,2],[3,2],[2,5]] <br/> <strong>Output:</strong> [2,3,7] <strong>Explanation: </strong>The queries are processed as follows: - [0,2]: The node with the maximum genetic difference is 0, with a difference of 2 XOR 0 = 2. - [3,2]: The node with the maximum genetic difference is 1, with a difference of 2 XOR 1 = 3. - [2,5]: The node with the maximum genetic difference is 2, with a difference of 5 XOR 2 = 7.   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/06/29/c2.png" style="width: 256px; height: 221px;" />  <strong>Input:</strong> parents = [3,7,-1,2,0,7,0,2], queries = [[4,6],[1,15],[0,5]] <br/> <strong>Output:</strong> [6,14,7] <strong>Explanation: </strong>The queries are processed as follows: - [4,6]: The node with the maximum genetic difference is 0, with a difference of 6 XOR 0 = 6. - [1,15]: The node with the maximum genetic difference is 1, with a difference of 15 XOR 1 = 14. - [0,5]: The node with the maximum genetic difference is 2, with a difference of 5 XOR 2 = 7.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>2 &lt;= parents.length &lt;= 10<sup>5</sup></code></li>  <li><code>0 &lt;= parents[i] &lt;= parents.length - 1</code> for every node <code>i</code> that is <strong>not</strong> the root.</li>  <li><code>parents[root] == -1</code></li>  <li><code>1 &lt;= queries.length &lt;= 3 * 10<sup>4</sup></code></li>  <li><code>0 &lt;= node<sub>i</sub> &lt;= parents.length - 1</code></li>  <li><code>0 &lt;= val<sub>i</sub> &lt;= 2 * 10<sup>5</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Bit-Trie for finding Maxing XOR of val from any 1 number of nums.
+
+https://leetcode.com/problems/maximum-xor-of-two-numbers-in-an-array/ 
+Look at notes for bit-trie explanation. 
+
+Here, the arr is changing based on which node we are looking at, arr is all nodes between the path root-&gt;node. 
+
+Suppose we are at root -&gt; node1 -&gt; node2-&gt; node3. BitTrie will have all values of this path.
+
+When we have to consider another path root -&gt; node1-&gt;node4. We dont have to build a new bit-trie, we can capture the state of bit-trie based on the path taken, using dfs and just adding num/removing a node with dfs. To simulate adding/removing a num, we only need to maintain count in the TrieNode(increment to add a num, decrement to remove a num), if its more than 0, in the current path, there is some number which has this bit set.
+
+Ruby gives TLE, same implementation done in python3 passes.
+
+
+https://www.youtube.com/watch?v=OqcUWxkd5Rs For in-depth explanation.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```python3 title="Maximum Genetic Difference Query" lines
+from typing import List, Dict
+from collections import defaultdict
+
+class BitTrieNode:
+    def __init__(self):
+        self.children = [None, None]
+        self.nums_with_this_bit = 0
+
+class BitTrie:
+    def __init__(self, max_bit_length=32):
+        self.max_bit_length = max_bit_length
+        self.root = BitTrieNode()
+    
+    def update_count(self, num: int, update: int) -> None:
+        node = self.root
+        
+        for bit_pos in range(self.max_bit_length, -1, -1):
+            bit = (num >> bit_pos) & 1
+            if node.children[bit] is None:
+                node.children[bit] = BitTrieNode()
+            node = node.children[bit]
+            node.nums_with_this_bit += update
+    
+    def add(self, num: int) -> None:
+        self.update_count(num, 1)
+    
+    def remove(self, num: int) -> None:
+        self.update_count(num, -1)
+    
+    def max_xor_result_for(self, value: int) -> int:
+        max_xor_value = 0
+        node = self.root
+        
+        for bit_pos in range(self.max_bit_length, -1, -1):
+            value_bit = (value >> bit_pos) & 1
+            required_bit = value_bit ^ 1
+            
+            if (node.children[required_bit] is not None and 
+                node.children[required_bit].nums_with_this_bit > 0):
+                max_xor_value += 2 ** bit_pos
+                node = node.children[required_bit]
+            else:
+                node = node.children[value_bit]
+                
+        return max_xor_value
+
+class Solution:
+    def maxGeneticDifference(self, parents: List[int], queries: List[List[int]]) -> List[int]:
+        q = len(queries)
+        answer = [0] * q
+        
+        # Create queries hash map
+        queries_map = defaultdict(list)
+        for i, (node, val) in enumerate(queries):
+            queries_map[node].append((val, i))
+        
+        # Find root node and create adjacency list
+        root_node = None
+        adj_map = defaultdict(list)
+        for i, x in enumerate(parents):
+            if x != -1:
+                adj_map[x].append(i)
+            else:
+                root_node = i
+        
+        bit_trie = BitTrie(18)
+        
+        def dfs(node: int) -> None:
+            bit_trie.add(node)
+            
+            for val, q_idx in queries_map[node]:
+                answer[q_idx] = bit_trie.max_xor_result_for(val)
+            
+            for child_node in adj_map[node]:
+                dfs(child_node)
+            
+            bit_trie.remove(node)
+        
+        dfs(root_node)
+        return answer
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

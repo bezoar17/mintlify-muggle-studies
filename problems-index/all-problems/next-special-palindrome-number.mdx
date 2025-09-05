@@ -1,0 +1,72 @@
+---
+title: '❗️ Next Special Palindrome Number'
+description: '[leetcode link](https://leetcode.com/problems/next-special-palindrome-number/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer <code>n</code>.</p>  <p>A number is called <strong>special</strong> if:</p>  <ul>  <li>It is a <strong><span data-keyword="palindrome-integer">palindrome</span></strong>.</li>  <li>Every digit <code>k</code> in the number appears <strong>exactly</strong> <code>k</code> times.</li> </ul>  <p>Return the <strong>smallest</strong> special number <strong>strictly </strong>greater than <code>n</code>.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">n = 2</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">22</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>22 is the smallest special number greater than 2, as it is a palindrome and the digit 2 appears exactly 2 times.</p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">n = 33</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">212</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>212 is the smallest special number greater than 33, as it is a palindrome and the digits 1 and 2 appear exactly 1 and 2 times respectively.<br />  </p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>0 &lt;= n &lt;= 10<sup>15</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Calculate all special palindrome no.s, small set of no.s, example  -&gt; 1,22,212 and so on.
+
+We calculate complete set first, and then each test case uses the same stored set.
+
+To calculate special palindrome no.s, we start with no. of digits in the no., so 1 length long, 2 length long, 3 length long etc. To build it, we choose no.s from list of digits, we choose and skip for all idx in digits. So 2^n, basically, for each digit.
+
+But, as soon as a digit is included, its length is d itself, so we can return early when length of number is exceeded. For e.g, while calculating nums of length 3, 4 can't be included as length of num has to be atleast 4 when 4 is included. 
+
+So, for each length, we get multiple set of chosen digits, and for each set which can form a valid palindrome, we generate the palindromes. For validity, only 1 odd digit can be part of the choice, as only that digit can be at mid of the palindrome.
+
+For generating the palindromes, we get half values, ie. d/2, for each digit, which will form one half of the palindrome. Generate all permutations of this half, and mirror it around the middle element.
+
+Now to get next special palindrome, we can just bsearch on the complete set.
+
+
+
+
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Next Special Palindrome Number" lines
+# @param {Integer} n
+# @return {Integer}
+@all_special_nos = []
+digits = [1,2,3,4,5,6,7,8,9]
+
+palin_possible=->(dgs) { dgs.count(&:odd?) <= 1 }
+
+build_nums=->(dgs) {
+  half, middle = [], ''
+  # each d appears d/2 times, with max 1 odd entry
+  dgs.each { |d| half+=[d.to_s] * (d/2); middle = d.to_s if d.odd? }
+  
+  Set.new(half.permutation.to_a).map(&:join).map {|h_s| h_s + middle + h_s.reverse }.map(&:to_i)
+}
+
+choose_digits=->(idx, chosen, length) {
+  total = chosen.sum
+  return if total > length
+  
+  @all_special_nos+= build_nums.call(chosen) if idx == digits.size && total == length && palin_possible.call(chosen)
+
+  return if idx == digits.size
+  
+  choose_digits.call(idx+1, chosen+[digits[idx]], length)
+  choose_digits.call(idx+1, chosen, length)
+}
+
+(1...17).each {|length| choose_digits.call(0, [], length) }
+
+def special_palindrome(n)
+  @all_special_nos.sort.bsearch { |x| x> n }
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

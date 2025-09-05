@@ -1,0 +1,71 @@
+---
+title: '❗️ Set Intersection Size At Least Two'
+description: '[leetcode link](https://leetcode.com/problems/set-intersection-size-at-least-two/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a 2D integer array <code>intervals</code> where <code>intervals[i] = [start<sub>i</sub>, end<sub>i</sub>]</code> represents all the integers from <code>start<sub>i</sub></code> to <code>end<sub>i</sub></code> inclusively.</p>  <p>A <strong>containing set</strong> is an array <code>nums</code> where each interval from <code>intervals</code> has <strong>at least two</strong> integers in <code>nums</code>.</p>  <ul>  <li>For example, if <code>intervals = [[1,3], [3,7], [8,9]]</code>, then <code>[1,2,4,7,8,9]</code> and <code>[2,3,4,8,9]</code> are <strong>containing sets</strong>.</li> </ul>  <p>Return <em>the minimum possible size of a containing set</em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> intervals = [[1,3],[3,7],[8,9]] <br/> <strong>Output:</strong> 5 <br/> <strong>Explanation:</strong> let nums = [2, 3, 4, 8, 9]. It can be shown that there cannot be any containing array of size 4.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> intervals = [[1,3],[1,4],[2,5],[3,5]] <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> let nums = [2, 3, 4]. It can be shown that there cannot be any containing array of size 2.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> intervals = [[1,2],[2,3],[2,4],[4,5]] <br/> <strong>Output:</strong> 5 <br/> <strong>Explanation:</strong> let nums = [1, 2, 3, 4, 5]. It can be shown that there cannot be any containing array of size 4.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= intervals.length &lt;= 3000</code></li>  <li><code>intervals[i].length == 2</code></li>  <li><code>0 &lt;= start<sub>i</sub> &lt; end<sub>i</sub> &lt;= 10<sup>8</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      **Atlassian**
+
+Order by asc end and desc start. So that, we process intervals in order so overlap calculation is easy. And desc start so that smaller intervals are processed first, so that any encompassing interval comes after, ( [2,5] [3,4] [1,4] , so [ shortest and ending first 3,4 is evaluated first ]). And while picking nos for intervals, pick the right most 2 values, because as the intervals are sorted, these 2 will maximize possibility of overlaps with upcoming intervals in sorted order. We keep track of these 2 rightmost values in the intersecting set. 
+
+Given, any upcoming interval will have interval_end greater than the previous one. 
+
+Case 1 , start of interval is greater than rightmost in intersecting set, no overlap, 2 values need to be added, these will be rightmost of current interval.
+
+Case 2, start of interval is greater than second rightmost but not rightmost, overlap but not engulfed, 1 value needs to be added(will be the rightmost), and right most and second right most needs to be updated
+
+[2,5] -&gt; 4,5;
+[5,10] -&gt; 5,10 (not choosing 9,10) -&gt; because we dont want to add more no.s to the existing set.
+[7,10]
+[10,11] -&gt; 10, 11
+
+Case 3, start of interval is lesser than second right most, so as the end of this interval is atleast same as last, so this interval already has second right most and rightmost elements within it, no need to do anything.
+
+Suppose we have two intervals [start1, end1] and [start2, end2].
+Now let's consider three cases here :
+when these two intervals do not overlap :
+end1 &lt; start2, means start2-end1 &gt; 0 --&gt; we will select two integers from both sets.
+when these two intervals overlap edge to edge :
+end1 == start2, means start2-end1 == 0--&gt; we will select one common element from the sets and one distinct element from previous interval.
+when these two intervals overlap(not edge to edge) :
+end1 &gt; start2, means start2-end1 &lt; 0 --&gt; we will select two elements that will be common from both the sets.
+
+
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Set Intersection Size At Least Two" lines
+# @param {Integer[][]} intervals
+# @return {Integer}
+def intersection_size_two(intervals)
+  intervals_sorted = intervals.sort_by{ |i| [i[1], -i[0]] }
+  
+  set_count = 0
+  rightmost, second_rightmost = -1,-1
+
+  intervals_sorted.each do |interval|
+    if interval.first > rightmost # not overlapping with rightmost
+        set_count += 2
+        rightmost, second_rightmost = interval.last, interval.last - 1
+    elsif interval.first.between?(second_rightmost+1, rightmost) # overlapping but only with 1 element(i.e rightmost)
+        set_count += 1
+        second_rightmost, rightmost = rightmost, interval.last
+    end # third case where 0 is added is when overlapping with both rightmost and secondrightmost, i.e, interval.first <= second_rightmost
+    # as the end of next is >= current end, if first is less than second_most then, we dont really have to update the rightmost or second
+  end
+
+  set_count
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

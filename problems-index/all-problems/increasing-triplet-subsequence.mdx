@@ -1,0 +1,39 @@
+---
+title: '🧀 Increasing Triplet Subsequence'
+description: '[leetcode link](https://leetcode.com/problems/increasing-triplet-subsequence/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an integer array <code>nums</code>, return <code>true</code><em> if there exists a triple of indices </em><code>(i, j, k)</code><em> such that </em><code>i &lt; j &lt; k</code><em> and </em><code>nums[i] &lt; nums[j] &lt; nums[k]</code>. If no such indices exists, return <code>false</code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [1,2,3,4,5] <br/> <strong>Output:</strong> true <br/> <strong>Explanation:</strong> Any triplet where i &lt; j &lt; k is valid.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [5,4,3,2,1] <br/> <strong>Output:</strong> false <br/> <strong>Explanation:</strong> No triplet exists.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> nums = [2,1,5,0,4,6] <br/> <strong>Output:</strong> true <br/> <strong>Explanation:</strong> One of the valid triplet is (3, 4, 5), because nums[3] == 0 &lt; nums[4] == 4 &lt; nums[5] == 6.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 5 * 10<sup>5</sup></code></li>  <li><code>-2<sup>31</sup> &lt;= nums[i] &lt;= 2<sup>31</sup> - 1</code></li> </ul>   <strong>Follow up:</strong> Could you implement a solution that runs in <code>O(n)</code> time complexity and <code>O(1)</code> space complexity?
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Increasing Triplet Subsequence" lines
+# @param {Integer[]} nums
+# @return {Boolean}
+def increasing_triplet(nums)
+    return false if nums.size < 3
+    least = second_least = (2**(0.size * 8 -2) -1)
+    nums.each do |val|
+      if val <= least
+        least = val
+      elsif val <= second_least
+        second_least = val
+      else
+        return true
+      end
+    end
+    false
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

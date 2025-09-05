@@ -1,0 +1,29 @@
+---
+title: '🧀 Partition Array Into K-Distinct Groups'
+description: '[leetcode link](https://leetcode.com/problems/partition-array-into-k-distinct-groups/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer array <code>nums</code> and an integer <code>k</code>.</p>  <p>Your task is to determine whether it is possible to partition all elements of <code>nums</code> into one or more groups such that:</p>  <ul>  <li>Each group contains <strong>exactly</strong> <code>k</code> elements.</li>  <li>All elements in each group are <strong>distinct</strong>.</li>  <li>Each element in <code>nums</code> must be assigned to <strong>exactly</strong> one group.</li> </ul>  <p>Return <code>true</code> if such a partition is possible, otherwise return <code>false</code>.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [1,2,3,4], k = 2</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">true</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>One possible partition is to have 2 groups:</p>  <ul>  <li>Group 1: <code>[1, 2]</code></li>  <li>Group 2: <code>[3, 4]</code></li> </ul>  <p>Each group contains <code>k = 2</code> distinct elements, and all elements are used exactly once.</p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [3,5,2,2], k = 2</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">true</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>One possible partition is to have 2 groups:</p>  <ul>  <li>Group 1: <code>[2, 3]</code></li>  <li>Group 2: <code>[2, 5]</code></li> </ul>  <p>Each group contains <code>k = 2</code> distinct elements, and all elements are used exactly once.</p> </div>  <p><strong class="example">Example 3:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [1,5,2,3], k = 3</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">false</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>We cannot form groups of <code>k = 3</code> distinct elements using all values exactly once.</p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>  <li><code><sup>​​​​​​​</sup>1 &lt;= k &lt;= nums.length</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Description is slightly off, each group should have exactly k elements, and all k should be distinct. So, we need n/k groups, and each should have k distinct elements. So, 2 simple checks, total size is a multiple of k. And freq of each number is at max n/k. 
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Partition Array Into K-Distinct Groups" lines
+# @param {Integer[]} nums
+# @param {Integer} k
+# @return {Boolean}
+def partition_array(nums, k)
+  nums.size % k == 0 && nums.tally.values.all? {|x| x<= nums.size/k}
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

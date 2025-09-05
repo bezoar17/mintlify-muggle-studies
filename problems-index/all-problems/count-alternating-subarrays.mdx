@@ -1,0 +1,39 @@
+---
+title: '🧀 Count Alternating Subarrays'
+description: '[leetcode link](https://leetcode.com/problems/count-alternating-subarrays/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a <span data-keyword="binary-array">binary array</span> <code>nums</code>.</p>  <p>We call a <span data-keyword="subarray-nonempty">subarray</span> <strong>alternating</strong> if <strong>no</strong> two <strong>adjacent</strong> elements in the subarray have the <strong>same</strong> value.</p>  <p>Return <em>the number of alternating subarrays in </em><code>nums</code>.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [0,1,1,1]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">5</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>The following subarrays are alternating: <code>[0]</code>, <code>[1]</code>, <code>[1]</code>, <code>[1]</code>, and <code>[0,1]</code>.</p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [1,0,1,0]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">10</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>Every subarray of the array is alternating. There are 10 possible subarrays that we can choose.</p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>nums[i]</code> is either <code>0</code> or <code>1</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      find alternating subarrays, for each subarray of len, (len * len+1)/2 subarrays are present.
+Add it up
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Count Alternating Subarrays" lines
+# @param {Integer[]} nums
+# @return {Integer}
+def count_alternating_subarrays(nums)
+  n = nums.size
+  pointer = 1
+  (1..n).reduce([1,0]) do |(sb_len, total_count),pointer|
+    if pointer<n && nums[pointer]!=nums[pointer-1]
+      sb_len+=1
+    else
+      total_count += (sb_len*(sb_len+1)/2); sb_len=1;
+    end
+
+    [sb_len, total_count]
+  end[1]
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,101 @@
+---
+title: '🧀 Min Cost to Connect All Points'
+description: '[leetcode link](https://leetcode.com/problems/min-cost-to-connect-all-points/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an array <code>points</code> representing integer coordinates of some points on a 2D-plane, where <code>points[i] = [x<sub>i</sub>, y<sub>i</sub>]</code>.</p>  <p>The cost of connecting two points <code>[x<sub>i</sub>, y<sub>i</sub>]</code> and <code>[x<sub>j</sub>, y<sub>j</sub>]</code> is the <strong>manhattan distance</strong> between them: <code>|x<sub>i</sub> - x<sub>j</sub>| + |y<sub>i</sub> - y<sub>j</sub>|</code>, where <code>|val|</code> denotes the absolute value of <code>val</code>.</p>  <p>Return <em>the minimum cost to make all points connected.</em> All points are connected if there is <strong>exactly one</strong> simple path between any two points.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/08/26/d.png" style="width: 214px; height: 268px;" />  <strong>Input:</strong> points = [[0,0],[2,2],[3,10],[5,2],[7,0]] <br/> <strong>Output:</strong> 20 <br/> <strong>Explanation:</strong>  <img alt="" src="https://assets.leetcode.com/uploads/2020/08/26/c.png" style="width: 214px; height: 268px;" /> We can connect the points as shown above to get the minimum cost of 20. Notice that there is a unique path between every pair of points.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> points = [[3,12],[-2,5],[-4,1]] <br/> <strong>Output:</strong> 18    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= points.length &lt;= 1000</code></li>  <li><code>-10<sup>6</sup> &lt;= x<sub>i</sub>, y<sub>i</sub> &lt;= 10<sup>6</sup></code></li>  <li>All pairs <code>(x<sub>i</sub>, y<sub>i</sub>)</code> are distinct.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Kruskal's MST using union find. 
+First initialize all edge values as distances between all nodes.
+
+Ruby gives tle if only edges.sort! is used, instead, use edges.sort_by! {|x| x[0]}
+explicit gives faster sorting, and no tle.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Min Cost to Connect All Points" lines
+# @param {Integer[][]} points
+# @return {Integer}
+def min_cost_connect_points(points)
+  n = points.size; edges = [];
+
+  (0...n).each do |i|
+    ((i+1)...n).each do |j|
+      next if i==j
+      dist = (points[i][0] - points[j][0]).abs + (points[i][1] - points[j][1]).abs
+      edges << [dist, i, j]
+    end
+  end
+  
+  edges.sort_by! {|x| x[0]}
+
+  uf = UnionFind.new((0...n).to_a)
+
+  cost = 0; edges_used = 0
+  connected = Set.new()
+  
+  edges.each do |weight, i, j|
+    next if uf.root(i) == uf.root(j)
+
+    cost += weight
+    uf.union(i,j);
+
+    return cost if uf.max_set_size == n
+  end
+  cost
+end
+
+
+class UnionFind
+  attr_accessor :nodes, :sizes
+  attr_reader :max_set_size
+
+  def initialize(node_keys=[])
+    @nodes = {}
+    @sizes = {}
+    @max_set_size = 0
+    node_keys.each { |i| root(i) }
+  end
+
+  # this will create a node key if it doesnt exist
+  def root(i)
+    nodes[i] ||= i; sizes[i] ||= 1; # create node if it doesnt exist
+
+    while nodes[i] != i
+      nodes[i] = nodes[nodes[i]] # path compression
+      i = nodes[i]
+    end
+    i
+  end
+
+  def size_for(i)
+    sizes[root(i)]
+  end
+
+  def union(i, j)
+    root_of_i = root(i)
+    root_of_j = root(j)
+
+    return false if root_of_i == root_of_j
+
+    if sizes[root_of_j] > sizes[root_of_i]
+      nodes[root_of_i] = root_of_j
+      sizes[root_of_j] += sizes[root_of_i]
+    else
+      nodes[root_of_j] = root_of_i
+      sizes[root_of_i] += sizes[root_of_j]
+    end
+    @max_set_size = [@max_set_size, sizes[root_of_i], sizes[root_of_j]].max
+  end
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

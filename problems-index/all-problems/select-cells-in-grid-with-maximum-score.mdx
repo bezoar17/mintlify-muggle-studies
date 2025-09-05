@@ -1,0 +1,59 @@
+---
+title: '❗️ Select Cells in Grid With Maximum Score'
+description: '[leetcode link](https://leetcode.com/problems/select-cells-in-grid-with-maximum-score/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a 2D matrix <code>grid</code> consisting of positive integers.</p>  <p>You have to select <em>one or more</em> cells from the matrix such that the following conditions are satisfied:</p>  <ul>  <li>No two selected cells are in the <strong>same</strong> row of the matrix.</li>  <li>The values in the set of selected cells are <strong>unique</strong>.</li> </ul>  <p>Your score will be the <strong>sum</strong> of the values of the selected cells.</p>  <p>Return the <strong>maximum</strong> score you can achieve.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">grid = [[1,2,3],[4,3,2],[1,1,1]]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">8</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2024/07/29/grid1drawio.png" /></p>  <p>We can select the cells with values 1, 3, and 4 that are colored above.</p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">grid = [[8,7,6],[8,3,2]]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">15</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2024/07/29/grid8_8drawio.png" style="width: 170px; height: 114px;" /></p>  <p>We can select the cells with values 7 and 8 that are colored above.</p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= grid.length, grid[i].length &lt;= 10</code></li>  <li><code>1 &lt;= grid[i][j] &lt;= 100</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Remove duplicates within a row, both cant be considered, we can pick at max 1 from each row.
+We have K distinct values in the grid each with its row representation, rows in which they appear , we have to choose n or less elements to maximize the score, such that no two elements belong to same row.
+
+We can do dp, for each  for a distinct_num, if it appears in r rows, we try r+1 possibilities, r choices or skip this num altogether. The state of which rows have been selected already can be a bit representation. There is 1 simple optimization but it does not massively improve the time or states to be processed for each num. We have that we will always pick the max element. So, for a max element, we only have r choices, and second max will also have r choices, where its r is all choices except the last one for max. If r is 0, we have to skip, we have 1 choice, if r is r, then skip is not present, we can always also pick this one. So, at each stage, we are just having r states instead of r+1, if we start from the max element.  
+
+Let's see why we can start with max element. Whatever is the maximum out of all distinct elements, will be picked always. If it was present in multiple rows, we try all possibilities, but we will never have maximum possible score without the max_val. To prove this, suppose we have a valid selection which does not have max_value, and max_value was present in row i, whatever was selected in row i(0 for nothing selected) can be replaced with max_value, and score will improve, without violating validity.
+
+So, max element from remaining rows is always selected to get max score of the elements collection.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Select Cells in Grid With Maximum Score" lines
+# @param {Integer[][]} grid
+# @return {Integer}
+def max_score(grid)
+  n = grid.size
+  num_row_idxs = Hash.new {|h,k| h[k]=[] }
+  grid.map(&:uniq).each_with_index { |r,i| r.each{|x| num_row_idxs[x]<<i+1 } }
+  all_nums = num_row_idxs.keys.sort.reverse
+  nums_count = all_nums.size
+  dp = {}
+  max_score= 0
+  
+  recursive=->(num_idx, mask){
+    return dp[[num_idx,mask]] if !dp[[num_idx,mask]].nil?
+    return 0 if num_idx == nums_count
+
+    # not chosen, this choice has to be present, as it will be triggered for other nums
+    # say [4,3] are max and second max but in same row, for 3, not chosing will be triggered
+    result = recursive.call(num_idx+1, mask)
+
+    num_row_idxs[all_nums[num_idx]].each do |row_idx|
+      if (mask & (1<<row_idx)) == 0
+        result = [result, all_nums[num_idx] + recursive.call(num_idx+1, mask | (1<<row_idx)) ].max
+      end
+    end
+    dp[[num_idx,mask]] = result
+  }
+  
+  recursive.call(0,0)
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

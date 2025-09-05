@@ -1,0 +1,51 @@
+---
+title: '🧀 Equal Sum Arrays With Minimum Number of Operations'
+description: '[leetcode link](https://leetcode.com/problems/equal-sum-arrays-with-minimum-number-of-operations/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given two arrays of integers <code>nums1</code> and <code><font face="monospace">nums2</font></code>, possibly of different lengths. The values in the arrays are between <code>1</code> and <code>6</code>, inclusive.</p>  <p>In one operation, you can change any integer&#39;s value in <strong>any </strong>of the arrays to <strong>any</strong> value between <code>1</code> and <code>6</code>, inclusive.</p>  <p>Return <em>the minimum number of operations required to make the sum of values in </em><code>nums1</code><em> equal to the sum of values in </em><code>nums2</code><em>.</em> Return <code>-1</code>​​​​​ if it is not possible to make the sum of the two arrays equal.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums1 = [1,2,3,4,5,6], nums2 = [1,1,2,2,2,2] <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> You can make the sums of nums1 and nums2 equal with 3 operations. All indices are 0-indexed. - Change nums2[0] to 6. nums1 = [1,2,3,4,5,6], nums2 = [<u><strong>6</strong></u>,1,2,2,2,2]. - Change nums1[5] to 1. nums1 = [1,2,3,4,5,<strong><u>1</u></strong>], nums2 = [6,1,2,2,2,2]. - Change nums1[2] to 2. nums1 = [1,2,<strong><u>2</u></strong>,4,5,1], nums2 = [6,1,2,2,2,2].   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums1 = [1,1,1,1,1,1,1], nums2 = [6] <br/> <strong>Output:</strong> -1 <br/> <strong>Explanation:</strong> There is no way to decrease the sum of nums1 or to increase the sum of nums2 to make them equal.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> nums1 = [6,6], nums2 = [1] <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> You can make the sums of nums1 and nums2 equal with 3 operations. All indices are 0-indexed.  - Change nums1[0] to 2. nums1 = [<strong><u>2</u></strong>,6], nums2 = [1]. - Change nums1[1] to 2. nums1 = [2,<strong><u>2</u></strong>], nums2 = [1]. - Change nums2[0] to 4. nums1 = [2,2], nums2 = [<strong><u>4</u></strong>].    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums1.length, nums2.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= nums1[i], nums2[i] &lt;= 6</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Suppose nums1 sum S1 is smaller than nums2 sum S2.
+
+The difference if diff=S2-S1. We can decrease this diff to 0. In each operation, max reduction we can do in diff is either increase the lowest element from nums1 to 6, or decrease highest from nums2 to 1.
+We do what is better and discard this element from consideration for the next operation. We keep reducing diff this way until we reach 0 or if we run out of elements in both arrays. Now, since we want to keep more options, when inc and dec values are same, we pick the one which has more elements remaining, hence giving us more options in future. 
+
+We can do this with pq, or simply just sort the nums1 in increasing, and nums2 in decreasing order. 
+Now, if we precalculate the max inc and max dec we can get from these elements, we have max inc/dec value for all no.s in both arrays. We sort these options in decreasing order, and just keep taking these values until diff becomes 0, if we cant reach 0, we return -1.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Equal Sum Arrays With Minimum Number of Operations" lines
+# @param {Integer[]} nums1
+# @param {Integer[]} nums2
+# @return {Integer}
+def min_operations(nums1, nums2)
+  # nums2 has greater or equal sum of nums1
+  s1 = nums1.sum; s2 = nums2.sum
+  return 0 if s1 == s2
+  if s1 > s2
+    nums1, nums2 = nums2, nums1; s1, s2 = s2, s1;
+  end
+  diff = s2-s1  
+  dec_options = nums2.map {|x| x-1}.select {|x| x>0}
+  inc_options = nums1.map {|x| 6-x}.select {|x| x>0}
+
+  all_options = (inc_options + dec_options).sort_by{-_1}
+  
+  all_options.each_with_index do |diff_reduction, i|
+    diff-=diff_reduction
+    return i+1 if diff<=0
+  end
+  -1
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

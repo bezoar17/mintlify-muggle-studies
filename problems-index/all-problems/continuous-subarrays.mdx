@@ -1,0 +1,63 @@
+---
+title: '🧀 Continuous Subarrays'
+description: '[leetcode link](https://leetcode.com/problems/continuous-subarrays/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a <strong>0-indexed</strong> integer array <code>nums</code>. A subarray of <code>nums</code> is called <strong>continuous</strong> if:</p>  <ul>  <li>Let <code>i</code>, <code>i + 1</code>, ..., <code>j</code><sub> </sub>be the indices in the subarray. Then, for each pair of indices <code>i &lt;= i<sub>1</sub>, i<sub>2</sub> &lt;= j</code>, <code><font face="monospace">0 &lt;=</font> |nums[i<sub>1</sub>] - nums[i<sub>2</sub>]| &lt;= 2</code>.</li> </ul>  <p>Return <em>the total number of <strong>continuous</strong> subarrays.</em></p>  <p>A subarray is a contiguous <strong>non-empty</strong> sequence of elements within an array.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [5,4,2,4] <br/> <strong>Output:</strong> 8 <br/> <strong>Explanation:</strong>  Continuous subarray of size 1: [5], [4], [2], [4]. Continuous subarray of size 2: [5,4], [4,2], [2,4]. Continuous subarray of size 3: [4,2,4]. There are no subarrys of size 4. Total continuous subarrays = 4 + 3 + 1 = 8. It can be shown that there are no more continuous subarrays.     <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [1,2,3] <br/> <strong>Output:</strong> 6 <br/> <strong>Explanation:</strong>  Continuous subarray of size 1: [1], [2], [3]. Continuous subarray of size 2: [1,2], [2,3]. Continuous subarray of size 3: [1,2,3]. Total continuous subarrays = 3 + 2 + 1 = 6.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```python3 title="Continuous Subarrays" lines
+class Solution:
+    def continuousSubarrays(self, nums: List[int]) -> int:
+        right = left = 0
+        window_len = total = 0
+
+        # Initialize window with first element
+        cur_min = cur_max = nums[right]
+
+        for right in range(len(nums)):
+            # Update min and max for current window
+            cur_min = min(cur_min, nums[right])
+            cur_max = max(cur_max, nums[right])
+
+            # If window condition breaks (diff > 2)
+            if cur_max - cur_min > 2:
+                # Add subarrays from previous valid window
+                window_len = right - left
+                total += window_len * (window_len + 1) // 2
+
+                # Start new window at current position
+                left = right
+                cur_min = cur_max = nums[right]
+
+                # Expand left boundary while maintaining condition
+                while left > 0 and abs(nums[right] - nums[left - 1]) <= 2:
+                    left -= 1
+                    cur_min = min(cur_min, nums[left])
+                    cur_max = max(cur_max, nums[left])
+
+                # Remove overcounted subarrays if left boundary expanded
+                if left < right:
+                    window_len = right - left
+                    total -= window_len * (window_len + 1) // 2
+
+        # Add subarrays from final window
+        window_len = right - left + 1
+        total += window_len * (window_len + 1) // 2
+
+        return total
+        
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,67 @@
+---
+title: '❗️ Get the Maximum Score'
+description: '[leetcode link](https://leetcode.com/problems/get-the-maximum-score/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given two <strong>sorted</strong> arrays of distinct integers <code>nums1</code> and <code>nums2</code>.</p>  <p>A <strong>valid<strong><em> </em></strong>path</strong> is defined as follows:</p>  <ul>  <li>Choose array <code>nums1</code> or <code>nums2</code> to traverse (from index-0).</li>  <li>Traverse the current array from left to right.</li>  <li>If you are reading any value that is present in <code>nums1</code> and <code>nums2</code> you are allowed to change your path to the other array. (Only one repeated value is considered in the valid path).</li> </ul>  <p>The <strong>score</strong> is defined as the sum of unique values in a valid path.</p>  <p>Return <em>the maximum score you can obtain of all possible <strong>valid paths</strong></em>. Since the answer may be too large, return it modulo <code>10<sup>9</sup> + 7</code>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/07/16/sample_1_1893.png" style="width: 500px; height: 151px;" />  <strong>Input:</strong> nums1 = [2,4,5,8,10], nums2 = [4,6,8,9] <br/> <strong>Output:</strong> 30 <br/> <strong>Explanation:</strong> Valid paths: [2,4,5,8,10], [2,4,5,8,9], [2,4,6,8,9], [2,4,6,8,10],  (starting from nums1) [4,6,8,9], [4,5,8,10], [4,5,8,9], [4,6,8,10]    (starting from nums2) The maximum is obtained with the path in green <strong>[2,4,6,8,10]</strong>.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums1 = [1,3,5,7,9], nums2 = [3,5,100] <br/> <strong>Output:</strong> 109 <br/> <strong>Explanation:</strong> Maximum sum is obtained with the path <strong>[1,3,5,100]</strong>.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> nums1 = [1,2,3,4,5], nums2 = [6,7,8,9,10] <br/> <strong>Output:</strong> 40 <br/> <strong>Explanation:</strong> There are no common elements between nums1 and nums2. Maximum sum is obtained with the path [6,7,8,9,10].    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums1.length, nums2.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= nums1[i], nums2[i] &lt;= 10<sup>7</sup></code></li>  <li><code>nums1</code> and <code>nums2</code> are strictly increasing.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Find common points between 2 arrays. For each segment between [common_pt_1, common_pt_2] we can choose from either of the arrays.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Get the Maximum Score" lines
+# @param {Integer[]} nums1
+# @param {Integer[]} nums2
+# @return {Integer}
+# Read-Only for queries of sum of [l,r]
+# pseudo_tree.query(l, r+1)
+
+class PseudoSumSegTree
+  def initialize(arr)
+    @n = arr.size # size of the source array
+    # query can have r till n, so sum of all elements is at prefix[n]
+    @prefix_sum_arr = (1..@n).reduce([0]) {|res, i| res << res.last + arr[i-1]; res } # sum till i-1
+  end
+  
+  # [l,r)
+  def query(l,r)
+    @prefix_sum_arr[r] - @prefix_sum_arr[l]
+  end
+end
+
+def max_sum(nums1, nums2)
+  n1 = nums1.size; n2 = nums2.size
+  if n1 < n2
+    nums1, nums2 = nums2, nums1; n1, n2 = n2, n1;
+  end
+  n1_h = nums1.each_with_index.to_h
+  n2_h = nums2.each_with_index.to_h
+  common_vals = (n1_h.keys.to_set & n2_h.keys.to_set).to_a
+  psg1 = PseudoSumSegTree.new(nums1)
+  psg2 = PseudoSumSegTree.new(nums2)
+
+  cv = common_vals.size
+  if cv < 1
+    return [nums1.sum, nums2.sum].max
+  end
+  dp_last = [psg1.query(0, n1_h[common_vals[0]]+1), psg2.query(0, n2_h[common_vals[0]]+1)].max
+  (1...cv).each do |cv_idx|
+    dp_current = [psg1.query(n1_h[common_vals[cv_idx-1]]+1, n1_h[common_vals[cv_idx]]+1),
+    psg2.query(n2_h[common_vals[cv_idx-1]]+1, n2_h[common_vals[cv_idx]]+1)].max
+    dp_last += dp_current 
+  end
+  dp_last += [ psg1.query(n1_h[common_vals[cv-1]]+1, n1),  psg2.query(n2_h[common_vals[cv-1]]+1, n2)   ].max
+
+  dp_last % (1_000_000_000 + 7)
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

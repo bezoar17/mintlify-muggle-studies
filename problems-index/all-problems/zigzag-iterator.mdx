@@ -1,0 +1,96 @@
+---
+title: '🧀 Zigzag Iterator'
+description: '[leetcode link](https://leetcode.com/problems/zigzag-iterator/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given two vectors of integers <code>v1</code> and <code>v2</code>, implement an iterator to return their elements alternately.</p>  <p>Implement the <code>ZigzagIterator</code> class:</p>  <ul>  <li><code>ZigzagIterator(List&lt;int&gt; v1, List&lt;int&gt; v2)</code> initializes the object with the two vectors <code>v1</code> and <code>v2</code>.</li>  <li><code>boolean hasNext()</code> returns <code>true</code> if the iterator still has elements, and <code>false</code> otherwise.</li>  <li><code>int next()</code> returns the current element of the iterator and moves the iterator to the next element.</li> </ul>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> v1 = [1,2], v2 = [3,4,5,6] <br/> <strong>Output:</strong> [1,3,2,4,5,6] <br/> <strong>Explanation:</strong> By calling next repeatedly until hasNext returns false, the order of elements returned by next should be: [1,3,2,4,5,6].   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> v1 = [1], v2 = [] <br/> <strong>Output:</strong> [1]   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> v1 = [], v2 = [1] <br/> <strong>Output:</strong> [1]    <p><strong>Constraints:</strong></p>  <ul>  <li><code>0 &lt;= v1.length, v2.length &lt;= 1000</code></li>  <li><code>1 &lt;= v1.length + v2.length &lt;= 2000</code></li>  <li><code>-2<sup>31</sup> &lt;= v1[i], v2[i] &lt;= 2<sup>31</sup> - 1</code></li> </ul>   <p><strong>Follow up:</strong> What if you are given <code>k</code> vectors? How well can your code be extended to such cases?</p>  <p><strong>Clarification for the follow-up question:</strong></p>  <p>The &quot;Zigzag&quot; order is not clearly defined and is ambiguous for <code>k &gt; 2</code> cases. If &quot;Zigzag&quot; does not look right to you, replace &quot;Zigzag&quot; with &quot;Cyclic&quot;.</p>  <p><strong>Follow-up Example:</strong></p>   <strong>Input:</strong> v1 = [1,2,3], v2 = [4,5,6,7], v3 = [8,9] <br/> <strong>Output:</strong> [1,4,8,2,5,9,3,6,7]  
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Implemented a custom SkipIteratorFancy, which can take list of lists, not only 2.
+
+Using the enumerator that ruby has, using to_enum. 
+
+Enumerator has peek, next methods.
+
+Augment this enumerator to have has_next? method, and then create cursor enumerator on list of enumerators, with cycle method, which will keep cycling the list.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Zigzag Iterator" lines
+class CustomEnumerator
+  def initialize(iter)
+    @iter = iter
+  end
+  
+  def has_next?
+    begin
+      @iter.peek
+    rescue StopIteration => e
+      return false
+    end
+    true
+  end
+
+  def next
+    if has_next?
+      @iter.next
+    else
+      raise StopIteration
+    end
+  end
+end
+
+class SkipIteratorFancy
+  def initialize(collection)
+    @collection = collection
+    @cursor = @collection.map { |x| CustomEnumerator.new(x.to_enum) }.cycle.to_enum
+  end
+
+  def has_next?
+    counter = 0
+    while !@cursor.peek.has_next? && counter < @collection.size
+      @cursor.next
+      counter+=1
+    end
+    !(counter == @collection.size)
+  end
+
+  def next
+    has_next?
+    @cursor.next.next
+  end
+end
+
+class ZigzagIterator
+    # @param {Integer[]} v1
+    # @param {Integer[]} v2
+    def initialize(v1, v2)
+      @z = SkipIteratorFancy.new([v1, v2])
+    end
+
+    # @return {Boolean}
+    def has_next
+      @z.has_next?
+    end
+
+    # @return {Integer}
+    def next
+      @z.next 
+    end
+end
+
+# Your ZigzagIterator will be called like this:
+# i, v = ZigzagIterator.new(v1, v2), []
+# while i.has_next()
+#    v << i.next
+# end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

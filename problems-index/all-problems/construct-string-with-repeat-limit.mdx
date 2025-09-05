@@ -1,0 +1,52 @@
+---
+title: '🧀 Construct String With Repeat Limit'
+description: '[leetcode link](https://leetcode.com/problems/construct-string-with-repeat-limit/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a string <code>s</code> and an integer <code>repeatLimit</code>. Construct a new string <code>repeatLimitedString</code> using the characters of <code>s</code> such that no letter appears <strong>more than</strong> <code>repeatLimit</code> times <strong>in a row</strong>. You do <strong>not</strong> have to use all characters from <code>s</code>.</p>  <p>Return <em>the <strong>lexicographically largest</strong> </em><code>repeatLimitedString</code> <em>possible</em>.</p>  <p>A string <code>a</code> is <strong>lexicographically larger</strong> than a string <code>b</code> if in the first position where <code>a</code> and <code>b</code> differ, string <code>a</code> has a letter that appears later in the alphabet than the corresponding letter in <code>b</code>. If the first <code>min(a.length, b.length)</code> characters do not differ, then the longer string is the lexicographically larger one.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> s = &quot;cczazcc&quot;, repeatLimit = 3 <br/> <strong>Output:</strong> &quot;zzcccac&quot; <br/> <strong>Explanation:</strong> We use all of the characters from s to construct the repeatLimitedString &quot;zzcccac&quot;. The letter &#39;a&#39; appears at most 1 time in a row. The letter &#39;c&#39; appears at most 3 times in a row. The letter &#39;z&#39; appears at most 2 times in a row. Hence, no letter appears more than repeatLimit times in a row and the string is a valid repeatLimitedString. The string is the lexicographically largest repeatLimitedString possible so we return &quot;zzcccac&quot;. Note that the string &quot;zzcccca&quot; is lexicographically larger but the letter &#39;c&#39; appears more than 3 times in a row, so it is not a valid repeatLimitedString.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> s = &quot;aababab&quot;, repeatLimit = 2 <br/> <strong>Output:</strong> &quot;bbabaa&quot; <br/> <strong>Explanation:</strong> We use only some of the characters from s to construct the repeatLimitedString &quot;bbabaa&quot;.  The letter &#39;a&#39; appears at most 2 times in a row. The letter &#39;b&#39; appears at most 2 times in a row. Hence, no letter appears more than repeatLimit times in a row and the string is a valid repeatLimitedString. The string is the lexicographically largest repeatLimitedString possible so we return &quot;bbabaa&quot;. Note that the string &quot;bbabaaa&quot; is lexicographically larger but the letter &#39;a&#39; appears more than 2 times in a row, so it is not a valid repeatLimitedString.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= repeatLimit &lt;= s.length &lt;= 10<sup>5</sup></code></li>  <li><code>s</code> consists of lowercase English letters.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      2 pointer or pq solutions, both work. 
+
+using += on array creates and re-assigns the array. Using &lt;&lt; or push is better. That is the difference between TLE and AC.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Construct String With Repeat Limit" lines
+# @param {String} s
+# @param {Integer} repeat_limit
+# @return {String}
+def repeat_limited_string(s, repeat_limit)
+  char_freq = Array.new(26, 0)
+  s.chars.tally.each {|k,v| char_freq[k.ord-'a'.ord]=v}
+  s_out = []
+  current_char_idx = 25
+  while current_char_idx >=0
+    if char_freq[current_char_idx] == 0
+      current_char_idx-=1; next
+    end
+
+    use_count = [repeat_limit, char_freq[current_char_idx]].min
+    s_out.push(*([current_char_idx]* use_count))
+    char_freq[current_char_idx]-=use_count
+
+    if char_freq[current_char_idx] > 0
+      smaller_char_idx = current_char_idx-1
+      smaller_char_idx-=1 while smaller_char_idx>=0 && char_freq[smaller_char_idx]==0
+      break if smaller_char_idx < 0
+      s_out << smaller_char_idx
+      char_freq[smaller_char_idx]-=1
+    end
+  end
+  s_out.map{|x| (x+97).chr}.join
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

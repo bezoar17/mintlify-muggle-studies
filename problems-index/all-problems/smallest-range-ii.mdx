@@ -1,0 +1,38 @@
+---
+title: '🧀 Smallest Range II'
+description: '[leetcode link](https://leetcode.com/problems/smallest-range-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer array <code>nums</code> and an integer <code>k</code>.</p>  <p>For each index <code>i</code> where <code>0 &lt;= i &lt; nums.length</code>, change <code>nums[i]</code> to be either <code>nums[i] + k</code> or <code>nums[i] - k</code>.</p>  <p>The <strong>score</strong> of <code>nums</code> is the difference between the maximum and minimum elements in <code>nums</code>.</p>  <p>Return <em>the minimum <strong>score</strong> of </em><code>nums</code><em> after changing the values at each index</em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [1], k = 0 <br/> <strong>Output:</strong> 0 <br/> <strong>Explanation:</strong> The score is max(nums) - min(nums) = 1 - 1 = 0.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [0,10], k = 2 <br/> <strong>Output:</strong> 6 <br/> <strong>Explanation:</strong> Change nums to be [2, 8]. The score is max(nums) - min(nums) = 8 - 2 = 6.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> nums = [1,3,6], k = 3 <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> Change nums to be [4, 6, 3]. The score is max(nums) - min(nums) = 6 - 3 = 3.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>4</sup></code></li>  <li><code>0 &lt;= nums[i] &lt;= 10<sup>4</sup></code></li>  <li><code>0 &lt;= k &lt;= 10<sup>4</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Imagine them on a number line, in a sorted manner. Starting from left few no.s would go up, from right few would go down. Once that down starts, all to right should go down. We are essentially optimizing for this fulcrum point, it actually depends on what no.s are present and hence what the new range could be and that is what is being optimized.
+
+Calculate result assuming ith index is last to go up, then calculate the new range of data, and minimize that.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Smallest Range II" lines
+# @param {Integer[]} nums
+# @param {Integer} k
+# @return {Integer}
+def smallest_range_ii(nums, k)
+  min, max = nums.sort!.minmax  
+  
+  # i is last to go up, after that everything is down
+  (0...(nums.size-1)).reduce(max-min) do |result, i|
+    new_max = [max-k, nums[i]+k].max
+    new_min = [min+k, nums[i+1]-k].min
+    [result, new_max-new_min].min
+  end
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

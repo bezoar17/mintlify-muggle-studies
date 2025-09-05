@@ -1,0 +1,74 @@
+---
+title: '🧀 Find a Safe Walk Through a Grid'
+description: '[leetcode link](https://leetcode.com/problems/find-a-safe-walk-through-a-grid/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an <code>m x n</code> binary matrix <code>grid</code> and an integer <code>health</code>.</p>  <p>You start on the upper-left corner <code>(0, 0)</code> and would like to get to the lower-right corner <code>(m - 1, n - 1)</code>.</p>  <p>You can move up, down, left, or right from one cell to another adjacent cell as long as your health <em>remains</em> <strong>positive</strong>.</p>  <p>Cells <code>(i, j)</code> with <code>grid[i][j] = 1</code> are considered <strong>unsafe</strong> and reduce your health by 1.</p>  <p>Return <code>true</code> if you can reach the final cell with a health value of 1 or more, and <code>false</code> otherwise.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">grid = [[0,1,0,0,0],[0,1,0,1,0],[0,0,0,1,0]], health = 1</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">true</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>The final cell can be reached safely by walking along the gray cells below.</p> <img alt="" src="https://assets.leetcode.com/uploads/2024/08/04/3868_examples_1drawio.png" style="width: 301px; height: 121px;" /></div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">grid = [[0,1,1,0,0,0],[1,0,1,0,0,0],[0,1,1,1,0,1],[0,0,1,0,1,0]], health = 3</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">false</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>A minimum of 4 health points is needed to reach the final cell safely.</p> <img alt="" src="https://assets.leetcode.com/uploads/2024/08/04/3868_examples_2drawio.png" style="width: 361px; height: 161px;" /></div>  <p><strong class="example">Example 3:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">grid = [[1,1,1],[1,0,1],[1,1,1]], health = 5</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">true</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>The final cell can be reached safely by walking along the gray cells below.</p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2024/08/04/3868_examples_3drawio.png" style="width: 181px; height: 121px;" /></p>  <p>Any path that does not go through the cell <code>(1, 1)</code> is unsafe since your health will drop to 0 when reaching the final cell.</p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>m == grid.length</code></li>  <li><code>n == grid[i].length</code></li>  <li><code>1 &lt;= m, n &lt;= 50</code></li>  <li><code><font face="monospace">2 &lt;= m * n</font></code></li>  <li><code>1 &lt;= health &lt;= m + n</code></li>  <li><code>grid[i][j]</code> is either 0 or 1.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      0-1 BFS classic.
+
+ if all edges are unweighted and dist is assumed to be 1, bfs gives the min-dist to a node. when we have 0-1 edges, for the shortest dist, we need to process all 0 edges in a path first.
+for this 0-1 BFS, we can use a queue, always pick from left, but while adding add 0s to start and 1s to the end. 1s are only evaluated when all 0 edges(which are to the left) are exhausted. This means when an element is picked from left of queue, dist value will be minimum because for path till this cell, all 0s have been picked before 1 edges. This is more efficient than Djikstra due to usage of single array, instead of a pq.
+
+Claude's better explanation.
+In standard BFS (where all edges have weight 1), the level-by-level exploration naturally gives us the minimum distance to each node. This works because each "hop" has the same cost.
+Now, consider a special case where edges can only have weights of 0 or 1. This creates an interesting scenario: some moves are "free" (weight 0) while others cost 1. For finding shortest paths in this case, we want to prioritize taking all possible free moves before considering any costly ones.
+This leads to a clever modification of BFS using a double-ended queue (deque):
+
+When we find a 0-weight edge, we add its destination to the front of the queue
+When we find a 1-weight edge, we add its destination to the back of the queue
+We always process nodes from the front of the queue
+
+This approach guarantees shortest paths because:
+
+All reachable nodes via 0-weight edges from our current position are processed immediately
+Only after exhausting all 0-weight paths do we consider paths that include 1-weight edges
+When we process a node, we've already found all shorter possible paths to it (since any path with more 0s would have been processed earlier)
+
+This "0-1 BFS" is more efficient than Dijkstra's algorithm for this special case, while still guaranteeing optimal paths. It's a perfect example of how understanding the constraints of a problem (in this case, edges being only 0 or 1) can lead to simpler and more efficient solutions than general algorithms.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Find a Safe Walk Through a Grid" lines
+# @param {Integer[][]} grid
+# @param {Integer} health
+# @return {Boolean}
+def find_safe_walk(grid, health)
+  # piority bfs from staring cell, with processing all 0s first and 1s last
+  m = grid.size;  n=grid[0].size
+  visited = Array.new(m) { Array.new(n, false) }
+
+  neighbors=->(x,y){
+    directions = [[0,1],[1,0],[-1,0],[0,-1]]
+    directions.map{|dx, dy|
+      (x+dx).between?(0,m-1) && (y+dy).between?(0,n-1) && !visited[x+dx][y+dy] ? [x+dx, y+dy] : nil
+    }.compact
+  }
+  
+  queue = [[[0,0],grid[0][0]]]
+  until queue.empty?
+    (i,j), d = queue.shift
+    next if visited[i][j]
+    visited[i][j]=true
+    return health-d>=1 if i==m-1 && j==n-1
+
+    neighbors.call(i,j).each { |ni,nj|
+      if grid[ni][nj] == 1
+        queue << [[ni,nj], d+1]
+      else
+        queue.unshift([[ni,nj], d])
+      end
+    }
+  end
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

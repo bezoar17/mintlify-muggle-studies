@@ -1,0 +1,52 @@
+---
+title: '🧀 Minimum Operations to Reduce an Integer to 0'
+description: '[leetcode link](https://leetcode.com/problems/minimum-operations-to-reduce-an-integer-to-0/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a positive integer <code>n</code>, you can do the following operation <strong>any</strong> number of times:</p>  <ul>  <li>Add or subtract a <strong>power</strong> of <code>2</code> from <code>n</code>.</li> </ul>  <p>Return <em>the <strong>minimum</strong> number of operations to make </em><code>n</code><em> equal to </em><code>0</code>.</p>  <p>A number <code>x</code> is power of <code>2</code> if <code>x == 2<sup>i</sup></code>&nbsp;where <code>i &gt;= 0</code><em>.</em></p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> n = 39 <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> We can do the following operations: - Add 2<sup>0</sup> = 1 to n, so now n = 40. - Subtract 2<sup>3</sup> = 8 from n, so now n = 32. - Subtract 2<sup>5</sup> = 32 from n, so now n = 0. It can be shown that 3 is the minimum number of operations we need to make n equal to 0.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> n = 54 <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> We can do the following operations: - Add 2<sup>1</sup> = 2 to n, so now n = 56. - Add 2<sup>3</sup> = 8 to n, so now n = 64. - Subtract 2<sup>6</sup> = 64 from n, so now n = 0. So the minimum number of operations is 3.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= n &lt;= 10<sup>5</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      For any given n, we first move to nearest 2^x value, and then do just 1 operation. Going to any other 2^x is sub-optimal. n will fall into [2^x, 2^x+1] range. We have to move to closer one, in terms of bits used, not in terms of actual value. 
+
+Suppose to go low we need to subtract s value, so n-s = 2^x. 
+To go high, we need to add a value, so n+a = 2^x+1. 
+Within s and a values, which ever has lower ops or lower 1s required, we should do that.
+
+Now, steps required to move from n to 0 is same as 0 to n, so to calculate s, a ops, answer to get to s,a is same as the answer for s,a, both of which will be calculated once we reach n.
+
+Approach is
+Move i from 0 to n, for each i
+1.Find upper and lower power of two nearest to i.
+2.Find the difference of (i and lower) and (upper and i)
+    i.e-&gt;find value of i-lower and upper-i
+3.Now from the stored value we will find the minimum of(dp[i-lower],dp[upper-i]);
+4. So ans of dp[i]=min(dp[i-lower],dp[upper-i])+1;
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Minimum Operations to Reduce an Integer to 0" lines
+# @param {Integer} n
+# @return {Integer}
+def min_operations(n)
+  dp = Array.new(n+1,0)
+  
+  (1..n).each do |i|
+    pow = Math.log(i,2)
+    low = 2 ** pow.floor
+    high = 2 ** pow.ceil
+    dp[i] = 1 + [dp[i-low], dp[high-i]].min
+  end
+
+  dp.last
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

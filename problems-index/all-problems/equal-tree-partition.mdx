@@ -1,0 +1,52 @@
+---
+title: '🧀 Equal Tree Partition'
+description: '[leetcode link](https://leetcode.com/problems/equal-tree-partition/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given the <code>root</code> of a binary tree, return <code>true</code><em> if you can partition the tree into two trees with equal sums of values after removing exactly one edge on the original tree</em>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/05/03/split1-tree.jpg" style="width: 500px; height: 204px;" />  <strong>Input:</strong> root = [5,10,10,null,null,2,3] <br/> <strong>Output:</strong> true   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/05/03/split2-tree.jpg" style="width: 277px; height: 302px;" />  <strong>Input:</strong> root = [1,2,10,null,null,2,20] <br/> <strong>Output:</strong> false <br/> <strong>Explanation:</strong> You cannot split the tree into two trees with equal sums after removing exactly one edge on the tree.    <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in the tree is in the range <code>[1, 10<sup>4</sup>]</code>.</li>  <li><code>-10<sup>5</sup> &lt;= Node.val &lt;= 10<sup>5</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Calculate sum of each node, considering it as root in a dfs way.
+
+If ever we see total_sum/2 in a subtree-sum it can be done, else it can't.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Equal Tree Partition" lines
+# Definition for a binary tree node.
+# class TreeNode
+#     attr_accessor :val, :left, :right
+#     def initialize(val = 0, left = nil, right = nil)
+#         @val = val
+#         @left = left
+#         @right = right
+#     end
+# end
+# @param {TreeNode} root
+# @return {Boolean}
+def check_equal_tree(root)
+  return false unless root
+
+  @root = root
+  @all_sums = []
+  @total_sum = tree_sum(root)
+  @all_sums.include?(@total_sum/2.0)
+end
+
+def tree_sum(node)
+  return 0 unless node
+
+  sum = node.val + tree_sum(node.left) + tree_sum(node.right)
+  @all_sums << sum.to_f if node!=@root
+  sum
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,118 @@
+---
+title: '🧀 Maximum Trailing Zeros in a Cornered Path'
+description: '[leetcode link](https://leetcode.com/problems/maximum-trailing-zeros-in-a-cornered-path/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a 2D integer array <code>grid</code> of size <code>m x n</code>, where each cell contains a positive integer.</p>  <p>A <strong>cornered path</strong> is defined as a set of adjacent cells with <strong>at most</strong> one turn. More specifically, the path should exclusively move either <strong>horizontally</strong> or <strong>vertically</strong> up to the turn (if there is one), without returning to a previously visited cell. After the turn, the path will then move exclusively in the <strong>alternate</strong> direction: move vertically if it moved horizontally, and vice versa, also without returning to a previously visited cell.</p>  <p>The <strong>product</strong> of a path is defined as the product of all the values in the path.</p>  <p>Return <em>the <strong>maximum</strong> number of <strong>trailing zeros</strong> in the product of a cornered path found in </em><code>grid</code>.</p>  <p>Note:</p>  <ul>  <li><strong>Horizontal</strong> movement means moving in either the left or right direction.</li>  <li><strong>Vertical</strong> movement means moving in either the up or down direction.</li> </ul>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2022/03/23/ex1new2.jpg" style="width: 577px; height: 190px;" />  <strong>Input:</strong> grid = [[23,17,15,3,20],[8,1,20,27,11],[9,4,6,2,21],[40,9,1,10,6],[22,7,4,5,3]] <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> The grid on the left shows a valid cornered path. It has a product of 15 * 20 * 6 * 1 * 10 = 18000 which has 3 trailing zeros. It can be shown that this is the maximum trailing zeros in the product of a cornered path.  The grid in the middle is not a cornered path as it has more than one turn. The grid on the right is not a cornered path as it requires a return to a previously visited cell.   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2022/03/25/ex2.jpg" style="width: 150px; height: 157px;" />  <strong>Input:</strong> grid = [[4,3,2],[7,6,1],[8,8,8]] <br/> <strong>Output:</strong> 0 <br/> <strong>Explanation:</strong> The grid is shown in the figure above. There are no cornered paths in the grid that result in a product with a trailing zero.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>m == grid.length</code></li>  <li><code>n == grid[i].length</code></li>  <li><code>1 &lt;= m, n &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= m * n &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= grid[i][j] &lt;= 1000</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      For n no.s being multiplied, no. of zeros is the min( sum of 2s in primefactorization of all no.s, sum of 5s in primefactorization of all no.s). For a given cell being the corner, there are 4 options of cornered path. top-left, top-right, bottom-left, bottom-right. For a path, max zeros is sum of 0s in the 2 directions(be careful to not include corner element twice). So, to get max of 4 path options, we pick max of each direction(which is prefix or suffix in each direction). For left right directions, ie. prefix suffix of a row, we keep it exclusive of the element, and for top & bottom we can keep it inclusive. 
+So, precalculate the prefix 2 and 5 counts in primefactorization of numbers, row-wise and column-wise. Once we have this, suffix value is total(last in row/col)-prefix value.
+Using these 2 prefix, and suffix options, we can check all 4 path options and take their max.
+For a path, 0s is min of (sum2_in_topleft, sum5_in_topleft)
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Maximum Trailing Zeros in a Cornered Path" lines
+# @param {Integer[][]} grid
+# @return {Integer}
+def max_trailing_zeros(grid)
+  # min no. of 2 and 5 in prime factorizations, is no. of 0s.
+  @count_2_5_in_pfs = {}
+  
+  m = grid.size
+  n = grid[0].size
+
+  col_prefix_25s = Array.new(m) { Array.new(n,0) }
+  row_prefix_25s = Array.new(m) { Array.new(n,0) }
+  
+  puts "Start Time : #{Time.now}"
+
+  grid.each_with_index do |row,i|
+    (0...n).each do |j|
+      last_values = (j>0 ? row_prefix_25s[i][j-1] : [0,0])
+      row_prefix_25s[i][j] = last_values.zip(count_2_5_in_prime_factorization(grid[i][j])).map{_1+_2}
+    end
+  end
+  puts "Rowdone Time : #{Time.now}"
+
+  (0...n).each do |j|
+    (0...m).each do |i|
+      last_values = (i>0 ? col_prefix_25s[i-1][j] : [0,0])
+      col_prefix_25s[i][j] = last_values.zip(count_2_5_in_prime_factorization(grid[i][j])).map{_1+_2}
+    end
+  end
+  puts "Col Done Time : #{Time.now}"
+
+  max_0s = 0;
+
+  (0...m).each do |i|
+    (0...n).each do |j|
+      left_25_counts = (j>0) ? row_prefix_25s[i][j-1] : [0,0]
+      # right_25_counts = row_prefix_25s[i][n-1].zip(row_prefix_25s[i][j]).map{|v| v[0]-v[1]}
+      right_25_counts = [row_prefix_25s[i][n-1][0]-row_prefix_25s[i][j][0],row_prefix_25s[i][n-1][1]-row_prefix_25s[i][j][1]]
+      top_25_counts = col_prefix_25s[i][j]
+      # bottom_25_counts = col_prefix_25s[m-1][j].zip(( i>0? col_prefix_25s[i-1][j]:[0,0])).map{|v| v[0]-v[1]}
+
+      last_bottom = (i>0)? col_prefix_25s[i-1][j]:[0,0]
+      bottom_25_counts = [col_prefix_25s[m-1][j][0]-last_bottom[0],col_prefix_25s[m-1][j][1]-last_bottom[1]]
+
+      # top_left = top_25_counts.zip(left_25_counts).map{_1+_2}.min
+      top_left = [top_25_counts[0]+left_25_counts[0], top_25_counts[1]+left_25_counts[1]].min
+      # top_right = top_25_counts.zip(right_25_counts).map{_1+_2}.min
+      top_right = [top_25_counts[0]+right_25_counts[0], top_25_counts[1]+right_25_counts[1]].min
+      # bottom_left = bottom_25_counts.zip(left_25_counts).map{_1+_2}.min
+      bottom_left = [bottom_25_counts[0]+left_25_counts[0], bottom_25_counts[1]+left_25_counts[1]].min
+      # bottom_right = bottom_25_counts.zip(right_25_counts).map{_1+_2}.min
+      bottom_right = [bottom_25_counts[0]+right_25_counts[0], bottom_25_counts[1]+right_25_counts[1]].min
+
+      max_0s = [max_0s, top_left, top_right, bottom_left, bottom_right].max
+    end
+  end
+
+  puts "End Time : #{Time.now}"
+  
+  max_0s
+end
+
+def count_2_5_in_prime_factorization(n)
+  return @count_2_5_in_pfs[n] unless @count_2_5_in_pfs[n].nil?
+  @count_2_5_in_pfs[n] = [count_in_prime_factorization(n,2), count_in_prime_factorization(n,5)]
+end
+
+def count_in_prime_factorization(n,prime)
+  # If number is less than 5, no 5s in prime factorization
+  return 0 if n < prime
+
+  total_primes = 0
+
+  # Count 5s by checking how many times 5 divides the number
+  while n % prime == 0
+    total_primes += 1
+    n /= prime
+  end
+
+  # Check for other factors of 5
+  (5..Math.sqrt(n).to_i).step(5) do |i|
+    while n % i == 0
+      total_primes += 1 if i % prime == 0
+      n /= i
+    end
+  end
+
+  # If remaining n is a prime > 5 and divisible by 5
+  total_primes += 1 if n > 1 && n % prime == 0
+
+  total_primes
+end
+
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

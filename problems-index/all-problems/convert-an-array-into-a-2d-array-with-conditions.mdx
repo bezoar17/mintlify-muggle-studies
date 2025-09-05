@@ -1,0 +1,36 @@
+---
+title: '🧀 Convert an Array Into a 2D Array With Conditions'
+description: '[leetcode link](https://leetcode.com/problems/convert-an-array-into-a-2d-array-with-conditions/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer array <code>nums</code>. You need to create a 2D array from <code>nums</code> satisfying the following conditions:</p>  <ul>  <li>The 2D array should contain <strong>only</strong> the elements of the array <code>nums</code>.</li>  <li>Each row in the 2D array contains <strong>distinct</strong> integers.</li>  <li>The number of rows in the 2D array should be <strong>minimal</strong>.</li> </ul>  <p>Return <em>the resulting array</em>. If there are multiple answers, return any of them.</p>  <p><strong>Note</strong> that the 2D array can have a different number of elements on each row.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [1,3,4,1,2,3,1] <br/> <strong>Output:</strong> [[1,3,4,2],[1,3],[1]] <br/> <strong>Explanation:</strong> We can create a 2D array that contains the following rows: - 1,3,4,2 - 1,3 - 1 All elements of nums were used, and each row of the 2D array contains distinct integers, so it is a valid answer. It can be shown that we cannot have less than 3 rows in a valid array.  <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [1,2,3,4] <br/> <strong>Output:</strong> [[4,3,2,1]] <br/> <strong>Explanation:</strong> All elements of the array are distinct, so we can keep all of them in the first row of the 2D array.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 200</code></li>  <li><code>1 &lt;= nums[i] &lt;= nums.length</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      A num which occurs max times, we need max rows to fit that, everything else can be split into these rows. As column for each row need not be same, its just about count now. Create the array while calculating the frequence of each char and expand the row count by max freq. 
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Convert an Array Into a 2D Array With Conditions" lines
+# @param {Integer[]} nums
+# @return {Integer[][]}
+def find_matrix(nums)
+  output = []
+  freq_h = Hash.new(0)
+  nums.each do |num|
+    output << [] if output.size == freq_h[num]
+    output[freq_h[num]] << num
+    freq_h[num]+=1
+  end
+  
+  output
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

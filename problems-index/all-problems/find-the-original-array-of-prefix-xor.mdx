@@ -1,0 +1,28 @@
+---
+title: '🧀 Find The Original Array of Prefix Xor'
+description: '[leetcode link](https://leetcode.com/problems/find-the-original-array-of-prefix-xor/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an <strong>integer</strong> array <code>pref</code> of size <code>n</code>. Find and return <em>the array </em><code>arr</code><em> of size </em><code>n</code><em> that satisfies</em>:</p>  <ul>  <li><code>pref[i] = arr[0] ^ arr[1] ^ ... ^ arr[i]</code>.</li> </ul>  <p>Note that <code>^</code> denotes the <strong>bitwise-xor</strong> operation.</p>  <p>It can be proven that the answer is <strong>unique</strong>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> pref = [5,2,0,3,1] <br/> <strong>Output:</strong> [5,7,2,3,2] <br/> <strong>Explanation:</strong> From the array [5,7,2,3,2] we have the following: - pref[0] = 5. - pref[1] = 5 ^ 7 = 2. - pref[2] = 5 ^ 7 ^ 2 = 0. - pref[3] = 5 ^ 7 ^ 2 ^ 3 = 3. - pref[4] = 5 ^ 7 ^ 2 ^ 3 ^ 2 = 1.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> pref = [13] <br/> <strong>Output:</strong> [13] <br/> <strong>Explanation:</strong> We have pref[0] = arr[0] = 13.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= pref.length &lt;= 10<sup>5</sup></code></li>  <li><code>0 &lt;= pref[i] &lt;= 10<sup>6</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      arr[i] = pref[i] ^ pref[i-1]
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Find The Original Array of Prefix Xor" lines
+# @param {Integer[]} pref
+# @return {Integer[]}
+def find_array(pref)
+  [pref[0]] + (1...pref.size).map { |i| pref[i]^pref[i-1] }  
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

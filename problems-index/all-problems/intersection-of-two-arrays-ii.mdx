@@ -1,0 +1,32 @@
+---
+title: '🧩 Intersection of Two Arrays II'
+description: '[leetcode link](https://leetcode.com/problems/intersection-of-two-arrays-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given two integer arrays <code>nums1</code> and <code>nums2</code>, return <em>an array of their intersection</em>. Each element in the result must appear as many times as it shows in both arrays and you may return the result in <strong>any order</strong>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums1 = [1,2,2,1], nums2 = [2,2] <br/> <strong>Output:</strong> [2,2]   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums1 = [4,9,5], nums2 = [9,4,9,8,4] <br/> <strong>Output:</strong> [4,9] <br/> <strong>Explanation:</strong> [9,4] is also accepted.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums1.length, nums2.length &lt;= 1000</code></li>  <li><code>0 &lt;= nums1[i], nums2[i] &lt;= 1000</code></li> </ul>   <p><strong>Follow up:</strong></p>  <ul>  <li>What if the given array is already sorted? How would you optimize your algorithm?</li>  <li>What if <code>nums1</code>&#39;s size is small compared to <code>nums2</code>&#39;s size? Which algorithm is better?</li>  <li>What if elements of <code>nums2</code> are stored on disk, and the memory is limited such that you cannot load all elements into the memory at once?</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Intersection of Two Arrays II" lines
+# @param {Integer[]} nums1
+# @param {Integer[]} nums2
+# @return {Integer[]}
+def intersect(nums1, nums2)
+#   nums1 & nums2 # this does not maintain duplicates, does set operation
+  h_1 = nums1.tally; h_2 = nums2.tally
+  
+  (nums1 & nums2).map {|k| [k] * [h_1[k], h_2[k]].min }.flatten
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,43 @@
+---
+title: '❗️ Longest Increasing Path in a Matrix'
+description: '[leetcode link](https://leetcode.com/problems/longest-increasing-path-in-a-matrix/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an <code>m x n</code> integers <code>matrix</code>, return <em>the length of the longest increasing path in </em><code>matrix</code>.</p>  <p>From each cell, you can either move in four directions: left, right, up, or down. You <strong>may not</strong> move <strong>diagonally</strong> or move <strong>outside the boundary</strong> (i.e., wrap-around is not allowed).</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/01/05/grid1.jpg" style="width: 242px; height: 242px;" />  <strong>Input:</strong> matrix = [[9,9,4],[6,6,8],[2,1,1]] <br/> <strong>Output:</strong> 4 <br/> <strong>Explanation:</strong> The longest increasing path is <code>[1, 2, 6, 9]</code>.   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/01/27/tmp-grid.jpg" style="width: 253px; height: 253px;" />  <strong>Input:</strong> matrix = [[3,4,5],[3,2,6],[2,2,1]] <br/> <strong>Output:</strong> 4 <strong>Explanation: </strong>The longest increasing path is <code>[3, 4, 5, 6]</code>. Moving diagonally is not allowed.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> matrix = [[1]] <br/> <strong>Output:</strong> 1    <p><strong>Constraints:</strong></p>  <ul>  <li><code>m == matrix.length</code></li>  <li><code>n == matrix[i].length</code></li>  <li><code>1 &lt;= m, n &lt;= 200</code></li>  <li><code>0 &lt;= matrix[i][j] &lt;= 2<sup>31</sup> - 1</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Simple dfs with memoization; max len = prev + 1 if value is greater, kinda like bellman ford, which calculates all possible variations. Just the caching improves the speed.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Longest Increasing Path in a Matrix" lines
+# @param {Integer[][]} matrix
+# @return {Integer}
+def longest_increasing_path(matrix)
+  rows = matrix.length - 1
+  columns = matrix[0].length - 1
+
+  directions = ->(row, column) { [[1,0],[-1,0],[0,1],[0,-1]].map { |r, c| [r + row, c + column] } }
+  in_bounds = ->(row, column) { row.between?(0, rows) && column.between?(0, columns) }
+  directions_in_bounds = ->(row, column) { directions.call(row, column).select { |r, c| in_bounds.call(r, c) && matrix[row][column] < matrix[r][c] } }
+  
+  cache = {}
+  
+  dfs = ->(row, column) do
+    cache[[row, column]] ||= directions_in_bounds.call(row, column).reduce(1) { |result, (r,c)| [result, dfs.call(r, c) + 1].max }
+  end
+
+  (0..rows).each { |row| (0..columns).each { |column| dfs.call(row, column) } }
+
+  cache.values.max
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

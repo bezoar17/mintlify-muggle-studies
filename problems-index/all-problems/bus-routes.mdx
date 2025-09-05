@@ -1,0 +1,73 @@
+---
+title: '❗️ Bus Routes'
+description: '[leetcode link](https://leetcode.com/problems/bus-routes/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an array <code>routes</code> representing bus routes where <code>routes[i]</code> is a bus route that the <code>i<sup>th</sup></code> bus repeats forever.</p>  <ul>  <li>For example, if <code>routes[0] = [1, 5, 7]</code>, this means that the <code>0<sup>th</sup></code> bus travels in the sequence <code>1 -&gt; 5 -&gt; 7 -&gt; 1 -&gt; 5 -&gt; 7 -&gt; 1 -&gt; ...</code> forever.</li> </ul>  <p>You will start at the bus stop <code>source</code> (You are not on any bus initially), and you want to go to the bus stop <code>target</code>. You can travel between bus stops by buses only.</p>  <p>Return <em>the least number of buses you must take to travel from </em><code>source</code><em> to </em><code>target</code>. Return <code>-1</code> if it is not possible.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> routes = [[1,2,7],[3,6,7]], source = 1, target = 6 <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> The best strategy is take the first bus to the bus stop 7, then take the second bus to the bus stop 6.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> routes = [[7,12],[4,5,15],[6],[15,19],[9,12,13]], source = 15, target = 12 <br/> <strong>Output:</strong> -1      <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= routes.length &lt;= 500</code>.</li>  <li><code>1 &lt;= routes[i].length &lt;= 10<sup>5</sup></code></li>  <li>All the values of <code>routes[i]</code> are <strong>unique</strong>.</li>  <li><code>sum(routes[i].length) &lt;= 10<sup>5</sup></code></li>  <li><code>0 &lt;= routes[i][j] &lt; 10<sup>6</sup></code></li>  <li><code>0 &lt;= source, target &lt; 10<sup>6</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Due to constraints, creating graph between cities will exceed memory. So, instead consider a route as a node, and they are connected if there is a common element between the nodes/routes. And so a multi-source BFS to get to the answer. 
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```python3 title="Bus Routes" lines
+class Solution:
+    def numBusesToDestination(self, routes: List[List[int]], source: int, target: int) -> int:
+        if source == target:
+            return 0
+    
+        # Convert routes to sets for faster lookup
+        route_nodes = [set(route) for route in routes]
+        
+        # Find all routes that contain the source
+        source_nodes = [idx for idx, route in enumerate(route_nodes) if source in route]
+        if not source_nodes:
+            return -1
+        
+        # Build adjacency list of routes that share at least one stop
+        adj_h = defaultdict(list)
+        r = len(route_nodes)
+        
+        for i in range(r):
+            for j in range(i + 1, r):
+                # If routes i and j have intersection (shared stops)
+                if route_nodes[i] & route_nodes[j]:
+                    adj_h[i].append(j)
+                    adj_h[j].append(i)
+        
+        # BFS to find minimum number of buses
+        queue = deque(source_nodes)
+        dist = 1
+        visited = set()
+        
+        while queue:
+            # Process all nodes at current distance level
+            queue_nodes = []
+            for _ in range(len(queue)):
+                node = queue.popleft()
+                queue_nodes.append(node)
+                visited.add(node)
+            
+            for node_i in queue_nodes:
+                # Check if current route contains target
+                if target in route_nodes[node_i]:
+                    return dist
+                
+                # Add adjacent routes to queue
+                for adjacent_route in adj_h[node_i]:
+                    if adjacent_route not in visited:
+                        queue.append(adjacent_route)
+            
+            dist += 1
+        
+        return -1
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

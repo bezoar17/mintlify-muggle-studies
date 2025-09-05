@@ -1,0 +1,110 @@
+---
+title: '❗️ Find Critical and Pseudo-Critical Edges in Minimum Spanning Tree'
+description: '[leetcode link](https://leetcode.com/problems/find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a weighted undirected connected graph with <code>n</code>&nbsp;vertices numbered from <code>0</code> to <code>n - 1</code>,&nbsp;and an array <code>edges</code>&nbsp;where <code>edges[i] = [a<sub>i</sub>, b<sub>i</sub>, weight<sub>i</sub>]</code> represents a bidirectional and weighted edge between nodes&nbsp;<code>a<sub>i</sub></code>&nbsp;and <code>b<sub>i</sub></code>. A minimum spanning tree (MST) is a subset of the graph&#39;s edges that connects all vertices without cycles&nbsp;and with the minimum possible total edge weight.</p>  <p>Find <em>all the critical and pseudo-critical edges in the given graph&#39;s minimum spanning tree (MST)</em>. An MST edge whose deletion from the graph would cause the MST weight to increase is called a&nbsp;<em>critical edge</em>. On&nbsp;the other hand, a pseudo-critical edge is that which can appear in some MSTs but not all.</p>  <p>Note that you can return the indices of the edges in any order.</p>   <p><strong class="example">Example 1:</strong></p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2020/06/04/ex1.png" style="width: 259px; height: 262px;" /></p>   <strong>Input:</strong> n = 5, edges = [[0,1,1],[1,2,1],[2,3,2],[0,3,2],[0,4,3],[3,4,3],[1,4,6]] <br/> <strong>Output:</strong> [[0,1],[2,3,4,5]] <br/> <strong>Explanation:</strong> The figure above describes the graph. The following figure shows all the possible MSTs: <img alt="" src="https://assets.leetcode.com/uploads/2020/06/04/msts.png" style="width: 540px; height: 553px;" /> Notice that the two edges 0 and 1 appear in all MSTs, therefore they are critical edges, so we return them in the first list of the output. The edges 2, 3, 4, and 5 are only part of some MSTs, therefore they are considered pseudo-critical edges. We add them to the second list of the output.   <p><strong class="example">Example 2:</strong></p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2020/06/04/ex2.png" style="width: 247px; height: 253px;" /></p>   <strong>Input:</strong> n = 4, edges = [[0,1,1],[1,2,1],[2,3,1],[0,3,1]] <br/> <strong>Output:</strong> [[],[0,1,2,3]] <br/> <strong>Explanation:</strong> We can observe that since all 4 edges have equal weight, choosing any 3 edges from the given 4 will yield an MST. Therefore all 4 edges are pseudo-critical.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>2 &lt;= n &lt;= 100</code></li>  <li><code>1 &lt;= edges.length &lt;= min(200, n * (n - 1) / 2)</code></li>  <li><code>edges[i].length == 3</code></li>  <li><code>0 &lt;= a<sub>i</sub> &lt; b<sub>i</sub> &lt; n</code></li>  <li><code>1 &lt;= weight<sub>i</sub>&nbsp;&lt;= 1000</code></li>  <li>All pairs <code>(a<sub>i</sub>, b<sub>i</sub>)</code> are <strong>distinct</strong>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Due to constraints you can run mst E times, so simulate for excluding and definitely including an edge to determine if its critical or not. Start with a benchmark MST value, and compare results of mst run for each edge.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Find Critical and Pseudo-Critical Edges in Minimum Spanning Tree" lines
+# @param {Integer} n
+# @param {Integer[][]} edges
+# @return {Integer[][]}
+class UnionFind
+  attr_accessor :nodes, :sizes
+  attr_reader :max_set_size
+
+  def initialize(node_keys=[])
+    @nodes = {}
+    @sizes = {}
+    @max_set_size = 0
+    node_keys.each { |i| root(i) }
+  end
+
+  # this will create a node key if it doesnt exist
+  def root(i)
+    nodes[i] ||= i; sizes[i] ||= 1; # create node if it doesnt exist
+
+    while nodes[i] != i
+      nodes[i] = nodes[nodes[i]] # path compression
+      i = nodes[i]
+    end
+    i
+  end
+
+  def size_for(i)
+    sizes[root(i)]
+  end
+
+  def union(i, j)
+    root_of_i = root(i)
+    root_of_j = root(j)
+
+    return false if root_of_i == root_of_j
+
+    if sizes[root_of_j] > sizes[root_of_i]
+      nodes[root_of_i] = root_of_j
+      sizes[root_of_j] += sizes[root_of_i]
+    else
+      nodes[root_of_j] = root_of_i
+      sizes[root_of_i] += sizes[root_of_j]
+    end
+    @max_set_size = [@max_set_size, sizes[root_of_i], sizes[root_of_j]].max
+  end
+end
+def find_critical_and_pseudo_critical_edges(n, edges)
+  # critical -> weight increase, pesudo-, in some but not all MSTs -> removal doesnt increase, some other replaces
+  # critical, appears in all, pseudo in some, removal of critical->increases, pseudo- doesnt increase.
+  # MST has N-1 edges, choose N-1 out of E, max value is EC1, when n is 2, and E is 200, ie. 200 is max MSTs combos, not all will be min.
+  # we can just run the MST algo once as a benchmark, then for all edges run it with/without edge
+  # constraints allow us to run MST multiple times
+  benchmark = mst_value(n, edges.dup);
+  critical = []
+  pseudo_critical = [] 
+  edges.each_with_index do |edge, i|
+    new_edges = edges.dup; new_edges.delete(edge)
+    new_mst = mst_value(n, new_edges)
+    critical << i if new_mst > benchmark
+  end
+
+  edges.each_with_index do |edge, i|
+    new_edges = edges.dup; new_edges.delete_at(i)
+    new_mst = mst_value(n, new_edges, edge)
+    pseudo_critical << i if new_mst == benchmark
+  end
+  [critical, pseudo_critical-critical]
+end
+
+def mst_value(n, edges, inclusive_edge=nil)
+  edges.sort_by!{|x| -x[-1]}
+  uf = UnionFind.new();
+  min_sum = 0
+
+  unless inclusive_edge.nil?
+    uf.union(inclusive_edge[0], inclusive_edge[1]);
+    min_sum = inclusive_edge[2]
+  end
+  
+  while !edges.empty?
+    edge = edges.pop
+    if uf.root(edge[0]) != uf.root(edge[1])
+      uf.union(edge[0],edge[1]); min_sum += edge[2];
+    end
+    break if uf.max_set_size == n
+  end
+  (uf.max_set_size < n) ? Float::INFINITY : min_sum
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,39 @@
+---
+title: '🧀 Combination Sum II'
+description: '[leetcode link](https://leetcode.com/problems/combination-sum-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a collection of candidate numbers (<code>candidates</code>) and a target number (<code>target</code>), find all unique combinations in <code>candidates</code>&nbsp;where the candidate numbers sum to <code>target</code>.</p>  <p>Each number in <code>candidates</code>&nbsp;may only be used <strong>once</strong> in the combination.</p>  <p><strong>Note:</strong>&nbsp;The solution set must not contain duplicate combinations.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> candidates = [10,1,2,7,6,1,5], target = 8 <br/> <strong>Output:</strong>  [ [1,1,6], [1,2,5], [1,7], [2,6] ]   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> candidates = [2,5,2,1,2], target = 5 <br/> <strong>Output:</strong>  [ [1,2,2], [5] ]    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;=&nbsp;candidates.length &lt;= 100</code></li>  <li><code>1 &lt;=&nbsp;candidates[i] &lt;= 50</code></li>  <li><code>1 &lt;= target &lt;= 30</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      To avoid duplicates, we have to do each with index kind of method, and use next if values are same.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Combination Sum II" lines
+def combination_sum2(candidates, target)
+  @candidates = candidates.sort
+  backtrack target, 0, [], []
+end
+
+def backtrack(target, j, curr, res)
+  return res << curr.dup if target == 0
+  (j...@candidates.size).each do |i|
+    next if i > j && @candidates[i] == @candidates[i - 1]
+    break if @candidates[i] > target
+    curr.push @candidates[i]
+    backtrack target - @candidates[i], i + 1, curr, res
+    curr.pop
+  end
+  res
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

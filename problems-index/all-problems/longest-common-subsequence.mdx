@@ -1,0 +1,47 @@
+---
+title: '🧀 Longest Common Subsequence'
+description: '[leetcode link](https://leetcode.com/problems/longest-common-subsequence/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given two strings <code>text1</code> and <code>text2</code>, return <em>the length of their longest <strong>common subsequence</strong>. </em>If there is no <strong>common subsequence</strong>, return <code>0</code>.</p>  <p>A <strong>subsequence</strong> of a string is a new string generated from the original string with some characters (can be none) deleted without changing the relative order of the remaining characters.</p>  <ul>  <li>For example, <code>&quot;ace&quot;</code> is a subsequence of <code>&quot;abcde&quot;</code>.</li> </ul>  <p>A <strong>common subsequence</strong> of two strings is a subsequence that is common to both strings.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> text1 = &quot;abcde&quot;, text2 = &quot;ace&quot;  <br/> <strong>Output:</strong> 3   <br/> <strong>Explanation:</strong> The longest common subsequence is &quot;ace&quot; and its length is 3.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> text1 = &quot;abc&quot;, text2 = &quot;abc&quot; <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> The longest common subsequence is &quot;abc&quot; and its length is 3.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> text1 = &quot;abc&quot;, text2 = &quot;def&quot; <br/> <strong>Output:</strong> 0 <br/> <strong>Explanation:</strong> There is no such common subsequence, so the result is 0.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= text1.length, text2.length &lt;= 1000</code></li>  <li><code>text1</code> and <code>text2</code> consist of only lowercase English characters.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Longest Common Subsequence" lines
+# @param {String} text1
+# @param {String} text2
+# @return {Integer}
+def longest_common_subsequence(text1, text2)
+    lcs(text1, text2)
+end
+
+def lcs(a,b)
+    m,n = a.size, b.size
+    dp = Array.new(m+1) { Array.new(n+1,0) }
+
+    (0..m).each do |i|
+      (0..n).each do |j|
+          if i ==0 || j ==0
+              dp[i][j]=0
+          elsif a[i-1] == b[j-1]
+              dp[i][j] = dp[i-1][j-1] + 1
+          else
+              dp[i][j] = [dp[i-1][j], dp[i][j-1]].max
+          end
+        end
+    end
+    dp[m][n]
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,65 @@
+---
+title: '❗️ N-Queens'
+description: '[leetcode link](https://leetcode.com/problems/n-queens/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>The <strong>n-queens</strong> puzzle is the problem of placing <code>n</code> queens on an <code>n x n</code> chessboard such that no two queens attack each other.</p>  <p>Given an integer <code>n</code>, return <em>all distinct solutions to the <strong>n-queens puzzle</strong></em>. You may return the answer in <strong>any order</strong>.</p>  <p>Each solution contains a distinct board configuration of the n-queens&#39; placement, where <code>&#39;Q&#39;</code> and <code>&#39;.&#39;</code> both indicate a queen and an empty space, respectively.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/11/13/queens.jpg" style="width: 600px; height: 268px;" />  <strong>Input:</strong> n = 4 <br/> <strong>Output:</strong> [[&quot;.Q..&quot;,&quot;...Q&quot;,&quot;Q...&quot;,&quot;..Q.&quot;],[&quot;..Q.&quot;,&quot;Q...&quot;,&quot;...Q&quot;,&quot;.Q..&quot;]] <br/> <strong>Explanation:</strong> There exist two distinct solutions to the 4-queens puzzle as shown above   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> n = 1 <br/> <strong>Output:</strong> [[&quot;Q&quot;]]    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= n &lt;= 9</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```cpp title="N-Queens" lines
+class Solution {
+public:
+    
+	bool isValid(int n,int positions[],int row,int column){
+		for(int i=0;i<column;i++)
+			if(positions[i]==row || abs(positions[i]-row)== abs(i-column))
+				return false;
+		return true;
+	}
+	
+	void solveNQ(int n,int column,int positions[],vector<vector <string> > & val){
+
+		if(column==n){
+
+			vector<string> build;
+			string s;
+			for(int i=0;i<n;i++){
+				s="";
+				for(int j=0;j<n;j++)
+					if(positions[i]==j)
+						s+="Q";
+					else
+						s+=".";
+				build.push_back(s);	
+			}
+			val.push_back(build);
+		}
+
+		for(int i=0;i<n;i++)
+			if(isValid(n,positions,i,column)){
+				positions[column]=i;
+				solveNQ(n,column+1,positions,val);
+		}
+	}
+	
+	vector<vector<string> > solveNQueens(int n) {
+    	int positions[n];
+    	vector<vector <string> > val;
+		solveNQ(n,0,positions,val);
+		return val;
+    }
+};
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

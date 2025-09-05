@@ -1,0 +1,46 @@
+---
+title: '❗️ Longest Path With Different Adjacent Characters'
+description: '[leetcode link](https://leetcode.com/problems/longest-path-with-different-adjacent-characters/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a <strong>tree</strong> (i.e. a connected, undirected graph that has no cycles) <strong>rooted</strong> at node <code>0</code> consisting of <code>n</code> nodes numbered from <code>0</code> to <code>n - 1</code>. The tree is represented by a <strong>0-indexed</strong> array <code>parent</code> of size <code>n</code>, where <code>parent[i]</code> is the parent of node <code>i</code>. Since node <code>0</code> is the root, <code>parent[0] == -1</code>.</p>  <p>You are also given a string <code>s</code> of length <code>n</code>, where <code>s[i]</code> is the character assigned to node <code>i</code>.</p>  <p>Return <em>the length of the <strong>longest path</strong> in the tree such that no pair of <strong>adjacent</strong> nodes on the path have the same character assigned to them.</em></p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2022/03/25/testingdrawio.png" style="width: 201px; height: 241px;" />  <strong>Input:</strong> parent = [-1,0,0,1,1,2], s = &quot;abacbe&quot; <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> The longest path where each two adjacent nodes have different characters in the tree is the path: 0 -&gt; 1 -&gt; 3. The length of this path is 3, so 3 is returned. It can be proven that there is no longer path that satisfies the conditions.    <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2022/03/25/graph2drawio.png" style="width: 201px; height: 221px;" />  <strong>Input:</strong> parent = [-1,0,0,0], s = &quot;aabc&quot; <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> The longest path where each two adjacent nodes have different characters is the path: 2 -&gt; 0 -&gt; 3. The length of this path is 3, so 3 is returned.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>n == parent.length == s.length</code></li>  <li><code>1 &lt;= n &lt;= 10<sup>5</sup></code></li>  <li><code>0 &lt;= parent[i] &lt;= n - 1</code> for all <code>i &gt;= 1</code></li>  <li><code>parent[0] == -1</code></li>  <li><code>parent</code> represents a valid tree.</li>  <li><code>s</code> consists of only lowercase English letters.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      dfs for diameter, but for generic tree, and condition of adjacent nodes shouldnt be same.
+
+Ruby, instead of string[idx], store chars array and access that.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Longest Path With Different Adjacent Characters" lines
+# @param {Integer[]} parent
+# @param {String} s
+# @return {Integer}
+def longest_path(parent, s)
+  diameter = 0; chars = s.chars
+  adj_h=Hash.new{|h,k|h[k]=[]}; parent[1..].each_with_index {|parent,i| adj_h[parent]<<(i+1); }
+
+  return 1 if parent.size == 1
+  
+  depth_of_tree=->(root) {
+    children = adj_h[root]
+    return 1 if children.empty?
+    child_depths = children.map{ |ch| val=depth_of_tree.call(ch); (chars[root]!=chars[ch]) ? val:0}.sort
+    diameter = [diameter, 1+child_depths.last(2).sum].max
+    return 1 + child_depths.last.to_i
+  }
+
+  depth_of_tree.call(0)
+  return diameter
+end
+
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,50 @@
+---
+title: '❗️ Sliding Window Maximum'
+description: '[leetcode link](https://leetcode.com/problems/sliding-window-maximum/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an array of integers&nbsp;<code>nums</code>, there is a sliding window of size <code>k</code> which is moving from the very left of the array to the very right. You can only see the <code>k</code> numbers in the window. Each time the sliding window moves right by one position.</p>  <p>Return <em>the max sliding window</em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [1,3,-1,-3,5,3,6,7], k = 3 <br/> <strong>Output:</strong> [3,3,5,5,6,7] <br/> <strong>Explanation:</strong>  Window position                Max ---------------               ----- [1  3  -1] -3  5  3  6  7       <strong>3</strong>  1 [3  -1  -3] 5  3  6  7       <strong>3</strong>  1  3 [-1  -3  5] 3  6  7      <strong> 5</strong>  1  3  -1 [-3  5  3] 6  7       <strong>5</strong>  1  3  -1  -3 [5  3  6] 7       <strong>6</strong>  1  3  -1  -3  5 [3  6  7]      <strong>7</strong>   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [1], k = 1 <br/> <strong>Output:</strong> [1]    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>-10<sup>4</sup> &lt;= nums[i] &lt;= 10<sup>4</sup></code></li>  <li><code>1 &lt;= k &lt;= nums.length</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      We maintain a queue, all elements in the queue are ordered by their effective position from left to right. ie, first element is effective till pos. So next would be effective till pos + something. We put elements from the right, and remove from the left and right both. Effective position means, till what index an element will be part of a sliding window. So, when i is added, it stays till i+k-1, and is invalid from i+k.
+
+So, when we see a new value at idx i, we put that to the right of the queue, ensuring that L-&gt;R remains strictly decreasing, so we remove values from right which are LE to new element, as this new element will be part of all windows which the values being removed will be. Or, values which are being removed will never contribute to max as long as value at idx i is present. 
+
+Also, remove any idx from the left which have stopped contributing to the current window. 
+Now, we have the left most element which is of max value, hence this is the answer for current window.
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Sliding Window Maximum" lines
+# @param {Integer[]} nums
+# @param {Integer} k
+# @return {Integer[]}
+def max_sliding_window(nums, k)
+  result = []
+  queue = []
+
+  nums.each_with_index do |val, idx|
+    # discard stuff from right
+    queue.pop until queue.empty? || nums[queue.last] >= val
+
+    queue << idx # append to right
+
+    # discard from left
+    queue.shift if idx == queue.first + k
+
+    result << nums[queue.first] if idx >= k-1
+  end
+
+  result
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

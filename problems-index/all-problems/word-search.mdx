@@ -1,0 +1,47 @@
+---
+title: '🧀 Word Search'
+description: '[leetcode link](https://leetcode.com/problems/word-search/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an <code>m x n</code> grid of characters <code>board</code> and a string <code>word</code>, return <code>true</code> <em>if</em> <code>word</code> <em>exists in the grid</em>.</p>  <p>The word can be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/11/04/word2.jpg" style="width: 322px; height: 242px;" />  <strong>Input:</strong> board = [[&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;E&quot;],[&quot;S&quot;,&quot;F&quot;,&quot;C&quot;,&quot;S&quot;],[&quot;A&quot;,&quot;D&quot;,&quot;E&quot;,&quot;E&quot;]], word = &quot;ABCCED&quot; <br/> <strong>Output:</strong> true   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/11/04/word-1.jpg" style="width: 322px; height: 242px;" />  <strong>Input:</strong> board = [[&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;E&quot;],[&quot;S&quot;,&quot;F&quot;,&quot;C&quot;,&quot;S&quot;],[&quot;A&quot;,&quot;D&quot;,&quot;E&quot;,&quot;E&quot;]], word = &quot;SEE&quot; <br/> <strong>Output:</strong> true   <p><strong class="example">Example 3:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/10/15/word3.jpg" style="width: 322px; height: 242px;" />  <strong>Input:</strong> board = [[&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;E&quot;],[&quot;S&quot;,&quot;F&quot;,&quot;C&quot;,&quot;S&quot;],[&quot;A&quot;,&quot;D&quot;,&quot;E&quot;,&quot;E&quot;]], word = &quot;ABCB&quot; <br/> <strong>Output:</strong> false    <p><strong>Constraints:</strong></p>  <ul>  <li><code>m == board.length</code></li>  <li><code>n = board[i].length</code></li>  <li><code>1 &lt;= m, n &lt;= 6</code></li>  <li><code>1 &lt;= word.length &lt;= 15</code></li>  <li><code>board</code> and <code>word</code> consists of only lowercase and uppercase English letters.</li> </ul>   <p><strong>Follow up:</strong> Could you use search pruning to make your solution faster with a larger <code>board</code>?</p> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Simple, dfs starting from each valid char, and check for valid paths.
+Before doing this, just check if all chars are present, as there can be a edge case to just trigger a deep dfs, without an answer possible. For e,g, all A's in word, and last char is B, but in matrix we have all As, each starting will try all depths, and be in loop.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Word Search" lines
+def dfs(board,word,i,j)
+  return true if word == ''
+  return false if i < 0 || j<0 || i >= board.length || j>= board[0].length || board[i][j]!=word[0]
+  pom = board[i][j]
+  board[i][j] = '#'
+  word = word[1..-1]
+  return true if dfs(board,word,i-1,j) || dfs(board,word,i,j-1) || dfs(board,word,i+1,j) || dfs(board,word,i,j+1)
+  board[i][j] = pom
+  return false
+end
+
+def exist(board, word)
+  set1 = board.flatten.to_set
+  set2 = word.split('').to_set
+  return false unless set1 >= set2
+  
+  (0...board.length).each do |i|
+    (0...board[0].length).each do |j|
+      return true if dfs(board,word,i,j)
+    end
+  end
+  return false
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

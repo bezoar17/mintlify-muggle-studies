@@ -1,0 +1,46 @@
+---
+title: '🧀 Letter Tile Possibilities'
+description: '[leetcode link](https://leetcode.com/problems/letter-tile-possibilities/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You have <code>n</code>&nbsp;&nbsp;<code>tiles</code>, where each tile has one letter <code>tiles[i]</code> printed on it.</p>  <p>Return <em>the number of possible non-empty sequences of letters</em> you can make using the letters printed on those <code>tiles</code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> tiles = &quot;AAB&quot; <br/> <strong>Output:</strong> 8 <strong>Explanation: </strong>The possible sequences are &quot;A&quot;, &quot;B&quot;, &quot;AA&quot;, &quot;AB&quot;, &quot;BA&quot;, &quot;AAB&quot;, &quot;ABA&quot;, &quot;BAA&quot;.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> tiles = &quot;AAABBC&quot; <br/> <strong>Output:</strong> 188   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> tiles = &quot;V&quot; <br/> <strong>Output:</strong> 1    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= tiles.length &lt;= 7</code></li>  <li><code>tiles</code> consists of uppercase English letters.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Letter Tile Possibilities" lines
+# @param {String} tiles
+# @return {Integer}
+def num_tile_possibilities(tiles)
+  (1..tiles.size).sum { |sz| tiles.chars.permutation(sz).uniq.size }
+end
+
+# def num_tile_possibilities(tiles)
+#     freq = Hash.new(0)
+#     tiles.each_char { |c| freq[c] += 1 }
+#     dfs(freq)
+# end
+# def dfs(freq)
+#     count = 0
+#     freq.each do |char, count_remaining|
+#         next if count_remaining == 0
+#         count += 1
+#         freq[char] -= 1
+#         count += dfs(freq)
+#         freq[char] += 1
+#     end
+#     count
+# end
+
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

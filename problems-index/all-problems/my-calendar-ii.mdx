@@ -1,0 +1,75 @@
+---
+title: '🧀 My Calendar II'
+description: '[leetcode link](https://leetcode.com/problems/my-calendar-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are implementing a program to use as your calendar. We can add a new event if adding the event will not cause a <strong>triple booking</strong>.</p>  <p>A <strong>triple booking</strong> happens when three events have some non-empty intersection (i.e., some moment is common to all the three events.).</p>  <p>The event can be represented as a pair of integers <code>startTime</code> and <code>endTime</code> that represents a booking on the half-open interval <code>[startTime, endTime)</code>, the range of real numbers <code>x</code> such that <code>startTime &lt;= x &lt; endTime</code>.</p>  <p>Implement the <code>MyCalendarTwo</code> class:</p>  <ul>  <li><code>MyCalendarTwo()</code> Initializes the calendar object.</li>  <li><code>boolean book(int startTime, int endTime)</code> Returns <code>true</code> if the event can be added to the calendar successfully without causing a <strong>triple booking</strong>. Otherwise, return <code>false</code> and do not add the event to the calendar.</li> </ul>   <p><strong class="example">Example 1:</strong></p>   <strong>Input</strong> [&quot;MyCalendarTwo&quot;, &quot;book&quot;, &quot;book&quot;, &quot;book&quot;, &quot;book&quot;, &quot;book&quot;, &quot;book&quot;] [[], [10, 20], [50, 60], [10, 40], [5, 15], [5, 10], [25, 55]] <strong>Output</strong> [null, true, true, true, false, true, true]  <strong>Explanation</strong> MyCalendarTwo myCalendarTwo = new MyCalendarTwo(); myCalendarTwo.book(10, 20); // return True, The event can be booked.  myCalendarTwo.book(50, 60); // return True, The event can be booked.  myCalendarTwo.book(10, 40); // return True, The event can be double booked.  myCalendarTwo.book(5, 15);  // return False, The event cannot be booked, because it would result in a triple booking. myCalendarTwo.book(5, 10); // return True, The event can be booked, as it does not use time 10 which is already double booked. myCalendarTwo.book(25, 55); // return True, The event can be booked, as the time in [25, 40) will be double booked with the third event, the time [40, 50) will be single booked, and the time [50, 55) will be double booked with the second event.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>0 &lt;= start &lt; end &lt;= 10<sup>9</sup></code></li>  <li>At most <code>1000</code> calls will be made to <code>book</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Maintain single and double bookings separately and process accordingly.
+
+For new element [L,R], if it overlaps with any double bookings, cant add it.
+
+For every overlapping interval in single bookings, if new element overlaps, 
+then add only the overlapping interval (overlap_start, overlap_end) to double bookings array, the 2 original intervals still remain in single bookings.
+
+For this, in the end, add the new element to single bookings.
+
+
+
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="My Calendar II" lines
+class MyCalendarTwo
+  def initialize()
+    @single_bookings = Set.new()
+    @double_bookings = Set.new()
+  end
+=begin
+    :type start_time: Integer
+    :type end_time: Integer
+    :rtype: Boolean
+=end
+  def book(start_time, end_time)
+    can_book(start_time, end_time)
+  end
+
+  def can_book(start_time, end_time)
+    @double_bookings.each do |booking|
+      return false if interval_overlaps([start_time, end_time-1], booking)
+    end
+
+    @single_bookings.each do |booking|
+      overlap_start = [booking[0], start_time].max
+      overlap_end = [booking[1], end_time-1].min
+
+      if overlap_start <= overlap_end
+        @double_bookings << [overlap_start, overlap_end] # only this overlapping period is added to double booked
+      end
+    end
+    
+    @single_bookings << [start_time, end_time-1]
+    true
+  end
+
+  def interval_overlaps(int1, int2)
+    a, b = [int1, int2].sort
+    b[0] <= a[1]
+  end
+end
+
+# Your MyCalendarTwo object will be instantiated and called as such:
+# obj = MyCalendarTwo.new()
+# param_1 = obj.book(start_time, end_time)
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

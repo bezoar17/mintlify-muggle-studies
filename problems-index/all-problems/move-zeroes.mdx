@@ -1,0 +1,39 @@
+---
+title: '🧩 Move Zeroes'
+description: '[leetcode link](https://leetcode.com/problems/move-zeroes/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an integer array <code>nums</code>, move all <code>0</code>&#39;s to the end of it while maintaining the relative order of the non-zero elements.</p>  <p><strong>Note</strong> that you must do this in-place without making a copy of the array.</p>   <p><strong class="example">Example 1:</strong></p> <strong>Input:</strong> nums = [0,1,0,3,12] <br/> <strong>Output:</strong> [1,3,12,0,0] <p><strong class="example">Example 2:</strong></p> <strong>Input:</strong> nums = [0] <br/> <strong>Output:</strong> [0]   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>4</sup></code></li>  <li><code>-2<sup>31</sup> &lt;= nums[i] &lt;= 2<sup>31</sup> - 1</code></li> </ul>   <strong>Follow up:</strong> Could you minimize the total number of operations done?
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Move Zeroes" lines
+# @param {Integer[]} nums
+# @return {Void} Do not return anything, modify nums in-place instead.
+def move_zeroes(nums)
+  placing_counter = 0
+
+  (0...nums.size).each do |i|
+    if nums[i]!=0
+        nums[placing_counter] = nums[i]; placing_counter+=1
+    end
+  end
+  
+  # we have populated nums and incremented placing_counter x times, where x is no. of non-zero elements seen
+  # we didnt have to lookback etc., now nums.size - x must be zeroes.
+
+  (placing_counter...nums.size).each {|i| nums[i]=0 }
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

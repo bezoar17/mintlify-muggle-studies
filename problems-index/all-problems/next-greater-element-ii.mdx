@@ -1,0 +1,46 @@
+---
+title: '🧀 Next Greater Element II'
+description: '[leetcode link](https://leetcode.com/problems/next-greater-element-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a circular integer array <code>nums</code> (i.e., the next element of <code>nums[nums.length - 1]</code> is <code>nums[0]</code>), return <em>the <strong>next greater number</strong> for every element in</em> <code>nums</code>.</p>  <p>The <strong>next greater number</strong> of a number <code>x</code> is the first greater number to its traversing-order next in the array, which means you could search circularly to find its next greater number. If it doesn&#39;t exist, return <code>-1</code> for this number.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [1,2,1] <br/> <strong>Output:</strong> [2,-1,2] Explanation: The first 1&#39;s next greater number is 2;  The number 2 can&#39;t find next greater number.  The second 1&#39;s next greater number needs to search circularly, which is also 2.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [1,2,3,4,3] <br/> <strong>Output:</strong> [2,3,4,-1,4]    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>4</sup></code></li>  <li><code>-10<sup>9</sup> &lt;= nums[i] &lt;= 10<sup>9</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      For circular kind of problems, duplicate the array and use mod to circle back to initial index. Problem is reduced to just next greater element
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Next Greater Element II" lines
+# @param {Integer[]} nums
+# @return {Integer[]}
+def next_greater_elements(nums)
+  n = nums.size
+  next_g_idx = get_nxt_grt(nums*2)
+  next_g_idx.first(n).map { |x| x==2*n ? -1: nums[x%n] }
+end
+
+def get_nxt_grt(nums)
+  n = nums.size
+  result = Array.new(n, n)
+  stack = []
+
+  (n-1).downto(0).each do |i|
+    stack.pop while !stack.empty? && nums[stack.last] <= nums[i]
+    result[i] = stack.last unless stack.empty?
+    stack << i
+  end
+  result
+end
+
+
+
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

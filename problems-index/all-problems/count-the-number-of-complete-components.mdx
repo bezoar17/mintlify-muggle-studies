@@ -1,0 +1,47 @@
+---
+title: '🧀 Count the Number of Complete Components'
+description: '[leetcode link](https://leetcode.com/problems/count-the-number-of-complete-components/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer <code>n</code>. There is an <strong>undirected</strong> graph with <code>n</code> vertices, numbered from <code>0</code> to <code>n - 1</code>. You are given a 2D integer array <code>edges</code> where <code>edges[i] = [a<sub>i</sub>, b<sub>i</sub>]</code> denotes that there exists an <strong>undirected</strong> edge connecting vertices <code>a<sub>i</sub></code> and <code>b<sub>i</sub></code>.</p>  <p>Return <em>the number of <strong>complete connected components</strong> of the graph</em>.</p>  <p>A <strong>connected component</strong> is a subgraph of a graph in which there exists a path between any two vertices, and no vertex of the subgraph shares an edge with a vertex outside of the subgraph.</p>  <p>A connected component is said to be <b>complete</b> if there exists an edge between every pair of its vertices.</p>   <p><strong class="example">Example 1:</strong></p>  <p><strong class="example"><img alt="" src="https://assets.leetcode.com/uploads/2023/04/11/screenshot-from-2023-04-11-23-31-23.png" style="width: 671px; height: 270px;" /></strong></p>   <strong>Input:</strong> n = 6, edges = [[0,1],[0,2],[1,2],[3,4]] <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> From the picture above, one can see that all of the components of this graph are complete.   <p><strong class="example">Example 2:</strong></p>  <p><strong class="example"><img alt="" src="https://assets.leetcode.com/uploads/2023/04/11/screenshot-from-2023-04-11-23-32-00.png" style="width: 671px; height: 270px;" /></strong></p>   <strong>Input:</strong> n = 6, edges = [[0,1],[0,2],[1,2],[3,4],[3,5]] <br/> <strong>Output:</strong> 1 <br/> <strong>Explanation:</strong> The component containing vertices 0, 1, and 2 is complete since there is an edge between every pair of two vertices. On the other hand, the component containing vertices 3, 4, and 5 is not complete since there is no edge between vertices 4 and 5. Thus, the number of complete components in this graph is 1.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= n &lt;= 50</code></li>  <li><code>0 &lt;= edges.length &lt;= n * (n - 1) / 2</code></li>  <li><code>edges[i].length == 2</code></li>  <li><code>0 &lt;= a<sub>i</sub>, b<sub>i</sub> &lt;= n - 1</code></li>  <li><code>a<sub>i</sub> != b<sub>i</sub></code></li>  <li>There are no repeated edges.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Union find, and then count edges in each component, it should be n*(n-1)/2, if n nodes in the component.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Count the Number of Complete Components" lines
+# @param {Integer} n
+# @param {Integer[][]} edges
+# @return {Integer}
+def count_complete_components(n, edges)
+  # n*(n-1)/2 edges in a component  
+  connects = {}
+  (0...n).each { |i| connects[i] = [i] }
+  
+  edges.each do |a,b|
+    connects[a] << b
+    connects[b] << a
+  end
+
+  (0...n).each { |i| connects[i].sort! }
+  
+  ans = 0
+  (0...n).each do |i|
+    if connects[i][0] == i
+        ans += 1 if (connects[i]).all? { |k| connects[k] == connects[i] }
+    end
+  end
+
+  ans
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

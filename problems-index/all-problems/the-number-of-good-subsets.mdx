@@ -1,0 +1,69 @@
+---
+title: '❗️ The Number of Good Subsets'
+description: '[leetcode link](https://leetcode.com/problems/the-number-of-good-subsets/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer array <code>nums</code>. We call a subset of <code>nums</code> <strong>good</strong> if its product can be represented as a product of one or more <strong>distinct prime</strong> numbers.</p>  <ul>  <li>For example, if <code>nums = [1, 2, 3, 4]</code>:   <ul>   <li><code>[2, 3]</code>, <code>[1, 2, 3]</code>, and <code>[1, 3]</code> are <strong>good</strong> subsets with products <code>6 = 2*3</code>, <code>6 = 2*3</code>, and <code>3 = 3</code> respectively.</li>   <li><code>[1, 4]</code> and <code>[4]</code> are not <strong>good</strong> subsets with products <code>4 = 2*2</code> and <code>4 = 2*2</code> respectively.</li>  </ul>  </li> </ul>  <p>Return <em>the number of different <strong>good</strong> subsets in </em><code>nums</code><em> <strong>modulo</strong> </em><code>10<sup>9</sup> + 7</code>.</p>  <p>A <strong>subset</strong> of <code>nums</code> is any array that can be obtained by deleting some (possibly none or all) elements from <code>nums</code>. Two subsets are different if and only if the chosen indices to delete are different.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [1,2,3,4] <br/> <strong>Output:</strong> 6 <br/> <strong>Explanation:</strong> The good subsets are: - [1,2]: product is 2, which is the product of distinct prime 2. - [1,2,3]: product is 6, which is the product of distinct primes 2 and 3. - [1,3]: product is 3, which is the product of distinct prime 3. - [2]: product is 2, which is the product of distinct prime 2. - [2,3]: product is 6, which is the product of distinct primes 2 and 3. - [3]: product is 3, which is the product of distinct prime 3.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [4,2,3,15] <br/> <strong>Output:</strong> 5 <br/> <strong>Explanation:</strong> The good subsets are: - [2]: product is 2, which is the product of distinct prime 2. - [2,3]: product is 6, which is the product of distinct primes 2 and 3. - [2,15]: product is 30, which is the product of distinct primes 2, 3, and 5. - [3]: product is 3, which is the product of distinct prime 3. - [15]: product is 15, which is the product of distinct primes 3 and 5.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= nums[i] &lt;= 30</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Looking at nums[i] &lt;=30, is always a hint for bitmasking etc, as state representation can fit in int as a bitmask.
+First of all, we only have 10 primes within this. So, we represent all numbers as bitmask of its prime-factorization.
+Here, some numbers have to be ignored, no.s like 4, 9, 25, which can never be in a good subset, we can also ignore 1, the effect 1 has is whatever no. of good-subsets we have, say x. If we have one 1 in the nums array, our answer becomes 2x. If we have another 1, it becomes 2(2x) as it can attach with each existing good subset.
+
+1 more thing is, suppose you have a good-subset with {2,3}, if 3 appears x times, and 2 appears y times, we actually have xy no. of total subsets here. So, we should also track counts of each num in nums, and use that, instead of traversing the whole of nums.
+
+How do we actually get the good-subsets ?
+2 no.s can be part of a subset if they dont share a common prime factor, so 15 and 5 cant be together, but 15 and 2 can.
+
+There are 1024 possible good-subsets, out of all 10 primes, 2^10 options. Each good-subset is also represented by a mask. Say that is M. We have to calculate the ways we can combine nums to form M. Say the result is stored in dp[M].
+
+For each num, n, and each previous subset mask value, we can combine the num n and previous mask to get the next subset value. This will only be done if n & previous mask dont share a prime, i.e dont have a common 1.
+
+So, we keep doing this for all nums and subset-mask values.
+
+
+
+
+
+
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="The Number of Good Subsets" lines
+# @param {Integer[]} nums
+# @return {Integer}
+def number_of_good_subsets(nums)
+  primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
+  big_mod = 1_000_000_000 + 7
+  
+  freq = Hash.new(0).merge(nums.tally)
+  dp = Array.new(1<<primes.size, 0) # no. of ways to form subset-masks
+  dp[0] = 1
+
+  freq.each do |num, count|
+    next if num == 1 || num%4 == 0 || num%9 == 0 || num == 25
+
+    num_mask = (0...primes.size).reduce(0) { |m,i| num % primes[i] == 0 ? (m | 1<<i) : m }
+
+    # for this num, get its effect on all subsets
+    (0...dp.size).each do |subset_mask|
+      next unless subset_mask & num_mask == 0 # subset cant have common 1 with num
+      dp[subset_mask | num_mask] += dp[subset_mask] * count
+      dp[subset_mask | num_mask] %= big_mod
+    end
+  end
+
+  result = dp[1..].sum % big_mod
+  (result * 2**freq[1]) % big_mod # effect of 1s in nums
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

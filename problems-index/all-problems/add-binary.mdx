@@ -1,0 +1,44 @@
+---
+title: '🧩 Add Binary'
+description: '[leetcode link](https://leetcode.com/problems/add-binary/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given two binary strings <code>a</code> and <code>b</code>, return <em>their sum as a binary string</em>.</p>   <p><strong class="example">Example 1:</strong></p> <strong>Input:</strong> a = "11", b = "1" <br/> <strong>Output:</strong> "100" <p><strong class="example">Example 2:</strong></p> <strong>Input:</strong> a = "1010", b = "1011" <br/> <strong>Output:</strong> "10101"   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= a.length, b.length &lt;= 10<sup>4</sup></code></li>  <li><code>a</code> and <code>b</code> consist&nbsp;only of <code>&#39;0&#39;</code> or <code>&#39;1&#39;</code> characters.</li>  <li>Each string does not contain leading zeros except for the zero itself.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```cpp title="Add Binary" lines
+class Solution {
+public:
+    string addBinary(string a, string b) {
+    int alen = a.size();
+    int blen = b.size();
+    bool carry = false;
+    string result;
+    while( alen>0 || blen>0) {
+        int abit = alen<=0 ? 0 : a[alen-1]-'0';
+        int bbit = blen<=0 ? 0 : b[blen-1]-'0';
+        int cbit = carry ? 1 : 0;
+        result.insert(result.begin(), '0' + ((abit+bbit+cbit) & 1) );
+        carry = (abit+bbit+cbit>1);
+        alen--; blen--;
+    }
+    if (carry){
+        result.insert(result.begin(), '1');
+    }
+    return result;
+}
+};
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

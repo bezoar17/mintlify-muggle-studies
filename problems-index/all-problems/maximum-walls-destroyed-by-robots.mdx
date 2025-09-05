@@ -1,0 +1,76 @@
+---
+title: '❗️ Maximum Walls Destroyed by Robots'
+description: '[leetcode link](https://leetcode.com/problems/maximum-walls-destroyed-by-robots/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <div data-docx-has-block-data="false" data-lark-html-role="root" data-page-id="Rax8d6clvoFeVtx7bzXcvkVynwf"> <div class="old-record-id-Y5dGdSKIMoNTttxGhHLccrpEnaf">There is an endless straight line populated with some robots and walls. You are given integer arrays <code>robots</code>, <code>distance</code>, and <code>walls</code>:</div> </div>  <ul>  <li><code>robots[i]</code> is the position of the <code>i<sup>th</sup></code> robot.</li>  <li><code>distance[i]</code> is the <strong>maximum</strong> distance the <code>i<sup>th</sup></code> robot&#39;s bullet can travel.</li>  <li><code>walls[j]</code> is the position of the <code>j<sup>th</sup></code> wall.</li> </ul>  <p>Every robot has <strong>one</strong> bullet that can either fire to the left or the right <strong>at most </strong><code>distance[i]</code> meters.</p>  <p>A bullet destroys every wall in its path that lies within its range. Robots are fixed obstacles: if a bullet hits another robot before reaching a wall, it <strong>immediately stops</strong> at that robot and cannot continue.</p>  <p>Return the <strong>maximum</strong> number of <strong>unique</strong> walls that can be destroyed by the robots.</p>  <p>Notes:</p>  <ul>  <li>A wall and a robot may share the same position; the wall can be destroyed by the robot at that position.</li>  <li>Robots are not destroyed by bullets.</li> </ul>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">robots = [4], distance = [3], walls = [1,10]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">1</span></p>  <p><br/> <strong>Explanation:</strong></p>  <ul>  <li><code>robots[0] = 4</code> fires <strong>left</strong> with <code>distance[0] = 3</code>, covering <code>[1, 4]</code> and destroys <code>walls[0] = 1</code>.</li>  <li>Thus, the answer is 1.</li> </ul> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">robots = [10,2], distance = [5,1], walls = [5,2,7]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">3</span></p>  <p><br/> <strong>Explanation:</strong></p>  <ul>  <li><code>robots[0] = 10</code> fires <strong>left</strong> with <code>distance[0] = 5</code>, covering <code>[5, 10]</code> and destroys <code>walls[0] = 5</code> and <code>walls[2] = 7</code>.</li>  <li><code>robots[1] = 2</code> fires <strong>left</strong> with <code>distance[1] = 1</code>, covering <code>[1, 2]</code> and destroys <code>walls[1] = 2</code>.</li>  <li>Thus, the answer is 3.</li> </ul> </div> <strong class="example">Example 3:</strong>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">robots = [1,2], distance = [100,1], walls = [10]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">0</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>In this example, only <code>robots[0]</code> can reach the wall, but its shot to the <strong>right</strong> is blocked by <code>robots[1]</code>; thus the answer is 0.</p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= robots.length == distance.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= walls.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= robots[i], walls[j] &lt;= 10<sup>9</sup></code></li>  <li><code>1 &lt;= distance[i] &lt;= 10<sup>5</sup></code></li>  <li>All values in <code>robots</code> are <strong>unique</strong></li>  <li>All values in <code>walls</code> are <strong>unique</strong></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Sort robots by positions, and also walls. Lets call the range of a robot as coverage, be it to the left or right. Calculating how many walls it covers is easy, we can do a query on sorted walls array to get no. of walls in a given coverage of [l,r]
+
+For ith robot, calc result if it was shot to the left or to the right, based on previous calculations. Store it in dp[i][0] and dp[i][1], 0 for left, 1 for right, then result would be dp.last.max
+
+As we are going from L-&gt;R, calculating right is easy, we calculate it as 
+	dp[i-1].max + what can you get from shooting right upto next robot or end of range
+Since, we are limiting the coverage to [next robot location, range of robot].min, we can consider both options for the last robot, as dp[i-1][1] will only count coverage upto ith robot's location.
+
+To calculate left for current robot i, we take max of both options for i-1, 
+For i-1 going left, dp[i-1][0] + we can just take coverage till the last robot or left range whichever is minimum. 
+For i-1 going right, dp[i-1][1] + we take the left coverage for i, but we have to subtract from it, any overlap it has with last robot's right shot, to avoid double counting. So, we have dp[i-1][1]  + left coverage for i - overlap of the 2 ranges of current left coverage, and last right coverage.
+
+To get no. of walls in a range, we can use binary search. With the same point of avoiding duplication, we have to be careful about the intervals to avoid overlap, when calculating the intervals. Because, in case 2 robots are present at say 25, and 30, with range of both being 5 and there is 1 wall at 30. Ranges are [25,30)  [30,). 
+
+Then we need to ensure the wall is not counted for both the robots, hence we keep the intervals accordingly. Rule we can follow is 
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Maximum Walls Destroyed by Robots" lines
+# @param {Integer[]} robots
+# @param {Integer[]} distance
+# @param {Integer[]} walls
+# @return {Integer}
+Robot = Struct.new(:pos, :dl, :dr) # position, left range, right range
+def max_walls(robots, distance, walls)
+  robo_arr = robots.zip(distance).map {|r, d| Robot.new(r, r-d, r+d) }.sort_by(&:pos)
+  walls.sort!
+  
+  overlapping_interval=->(i1, i2) { [[i1.first, i2.first].max, [i1.last, i2.last].min] } # overlap [l,r] between 2 intervals;
+  walls_in=->(l,r) { # no. of walls between [l,r], r_idx - l_idx
+    return 0 if l > r
+    (walls.bsearch_index { |x| x>r } || walls.size) - (walls.bsearch_index { |x| x>=l } || walls.size)
+  }
+  
+  last_left = walls_in.call(robo_arr[0].dl, robo_arr[0].pos)
+  last_right = walls_in.call(robo_arr[0].pos, robots.size == 1 ? robo_arr[0].dr : [robo_arr[0].dr, robo_arr[1].pos - 1].min)
+  
+  (1...robots.size).each do |i|
+    robot, last_robot = robo_arr[i], robo_arr[i-1]
+    next_robot_pos = robo_arr[i+1]&.pos || Float::INFINITY
+
+    curr_right = [last_left, last_right].max + walls_in.call(robot.pos, [robot.dr, next_robot_pos-1].min)
+    
+    
+    curr_left_coverage = walls_in.call([robot.dl, last_robot.pos+1].max, robot.pos)
+    # robot -> [dl, pos-1]; last_robot -> [pos+1, dr] -> get overlap of these 2 intervals
+    coverage_overlap = walls_in.call(*overlapping_interval.call( [last_robot.pos+1, last_robot.dr], [robot.dl, robot.pos-1]))
+    
+    curr_left = [
+      curr_left_coverage + last_left,
+      curr_left_coverage + last_right - coverage_overlap, 
+    ].max
+    
+    last_left, last_right = curr_left, curr_right
+  end
+  
+  [last_left, last_right].max
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,62 @@
+---
+title: '🧀 Letter Combinations of a Phone Number'
+description: '[leetcode link](https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a string containing digits from <code>2-9</code> inclusive, return all possible letter combinations that the number could represent. Return the answer in <strong>any order</strong>.</p>  <p>A mapping of digits to letters (just like on the telephone buttons) is given below. Note that 1 does not map to any letters.</p> <img alt="" src="https://assets.leetcode.com/uploads/2022/03/15/1200px-telephone-keypad2svg.png" style="width: 300px; height: 243px;" />  <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> digits = &quot;23&quot; <br/> <strong>Output:</strong> [&quot;ad&quot;,&quot;ae&quot;,&quot;af&quot;,&quot;bd&quot;,&quot;be&quot;,&quot;bf&quot;,&quot;cd&quot;,&quot;ce&quot;,&quot;cf&quot;]   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> digits = &quot;&quot; <br/> <strong>Output:</strong> []   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> digits = &quot;2&quot; <br/> <strong>Output:</strong> [&quot;a&quot;,&quot;b&quot;,&quot;c&quot;]    <p><strong>Constraints:</strong></p>  <ul>  <li><code>0 &lt;= digits.length &lt;= 4</code></li>  <li><code>digits[i]</code> is a digit in the range <code>[&#39;2&#39;, &#39;9&#39;]</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```cpp title="Letter Combinations of a Phone Number" lines
+class Solution {
+public:
+    void recur(vector<string> &ans,string digits,int index,string current,char hash[][4]){
+        
+        if(digits.size()==0)
+        return;
+   		if(index==digits.size()){
+   		    for(int i=0;i<current.size();i++)
+   		    if(current.at(i)=='\x00')
+   		    return;
+   			ans.push_back(current);
+   			return;
+   		}
+   		for(int i=0;i<4;i++){
+   			string temp=current;
+   			current+=hash[digits.at(index)-'0'][i];
+   			recur(ans,digits,index+1,current,hash);
+   			current=temp;
+   		}
+   	}	
+	vector<string> letterCombinations(string digits) {
+        
+       vector <string> ret;
+       char  phone[10][4]={ {' ',  '{${code}$}', '{${code}$}', '{${code}$}' }, //0
+                         {'{${code}$}', '{${code}$}', '{${code}$}', '{${code}$}' }, //1
+                         {'a',  'b',  'c',  '{${code}$}' }, //2
+                         {'d',  'e',  'f',  '{${code}$}' }, //3
+                         {'g',  'h',  'i',  '{${code}$}' }, //4
+                         {'j',  'k',  'l',  '{${code}$}' }, //5
+                         {'m',  'n',  'o',  '{${code}$}' }, //6
+                         {'p',  'q',  'r',  's'  }, //7
+                         {'t',  'u',  'v',  '{${code}$}' }, //8
+                         {'w',  'x',  'y',  'z'  }  //9
+                       };
+
+        recur(ret,digits,0,"",phone);
+        return ret;
+    }
+};
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

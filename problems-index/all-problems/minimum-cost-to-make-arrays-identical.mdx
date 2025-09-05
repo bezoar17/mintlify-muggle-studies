@@ -1,0 +1,45 @@
+---
+title: '🧀 Minimum Cost to Make Arrays Identical'
+description: '[leetcode link](https://leetcode.com/problems/minimum-cost-to-make-arrays-identical/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given two integer arrays <code>arr</code> and <code>brr</code> of length <code>n</code>, and an integer <code>k</code>. You can perform the following operations on <code>arr</code> <em>any</em> number of times:</p>  <ul>  <li>Split <code>arr</code> into <em>any</em> number of <strong>contiguous</strong> <span data-keyword="subarray-nonempty">subarrays</span> and rearrange these subarrays in <em>any order</em>. This operation has a fixed cost of <code>k</code>.</li>  <li>  <p>Choose any element in <code>arr</code> and add or subtract a positive integer <code>x</code> to it. The cost of this operation is <code>x</code>.</p>  </li> </ul>  <p>Return the <strong>minimum </strong>total cost to make <code>arr</code> <strong>equal</strong> to <code>brr</code>.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">arr = [-7,9,5], brr = [7,-2,-5], k = 2</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">13</span></p>  <p><br/> <strong>Explanation:</strong></p>  <ul>  <li>Split <code>arr</code> into two contiguous subarrays: <code>[-7]</code> and <code>[9, 5]</code> and rearrange them as <code>[9, 5, -7]</code>, with a cost of 2.</li>  <li>Subtract 2 from element <code>arr[0]</code>. The array becomes <code>[7, 5, -7]</code>. The cost of this operation is 2.</li>  <li>Subtract 7 from element <code>arr[1]</code>. The array becomes <code>[7, -2, -7]</code>. The cost of this operation is 7.</li>  <li>Add 2 to element <code>arr[2]</code>. The array becomes <code>[7, -2, -5]</code>. The cost of this operation is 2.</li> </ul>  <p>The total cost to make the arrays equal is <code>2 + 2 + 7 + 2 = 13</code>.</p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">arr = [2,1], brr = [2,1], k = 0</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">0</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>Since the arrays are already equal, no operations are needed, and the total cost is 0.</p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= arr.length == brr.length &lt;= 10<sup>5</sup></code></li>  <li><code>0 &lt;= k &lt;= 2 * 10<sup>10</sup></code></li>  <li><code>-10<sup>5</sup> &lt;= arr[i] &lt;= 10<sup>5</sup></code></li>  <li><code>-10<sup>5</sup> &lt;= brr[i] &lt;= 10<sup>5</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Operation 1 means, in 1 operation, we can turn arr into whatever order we need for k cost
+There is an order of A for which cost of making each element equal to b is minimum, say min_x
+Cost for current_order is c_x, if min_x+k &lt; c_x, we use k, else doesnt make sense to check any other order of A
+Now the min_x order happens when both arrays are sorted, whatever config of a1-&gt;b1, a2-&gt;b2 we have for sorted arrays
+we can get to that config of arr/brr by picking the correct order of arr 
+Example:
+a -&gt; [-7,9,5]; b -&gt;[7,-2,-5]; s_b -&gt;[-2,-5,7]; s_a-&gt;[-7,5,9] In final order, -2 in b should face -7 in a, -5 should face 5 etc.
+So optimal order min_x in a becomes [9,-7,5]
+
+
+why min_x happens when both are sorted. Given sorted arrays [a1, a2, ..] [b1, b2...]
+Smaller numbers in one array will be with smaller numbers in the other array, and the same for larger numbers.
+If you were to swap any two numbers, the total sum would always increase because some small number would be with a larger number and vice versa.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Minimum Cost to Make Arrays Identical" lines
+# @param {Integer[]} arr
+# @param {Integer[]} brr
+# @param {Integer} k
+# @return {Integer}
+def min_cost(arr, brr, k)
+  # there is an order for which cost of making each element equal is minimum, say min_x
+  # current_odrer is c_x, if min_x+k < c_x, we use k
+  # o1_x, o2_x; 
+  [arr.zip(brr).map {|a,b| (a-b).abs}.sum, k + arr.sort.zip(brr.sort).map {|a,b| (a-b).abs}.sum].min
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

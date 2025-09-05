@@ -1,0 +1,38 @@
+---
+title: '🧩 Maximum Depth of Binary Tree'
+description: '[leetcode link](https://leetcode.com/problems/maximum-depth-of-binary-tree/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given the <code>root</code> of a binary tree, return <em>its maximum depth</em>.</p>  <p>A binary tree&#39;s <strong>maximum depth</strong>&nbsp;is the number of nodes along the longest path from the root node down to the farthest leaf node.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/11/26/tmp-tree.jpg" style="width: 400px; height: 277px;" />  <strong>Input:</strong> root = [3,9,20,null,null,15,7] <br/> <strong>Output:</strong> 3   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> root = [1,null,2] <br/> <strong>Output:</strong> 2    <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in the tree is in the range <code>[0, 10<sup>4</sup>]</code>.</li>  <li><code>-100 &lt;= Node.val &lt;= 100</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Maximum Depth of Binary Tree" lines
+# Definition for a binary tree node.
+# class TreeNode
+#     attr_accessor :val, :left, :right
+#     def initialize(val = 0, left = nil, right = nil)
+#         @val = val
+#         @left = left
+#         @right = right
+#     end
+# end
+# @param {TreeNode} root
+# @return {Integer}
+def max_depth(root)
+  return 0 if root.nil?
+  return 1 + [ max_depth(root.left), max_depth(root.right) ].max 
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,57 @@
+---
+title: '❗️ Max Dot Product of Two Subsequences'
+description: '[leetcode link](https://leetcode.com/problems/max-dot-product-of-two-subsequences/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given two arrays <code>nums1</code>&nbsp;and <code><font face="monospace">nums2</font></code><font face="monospace">.</font></p>  <p>Return the maximum dot product&nbsp;between&nbsp;<strong>non-empty</strong> subsequences of nums1 and nums2 with the same length.</p>  <p>A subsequence of a array is a new array which is formed from the original array by deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters. (ie,&nbsp;<code>[2,3,5]</code>&nbsp;is a subsequence of&nbsp;<code>[1,2,3,4,5]</code>&nbsp;while <code>[1,5,3]</code>&nbsp;is not).</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums1 = [2,1,-2,5], nums2 = [3,0,-6] <br/> <strong>Output:</strong> 18 <br/> <strong>Explanation:</strong> Take subsequence [2,-2] from nums1 and subsequence [3,-6] from nums2. Their dot product is (2*3 + (-2)*(-6)) = 18.  <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums1 = [3,-2], nums2 = [2,-6,7] <br/> <strong>Output:</strong> 21 <br/> <strong>Explanation:</strong> Take subsequence [3] from nums1 and subsequence [7] from nums2. Their dot product is (3*7) = 21.  <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> nums1 = [-1,-1], nums2 = [1,1] <br/> <strong>Output:</strong> -1 <strong>Explanation: </strong>Take subsequence [-1] from nums1 and subsequence [1] from nums2. Their dot product is -1.   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums1.length, nums2.length &lt;= 500</code></li>  <li><code>-1000 &lt;= nums1[i], nums2[i] &lt;= 1000</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Slight variation of LCS. 
+
+In lcs, we always increase and move both idx by 1 if char is same. Here, we have 
+```
+F(X, Y) = max (
+            nums1[X]*nums2[Y],       // ignore previous F(.., ..) because it might be better to not add it at all (i.e. if it is negative).
+            F(X-1, Y),                             // ignore the last number from first
+            F(X, Y-1),                            // ignore the last number from second
+            F(X-1, Y-1) + nums[X] * nums[Y],  // use last numbers from both the first and the second
+          )
+```
+
+When we move both indexes, we can either choose to include its sum or reset sum here, when its positive choosing will be better, or if its negative, resetting will be better. The idx move in either of the array is same as LCS. 
+
+Also, this https://leetcode.com/problems/uncrossed-lines/solutions/282842/JavaC++Python-DP-The-Longest-Common-Subsequence/
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Max Dot Product of Two Subsequences" lines
+# @param {Integer[]} nums1
+# @param {Integer[]} nums2
+# @return {Integer}
+def max_dot_product(nums1, nums2)
+  n1 = nums1.size; n2 = nums2.size
+  dp = Array.new(n1) { Array.new(n2) }
+  (0...n1).each do |i|
+    (0...n2).each do |j|
+      current_dot_product = nums1[i] * nums2[j]
+      dp[i][j] = [
+        i<1 || j<1 ? -Float::INFINITY : (current_dot_product + dp[i-1][j-1]), # move i,j by 1, and continue sum
+        current_dot_product, # move i,j by 1, but reset sum
+        
+        i<1 ? -Float::INFINITY : dp[i-1][j], # move i by 1
+        j<1 ? -Float::INFINITY : dp[i][j-1], # move j by 1
+      ].max
+    end
+   end
+  dp[n1-1][n2-1]
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

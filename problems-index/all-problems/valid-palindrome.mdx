@@ -1,0 +1,36 @@
+---
+title: '🧩 Valid Palindrome'
+description: '[leetcode link](https://leetcode.com/problems/valid-palindrome/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>A phrase is a <strong>palindrome</strong> if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.</p>  <p>Given a string <code>s</code>, return <code>true</code><em> if it is a <strong>palindrome</strong>, or </em><code>false</code><em> otherwise</em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> s = &quot;A man, a plan, a canal: Panama&quot; <br/> <strong>Output:</strong> true <br/> <strong>Explanation:</strong> &quot;amanaplanacanalpanama&quot; is a palindrome.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> s = &quot;race a car&quot; <br/> <strong>Output:</strong> false <br/> <strong>Explanation:</strong> &quot;raceacar&quot; is not a palindrome.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> s = &quot; &quot; <br/> <strong>Output:</strong> true <br/> <strong>Explanation:</strong> s is an empty string &quot;&quot; after removing non-alphanumeric characters. Since an empty string reads the same forward and backward, it is a palindrome.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= s.length &lt;= 2 * 10<sup>5</sup></code></li>  <li><code>s</code> consists only of printable ASCII characters.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Valid Palindrome" lines
+# @param {String} s
+# @return {Boolean}
+def is_palindrome(s)
+  charset = Set.new(('a'..'z').to_a + ('0'..'9').to_a)
+  ss = s.downcase.chars.select { |i| charset.include?(i) }.join
+  left_p = 0; right_p = ss.size - 1
+  
+  while right_p > left_p
+    return false if ss[right_p] != ss[left_p]
+    left_p+=1; right_p-=1;
+  end
+  true
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

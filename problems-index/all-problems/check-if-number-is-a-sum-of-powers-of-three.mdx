@@ -1,0 +1,52 @@
+---
+title: '🧀 Check if Number is a Sum of Powers of Three'
+description: '[leetcode link](https://leetcode.com/problems/check-if-number-is-a-sum-of-powers-of-three/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an integer <code>n</code>, return <code>true</code> <em>if it is possible to represent </em><code>n</code><em> as the sum of distinct powers of three.</em> Otherwise, return <code>false</code>.</p>  <p>An integer <code>y</code> is a power of three if there exists an integer <code>x</code> such that <code>y == 3<sup>x</sup></code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> n = 12 <br/> <strong>Output:</strong> true <br/> <strong>Explanation:</strong> 12 = 3<sup>1</sup> + 3<sup>2</sup>   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> n = 91 <br/> <strong>Output:</strong> true <br/> <strong>Explanation:</strong> 91 = 3<sup>0</sup> + 3<sup>2</sup> + 3<sup>4</sup>   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> n = 21 <br/> <strong>Output:</strong> false    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= n &lt;= 10<sup>7</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Set based combination generation.
+
+Only max 16/17 distinct elements, pick the ones which can be a part of the answer. Then build all combinations using set method. Add first element, then pair next element from result space. Then same for the next number and so on, this will generate all combos, if we find our n, we return true else we return false.
+
+
+Another solution, binary representation has 0 and 1, for ternary representation we can have 0,1,2. If its 2, then that power has been used 2 times, which cant happen in our case. To check this, n%3 cant be 2.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Check if Number is a Sum of Powers of Three" lines
+# @param {Integer} n
+# @return {Boolean}
+def check_powers_of_three(n)
+  check_powers_of_three_small(n)
+  nums = (0...17).map {|x| 3**x }.select {|x| x <= n}
+  return true if nums.include?(n)
+  
+  sums = Set.new
+  sums.add(0)
+  
+  nums.each do |num|
+    sums |= sums.map { |x| num + x }
+    return true if sums.include?(n)
+  end
+  false
+end
+
+def check_powers_of_three_small(n)
+  while n>0
+    return false if n%3==2
+    n/=3
+  end
+  true
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

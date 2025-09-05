@@ -1,0 +1,59 @@
+---
+title: '🧀 Maximum Product of Splitted Binary Tree'
+description: '[leetcode link](https://leetcode.com/problems/maximum-product-of-splitted-binary-tree/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given the <code>root</code> of a binary tree, split the binary tree into two subtrees by removing one edge such that the product of the sums of the subtrees is maximized.</p>  <p>Return <em>the maximum product of the sums of the two subtrees</em>. Since the answer may be too large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>  <p><strong>Note</strong> that you need to maximize the answer before taking the mod and not after taking it.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/01/21/sample_1_1699.png" style="width: 500px; height: 167px;" />  <strong>Input:</strong> root = [1,2,3,4,5,6] <br/> <strong>Output:</strong> 110 <br/> <strong>Explanation:</strong> Remove the red edge and get 2 binary trees with sum 11 and 10. Their product is 110 (11*10)   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/01/21/sample_2_1699.png" style="width: 500px; height: 211px;" />  <strong>Input:</strong> root = [1,null,2,3,4,null,null,5,6] <br/> <strong>Output:</strong> 90 <br/> <strong>Explanation:</strong> Remove the red edge and get 2 binary trees with sum 15 and 6.Their product is 90 (15*6)    <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in the tree is in the range <code>[2, 5 * 10<sup>4</sup>]</code>.</li>  <li><code>1 &lt;= Node.val &lt;= 10<sup>4</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      2 dfs. 1 to calculate sub of a subtree. Then to choose between left and right child edge split. sums of 2 trees are sum_of_subtree * (total - sum_of_subtree)
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Maximum Product of Splitted Binary Tree" lines
+# Definition for a binary tree node.
+# class TreeNode
+#     attr_accessor :val, :left, :right
+#     def initialize(val = 0, left = nil, right = nil)
+#         @val = val
+#         @left = left
+#         @right = right
+#     end
+# end
+# @param {TreeNode} root
+# @return {Integer}
+def max_product(root)
+  big_mod = 1_000_000_000 + 7
+  @max_product = -Float::INFINITY
+  @sums_for_subtree = {};
+  @total_sum = calc_sum_for_subtree(root)
+  calc_split_product(root)
+  @max_product % big_mod
+end
+
+def calc_split_product(node)
+  return if node.nil?
+  left_sum = node.left.nil? ? 0 : @sums_for_subtree[node.left]
+  right_sum = node.right.nil? ? 0 : @sums_for_subtree[node.right]
+  split_left = left_sum * (@total_sum-left_sum)
+  split_right = right_sum * (@total_sum-right_sum)
+  @max_product = [@max_product, split_right, split_left].max
+  
+  calc_split_product(node.left)
+  calc_split_product(node.right)
+end
+
+def calc_sum_for_subtree(node)
+  return 0 if node.nil?
+  @sums_for_subtree[node] = (node.val + calc_sum_for_subtree(node.left) + calc_sum_for_subtree(node.right))
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

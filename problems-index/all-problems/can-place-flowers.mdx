@@ -1,0 +1,44 @@
+---
+title: '🧩 Can Place Flowers'
+description: '[leetcode link](https://leetcode.com/problems/can-place-flowers/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You have a long flowerbed in which some of the plots are planted, and some are not. However, flowers cannot be planted in <strong>adjacent</strong> plots.</p>  <p>Given an integer array <code>flowerbed</code> containing <code>0</code>&#39;s and <code>1</code>&#39;s, where <code>0</code> means empty and <code>1</code> means not empty, and an integer <code>n</code>, return <code>true</code>&nbsp;<em>if</em> <code>n</code> <em>new flowers can be planted in the</em> <code>flowerbed</code> <em>without violating the no-adjacent-flowers rule and</em> <code>false</code> <em>otherwise</em>.</p>   <p><strong class="example">Example 1:</strong></p> <strong>Input:</strong> flowerbed = [1,0,0,0,1], n = 1 <br/> <strong>Output:</strong> true <p><strong class="example">Example 2:</strong></p> <strong>Input:</strong> flowerbed = [1,0,0,0,1], n = 2 <br/> <strong>Output:</strong> false   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= flowerbed.length &lt;= 2 * 10<sup>4</sup></code></li>  <li><code>flowerbed[i]</code> is <code>0</code> or <code>1</code>.</li>  <li>There are no two adjacent flowers in <code>flowerbed</code>.</li>  <li><code>0 &lt;= n &lt;= flowerbed.length</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Can Place Flowers" lines
+# @param {Integer[]} flowerbed
+# @param {Integer} n
+# @return {Boolean}
+def can_place_flowers(flowerbed, n)
+  flowerbed = [0] + flowerbed + [0]
+  pointer = 0; f = flowerbed.size;
+  count_0 = 0
+  flowers = n
+  
+  while pointer <f
+    while pointer < f && flowerbed[pointer]==0
+      pointer+=1; count_0+=1;
+    end
+    flowers -= ((count_0-1)/2) if count_0 > 2
+    return true if flowers < 1
+    count_0 = 0
+    pointer+=1
+  end
+
+  false
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

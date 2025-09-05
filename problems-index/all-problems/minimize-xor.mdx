@@ -1,0 +1,46 @@
+---
+title: '🧀 Minimize XOR'
+description: '[leetcode link](https://leetcode.com/problems/minimize-xor/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given two positive integers <code>num1</code> and <code>num2</code>, find the positive integer <code>x</code> such that:</p>  <ul>  <li><code>x</code> has the same number of set bits as <code>num2</code>, and</li>  <li>The value <code>x XOR num1</code> is <strong>minimal</strong>.</li> </ul>  <p>Note that <code>XOR</code> is the bitwise XOR operation.</p>  <p>Return <em>the integer </em><code>x</code>. The test cases are generated such that <code>x</code> is <strong>uniquely determined</strong>.</p>  <p>The number of <strong>set bits</strong> of an integer is the number of <code>1</code>&#39;s in its binary representation.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> num1 = 3, num2 = 5 <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> The binary representations of num1 and num2 are 0011 and 0101, respectively. The integer <strong>3</strong> has the same number of set bits as num2, and the value <code>3 XOR 3 = 0</code> is minimal.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> num1 = 1, num2 = 12 <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> The binary representations of num1 and num2 are 0001 and 1100, respectively. The integer <strong>3</strong> has the same number of set bits as num2, and the value <code>3 XOR 1 = 2</code> is minimal.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= num1, num2 &lt;= 10<sup>9</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      We have x bits from num2 we can match with y bits in nums1 to minimize xor. If x==y, our result is nums1, and minimum xor is 0. If x &lt; y, we can match at max x bits, so match the MSBs in nums1, go from left to right in binary representation. When x&gt;y, we can obviously make all y bits in nums1 0. But we will remain with x-y bits which have to be paired up with 0s in nums1. To minimize the resulting xor, this should be done first on the LSBs, so go from right to left. For every 0 you have, put one bit from rem = x-y. If the num1 is completely traversed, and we still have some 1s remaining, those will have to be just added to the construction. When this case happens, the construction already has all 1s, as any 0 in nums1 would have been converted to 1. So, we just add the remaining 1s to start or end to get the new binary representation, and get the final answer.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Minimize XOR" lines
+# @param {Integer} num1
+# @param {Integer} num2
+# @return {Integer}
+def minimize_xor(num1, num2)
+  s_2 = num2.to_s(2).chars
+  num2_1_count= s_2.count{|x| x=='1'}
+  s_1 = num1.to_s(2).chars
+  num1_1_count= s_1.count{|x| x=='1'}
+  
+  return num1 if num2_1_count == num1_1_count
+  if num2_1_count < num1_1_count # match all 1s you can from L to R, to have least xor
+    s_1.map do |ch|
+      (ch=='1' && num2_1_count >0) ? (num2_1_count-=1; '1') : '0'
+    end.join.to_i(2)
+  else 
+    # more 1s to be added than present, add them to the rightside for least xor, so go from R-L to construct number
+    extra_1s = num2_1_count-num1_1_count
+    res_s = s_1.reverse.map do |ch|
+      (ch=='0' && extra_1s > 0) ? (extra_1s-=1; '1') : ch
+    end.join + '1'*extra_1s # when rhs('1'*extra_1s) is non-zero, then res_s is all 1s, adding to front or back doesnt matter
+    res_s.reverse.to_i(2)
+  end
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

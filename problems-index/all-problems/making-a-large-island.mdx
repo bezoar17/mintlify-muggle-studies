@@ -1,0 +1,70 @@
+---
+title: '❗️ Making A Large Island'
+description: '[leetcode link](https://leetcode.com/problems/making-a-large-island/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an <code>n x n</code> binary matrix <code>grid</code>. You are allowed to change <strong>at most one</strong> <code>0</code> to be <code>1</code>.</p>  <p>Return <em>the size of the largest <strong>island</strong> in</em> <code>grid</code> <em>after applying this operation</em>.</p>  <p>An <strong>island</strong> is a 4-directionally connected group of <code>1</code>s.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> grid = [[1,0],[0,1]] <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> Change one 0 to 1 and connect two 1s, then we get an island with area = 3.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> grid = [[1,1],[1,0]] <br/> <strong>Output:</strong> 4 <strong>Explanation: </strong>Change the 0 to 1 and make the island bigger, only one island with area = 4.  <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> grid = [[1,1],[1,1]] <br/> <strong>Output:</strong> 4 <br/> <strong>Explanation:</strong> Can&#39;t change any 0 to 1, only one island with area = 4.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>n == grid.length</code></li>  <li><code>n == grid[i].length</code></li>  <li><code>1 &lt;= n &lt;= 500</code></li>  <li><code>grid[i][j]</code> is either <code>0</code> or <code>1</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      If you make a cell 0-&gt;1, its neighbor should have an island on atleast 1 sides.
+1-2-3-4, then islands can be connected
+we can have a case that a 0 is surrounded by water all the way, but all of them belong to the same island, in that case, count will only increase by 1, no islands will be merged.
+union-find is perfect for this case, we just need to see if, the resulting union would increase size or not.
+
+Else we can store island id in the grid, and island count in a hash of id-&gt;count.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Making A Large Island" lines
+# @param {Integer[][]} grid
+# @return {Integer}
+def largest_island(grid)
+  n = grid.size
+  island_count_h = Hash.new(0)
+  current_island_id = 2 # island ids starting from 2, will be useful as visited too
+  directions = [[1,0],[-1,0],[0,1],[0,-1]]
+  
+  dfs=->(i, j, island_id) {
+    grid[i][j] = island_id
+    island_count_h[island_id]+=1
+    directions.each {|dx, dy|  x = i+dx; y= j+dy; dfs.call(x, y, island_id) if x.between?(0, n-1) && y.between?(0, n-1) && grid[x][y] == 1}
+  }
+
+  neighbor_islands=->(i,j){
+    directions.map {|dx,dy| x = i+dx; y= j+dy; x.between?(0, n-1) && y.between?(0, n-1) && grid[x][y] !=0 ? grid[x][y] : nil}.compact.uniq
+  }
+  
+  (0...n).each do |r|
+    (0...n).each do |c|
+      if grid[r][c] == 1
+        dfs.call(r, c, current_island_id)
+        current_island_id+=1
+      end
+    end
+  end
+  return 1 if current_island_id==2
+
+  result = island_count_h.values.max
+
+  (0...n).each do |r|
+    (0...n).each do |c|
+      if grid[r][c] == 0
+        connected_island_count = 1 + island_count_h.slice(*neighbor_islands.call(r,c)).values.sum
+        result = [connected_island_count, result].max
+      end
+    end
+  end
+
+  result
+end
+
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

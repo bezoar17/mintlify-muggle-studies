@@ -1,0 +1,47 @@
+---
+title: '🧀 Search a 2D Matrix II'
+description: '[leetcode link](https://leetcode.com/problems/search-a-2d-matrix-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Write an efficient algorithm that searches for a value <code>target</code> in an <code>m x n</code> integer matrix <code>matrix</code>. This matrix has the following properties:</p>  <ul>  <li>Integers in each row are sorted in ascending from left to right.</li>  <li>Integers in each column are sorted in ascending from top to bottom.</li> </ul>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/11/24/searchgrid2.jpg" style="width: 300px; height: 300px;" />  <strong>Input:</strong> matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 5 <br/> <strong>Output:</strong> true   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/11/24/searchgrid.jpg" style="width: 300px; height: 300px;" />  <strong>Input:</strong> matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 20 <br/> <strong>Output:</strong> false    <p><strong>Constraints:</strong></p>  <ul>  <li><code>m == matrix.length</code></li>  <li><code>n == matrix[i].length</code></li>  <li><code>1 &lt;= n, m &lt;= 300</code></li>  <li><code>-10<sup>9</sup> &lt;= matrix[i][j] &lt;= 10<sup>9</sup></code></li>  <li>All the integers in each row are <strong>sorted</strong> in ascending order.</li>  <li>All the integers in each column are <strong>sorted</strong> in ascending order.</li>  <li><code>-10<sup>9</sup> &lt;= target &lt;= 10<sup>9</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Do a binary search on first row and first column to find the insertion index and hence the high or right index for rows and columns. Then do binary search on each row and limited column level.
+
+
+Another solution is 
+Check the top-right corner or bottom left. If it's not the target, then remove the top row or rightmost column.
+
+Similar to the above intuition, top cell is indicator of lower limit of column, and right most is indicator of upper limit of row.
+
+
+
+
+
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Search a 2D Matrix II" lines
+# @param {Integer[][]} matrix
+# @param {Integer} target
+# @return {Boolean}
+def search_matrix(matrix, target)
+    j = -1
+    matrix.each { |row|
+        j -= 1 while row[j] && row[j] > target
+        return true if row[j] == target
+    }
+    false
+end
+
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

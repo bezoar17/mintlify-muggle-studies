@@ -1,0 +1,74 @@
+---
+title: '❗️ Longest Duplicate Substring'
+description: '[leetcode link](https://leetcode.com/problems/longest-duplicate-substring/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a string <code>s</code>, consider all <em>duplicated substrings</em>: (contiguous) substrings of s that occur 2 or more times.&nbsp;The occurrences&nbsp;may overlap.</p>  <p>Return <strong>any</strong> duplicated&nbsp;substring that has the longest possible length.&nbsp;If <code>s</code> does not have a duplicated substring, the answer is <code>&quot;&quot;</code>.</p>   <p><strong class="example">Example 1:</strong></p> <strong>Input:</strong> s = "banana" <br/> <strong>Output:</strong> "ana" <p><strong class="example">Example 2:</strong></p> <strong>Input:</strong> s = "abcd" <br/> <strong>Output:</strong> ""   <p><strong>Constraints:</strong></p>  <ul>  <li><code>2 &lt;= s.length &lt;= 3 * 10<sup>4</sup></code></li>  <li><code>s</code> consists of lowercase English letters.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      binary search + rabin karp algorithm of hashing
+
+Assume k is answer, check if any substring of length k occurs more than 1 time. 
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Longest Duplicate Substring" lines
+# @param {String} s
+# @return {String}
+def fast_pow(num, exp, mod)
+  num %= mod; res = 1
+  (res = (res*num) % mod if exp.odd?; exp >>= 1; num = (num * num) % mod) while exp > 0
+  res
+end
+
+def longest_dup_substring(s)
+  l = 1
+  r = s.size
+  res = ""
+
+  while l<r
+    mid = (l+r)/2
+    check = duplicated(s,mid)
+    if check
+      res = check
+      l = mid+1
+    else
+      r = mid
+    end
+  end
+  res
+end
+
+def duplicated(s, k) # is there a duplicated sub-string of len k, using rabin-karp
+  charset = ('a'..'z').each_with_index.to_h
+  base = 101
+  mod = 1_000_000_000 + 7
+  base_power = fast_pow(base, k-1, mod)
+  hash =->(s) { s.reverse.chars.each_with_index.sum {|ch, i| charset[ch] * fast_pow(base, i, mod)} % mod }
+  get_next_hash=->(hash_val, in_ch, out_ch) { ((hash_val - charset[out_ch] * base_power) * base + charset[in_ch]) % mod }
+  
+  patterns = Hash.new {|h,k| h[k]=[]}
+  curr_hash = hash.call(s[0,k])
+  
+  (0..s.size-k).each do |i|
+    if patterns.include?(curr_hash)
+      patterns[curr_hash].each do |candidate|
+        return s[i,k] if s[i,k] == s[candidate, k]
+      end
+    end
+    patterns[curr_hash] << i
+    curr_hash = get_next_hash.call(curr_hash, s[i+k], s[i]) if i+k < s.size
+  end
+  false
+end
+
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

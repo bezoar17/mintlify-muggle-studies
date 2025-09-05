@@ -1,0 +1,48 @@
+---
+title: '🧀 Lowest Common Ancestor of a Binary Search Tree'
+description: '[leetcode link](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a binary search tree (BST), find the lowest common ancestor (LCA) node of two given nodes in the BST.</p>  <p>According to the <a href="https://en.wikipedia.org/wiki/Lowest_common_ancestor" target="_blank">definition of LCA on Wikipedia</a>: &ldquo;The lowest common ancestor is defined between two nodes <code>p</code> and <code>q</code> as the lowest node in <code>T</code> that has both <code>p</code> and <code>q</code> as descendants (where we allow <strong>a node to be a descendant of itself</strong>).&rdquo;</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2018/12/14/binarysearchtree_improved.png" style="width: 200px; height: 190px;" />  <strong>Input:</strong> root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 8 <br/> <strong>Output:</strong> 6 <br/> <strong>Explanation:</strong> The LCA of nodes 2 and 8 is 6.   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2018/12/14/binarysearchtree_improved.png" style="width: 200px; height: 190px;" />  <strong>Input:</strong> root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 4 <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> The LCA of nodes 2 and 4 is 2, since a node can be a descendant of itself according to the LCA definition.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> root = [2,1], p = 2, q = 1 <br/> <strong>Output:</strong> 2    <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in the tree is in the range <code>[2, 10<sup>5</sup>]</code>.</li>  <li><code>-10<sup>9</sup> &lt;= Node.val &lt;= 10<sup>9</sup></code></li>  <li>All <code>Node.val</code> are <strong>unique</strong>.</li>  <li><code>p != q</code></li>  <li><code>p</code> and <code>q</code> will exist in the BST.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Lowest Common Ancestor of a Binary Search Tree" lines
+# Definition for a binary tree node.
+# class TreeNode
+#     attr_accessor :val, :left, :right
+#     def initialize(val)
+#         @val = val
+#         @left, @right = nil, nil
+#     end
+# end
+
+# @param {TreeNode} root
+# @param {TreeNode} p
+# @param {TreeNode} q
+# @return {TreeNode}
+def lowest_common_ancestor(root, r, q)
+  return root if root.val.between?(*[r.val, q.val].sort) # if root is in range of r and q, this is it
+  # as in a BST left tree will have all lesser, and right would have all higher.
+  
+  if root.val < r.val && root.val < q.val
+    return lowest_common_ancestor(root.right, r, q)
+  end
+
+  if root.val > r.val && root.val > q.val
+    return lowest_common_ancestor(root.left, r, q)
+  end
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

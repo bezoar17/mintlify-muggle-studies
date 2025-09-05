@@ -1,0 +1,60 @@
+---
+title: '❗️ Maximum Good Subtree Score'
+description: '[leetcode link](https://leetcode.com/problems/maximum-good-subtree-score/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an undirected tree rooted at node 0 with <code>n</code> nodes numbered from 0 to <code>n - 1</code>. Each node <code>i</code> has an integer value <code>vals[i]</code>, and its parent is given by <code>par[i]</code>.</p>  <p>A <strong>subset</strong> of nodes within the <strong>subtree</strong> of a node is called <strong>good</strong> if every digit from 0 to 9 appears <strong>at most</strong> once in the decimal representation of the values of the selected nodes.</p>  <p>The <strong>score</strong> of a good subset is the sum of the values of its nodes.</p>  <p>Define an array <code>maxScore</code> of length <code>n</code>, where <code>maxScore[u]</code> represents the <strong>maximum</strong> possible sum of values of a good subset of nodes that belong to the subtree rooted at node <code>u</code>, including <code>u</code> itself and all its descendants.</p>  <p>Return the sum of all values in <code>maxScore</code>.</p>  <p>Since the answer may be large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">vals = [2,3], par = [-1,0]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">8</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2025/04/29/screenshot-2025-04-29-at-150754.png" style="height: 84px; width: 180px;" /></p>  <ul>  <li>The subtree rooted at node 0 includes nodes <code>{0, 1}</code>. The subset <code>{2, 3}</code> is<i> </i>good as the digits 2 and 3 appear only once. The score of this subset is <code>2 + 3 = 5</code>.</li>  <li>The subtree rooted at node 1 includes only node <code>{1}</code>. The subset <code>{3}</code> is<i> </i>good. The score of this subset is 3.</li>  <li>The <code>maxScore</code> array is <code>[5, 3]</code>, and the sum of all values in <code>maxScore</code> is <code>5 + 3 = 8</code>. Thus, the answer is 8.</li> </ul> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">vals = [1,5,2], par = [-1,0,0]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">15</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p><strong><img alt="" src="https://assets.leetcode.com/uploads/2025/04/29/screenshot-2025-04-29-at-151408.png" style="width: 205px; height: 140px;" /></strong></p>  <ul>  <li>The subtree rooted at node 0 includes nodes <code>{0, 1, 2}</code>. The subset <code>{1, 5, 2}</code> is<i> </i>good as the digits 1, 5 and 2 appear only once. The score of this subset is <code>1 + 5 + 2 = 8</code>.</li>  <li>The subtree rooted at node 1 includes only node <code>{1}</code>. The subset <code>{5}</code> is<i> </i>good. The score of this subset is 5.</li>  <li>The subtree rooted at node 2 includes only node <code>{2}</code>. The subset <code>{2}</code> is<i> </i>good. The score of this subset is 2.</li>  <li>The <code>maxScore</code> array is <code>[8, 5, 2]</code>, and the sum of all values in <code>maxScore</code> is <code>8 + 5 + 2 = 15</code>. Thus, the answer is 15.</li> </ul> </div>  <p><strong class="example">Example 3:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">vals = [34,1,2], par = [-1,0,1]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">42</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2025/04/29/screenshot-2025-04-29-at-151747.png" style="height: 80px; width: 256px;" /></p>  <ul>  <li>The subtree rooted at node 0 includes nodes <code>{0, 1, 2}</code>. The subset <code>{34, 1, 2}</code> is<i> </i>good as the digits 3, 4, 1 and 2 appear only once. The score of this subset is <code>34 + 1 + 2 = 37</code>.</li>  <li>The subtree rooted at node 1 includes node <code>{1, 2}</code>. The subset <code>{1, 2}</code> is<i> </i>good as the digits 1 and 2 appear only once. The score of this subset is <code>1 + 2 = 3</code>.</li>  <li>The subtree rooted at node 2 includes only node <code>{2}</code>. The subset <code>{2}</code> is<i> </i>good. The score of this subset is 2.</li>  <li>The <code>maxScore</code> array is <code>[37, 3, 2]</code>, and the sum of all values in <code>maxScore</code> is <code>37 + 3 + 2 = 42</code>. Thus, the answer is 42.</li> </ul> </div>  <p><strong class="example">Example 4:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">vals = [3,22,5], par = [-1,0,1]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">18</span></p>  <p><br/> <strong>Explanation:</strong></p>  <ul>  <li>The subtree rooted at node 0 includes nodes <code>{0, 1, 2}</code>. The subset <code>{3, 22, 5}</code> is<i> </i>not good, as digit 2 appears twice. Therefore, the subset <code>{3, 5}</code> is valid. The score of this subset is <code>3 + 5 = 8</code>.</li>  <li>The subtree rooted at node 1 includes nodes <code>{1, 2}</code>. The subset <code>{22, 5}</code> is<i> </i>not good, as digit 2 appears twice. Therefore, the subset <code>{5}</code> is valid. The score of this subset is 5.</li>  <li>The subtree rooted at node 2 includes <code>{2}</code>. The subset <code>{5}</code> is<i> </i>good. The score of this subset is 5.</li>  <li>The <code>maxScore</code> array is <code>[8, 5, 5]</code>, and the sum of all values in <code>maxScore</code> is <code>8 + 5 + 5 = 18</code>. Thus, the answer is 18.</li> </ul>  <ul> </ul> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= n == vals.length &lt;= 500</code></li>  <li><code>1 &lt;= vals[i] &lt;= 10<sup>9</sup></code></li>  <li><code>par.length == n</code></li>  <li><code>par[0] == -1</code></li>  <li><code>0 &lt;= par[i] &lt; n</code> for <code>i</code> in <code>[1, n - 1]</code></li>  <li>The input is generated such that the parent array <code>par</code> represents a valid tree.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Postorder DFS to form subsets out of sub-tree of each child, and then use those to update current nodes values. Similar to subset generation in an array, when 
+we process each idx, and keep track of subsets, and keep extending list of subsets, here we just do that with dfs, and keep updating state by taking max.
+
+At each node, we want to track all possible subsets of nodes for that subtree, and among those subsets, which are valid, and their max score. Subset generation becomes simple, if for each node we encounter, we take it all previous subsets present, and start with an empty subset. This way we simulate picking/leaving node/number and generate all subsets uptil a given point. When doing this in a tree, we can do a post-order dfs, starting set for each node is {0} & {value} itself. Also, a node itself can be invalid, so in that case starting subsets will only be {0}We do dfs on all children first. And then once results are in, we process and update all masks possible at this node, by including it with valid subsets from children nodes, and then return the result to the parent.
+
+Now, when merging a root nodes result with children node, we simply have to see if it does not share a common bit with the child. Since all choices of take/no-take are already present for each child nodes subtree, we will have those results in the mask for the child tree. So, we can just iterate over current masks and update the answers, this happens for each node. 
+
+Range of all masks is simply bit length, i.e 10 bits representing which bits have been used.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Maximum Good Subtree Score" lines
+# @param {Integer[]} vals
+# @param {Integer[]} par
+# @return {Integer}
+def good_subtree_sum(vals, par)
+  big_mod = 10**9 + 7
+  n = vals.size
+  next_nodes = Array.new(n) { Array.new }; (1...n).each { |u| next_nodes[par[u]]<< u}
+
+  max_score = Array.new(n,0)
+  mask_for=->(s) { s.sum {|i| 1<<i.to_i } }
+
+  dfs=->(node) {
+    dp_node = Hash.new(0); dp_node[0]=0
+    str = vals[node].to_s.chars
+    dp_node[mask_for[str]] = vals[node] if str.size == str.to_set.size
+
+    # first calc dp for a child, then use its results to update current node's values
+    # the step of essentially mixing all node states with all children states, is what gets all subset combos for curr node
+    next_nodes[node].each do |child_node|
+      dp_child = dfs.call(child_node)
+      dp_node.to_a.each { |pm, pv| dp_child.each { |cm, cv| dp_node[pm|cm] = [dp_node[pm|cm], cv+pv].max if cm & pm == 0 } }
+    end
+    
+    max_score[node] = dp_node.values.max
+    dp_node
+  }
+
+  dfs[0]
+  max_score.sum % big_mod  
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

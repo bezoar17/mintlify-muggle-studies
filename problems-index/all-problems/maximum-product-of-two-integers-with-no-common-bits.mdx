@@ -1,0 +1,59 @@
+---
+title: '🧀 Maximum Product of Two Integers With No Common Bits'
+description: '[leetcode link](https://leetcode.com/problems/maximum-product-of-two-integers-with-no-common-bits/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer array <code>nums</code>.</p>  <p>Your task is to find two <strong>distinct</strong> indices <code>i</code> and <code>j</code> such that the product <code>nums[i] * nums[j]</code> is <strong>maximized,</strong> and the binary representations of <code>nums[i]</code> and <code>nums[j]</code> do not share any common set bits.</p>  <p>Return the <strong>maximum</strong> possible product of such a pair. If no such pair exists, return 0.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [1,2,3,4,5,6,7]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">12</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>The best pair is 3 (011) and 4 (100). They share no set bits and <code>3 * 4 = 12</code>.</p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [5,6,4]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">0</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>Every pair of numbers has at least one common set bit. Hence, the answer is 0.</p> </div>  <p><strong class="example">Example 3:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [64,8,32]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">2048</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>No pair of numbers share a common bit, so the answer is the product of the two maximum elements, 64 and 32 (<code>64 * 32 = 2048</code>).</p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>2 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= nums[i] &lt;= 10<sup>6</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      SUM OVER SUBSETS DP, case where why all subset generation is not required ?
+https://claude.ai/share/bb5311fa-3052-4e09-a535-8efc3459de30 
+Prompt is: What is sum over subset dp, when is it used, give some examples, and why all submask generation is not required for these cases. Here we are taking max instead of sum.
+
+Subset-gen takes 3^n, here we have k* 2^k. Thats the only optimization.
+
+For a given mask, get its complement, for this complement mask, cm, check which max no. is present which is part of this cm. For example, if cm is 01110, we might have 00110 present in nums and 00010 present in nums, both are valid but pick the bigger one can calculate the product of this no. with original no.
+
+For each mask, we need to store max sub-mask present in nums. Essentially, even though 01110 is not present, we need to store 00110 as the max value possible for 01110. 
+
+For any given bitmask m, dp[m] will store the largest number from the original array that is a submask of m. In math dp[m] = a, where a is the biggest number in A that m | a = m.
+
+Now instead of calculating all sub-masks of a mask, and taking max from that. There is an optimization, we can do to consider max from all. Which is used in SUM OVER SUBSETS DP. As information between submasks is propagated, we dont need to consider all sub-masks, if we propagate properly. Iteration over all sub-masks is required when sub-masks reprsent different things which can't be propagated to supermasks, when sub-masks inherently represents a different state.
+
+The key part of the SOS DP is: for every bit i, for every mask m with the i-th bit set, we update on submask m ^ (1 &lt;&lt; i), i.e the ith bit set as off. Since we have considered all bits, we have eventually pulled from submasks with 1 bit difference. Because of the order we do things, this includes information from all submasks.
+
+To do this, for each bit, say 2nd bit,  calculate results for all masks, if for a mask that bit is set, calculate result with that bit off. When we are calculating something for nth bit, all n-1 bits have been processed, so all masks where some bit less than n was set, info for them has been updated already. 
+
+Think of it like this, for 4nd bit, we are essentially updating all masks which have the 2nd bit set. For a mask, say x1xxx, the submasks x1xxx and x0xxx, are both valid. x1xxx is already the mask, we are allowing x0xxx to be part of the answer for x1xxx. Now, the bit to the left of 1 is 5th bit, that has not been processed yet. But, 3 bits to the right of the mask have been processed, and x1xxx already holds the max value uptil 1xxx, i.e till this 4th bit when it is being processed. When 0xxx is also allowed, we pick max from this also. And then go to the 5th bit, so any mask like 1xxxx, will also allow 0xxxx, and pick max from that, wherein the 4 bits to the right of xxxx, already hold the max for the mask.
+
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```python3 title="Maximum Product of Two Integers With No Common Bits" lines
+fmax = lambda x, y: x if x > y else y
+
+class Solution:
+    def maxProduct(self, nums: List[int]) -> int:
+        k = max(nums).bit_length()
+        max_mask = 1 << k
+        dp = [0] * max_mask
+        for x in nums:
+            dp[x] = x
+        
+        for bit_pos in range(k):
+            for mask in range(max_mask):
+                if mask>>bit_pos & 1:
+                    dp[mask] = fmax(dp[mask], dp[mask ^ (1 << bit_pos)])
+        
+        return max(m * dp[(max_mask - 1) ^ m] for m in nums)
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

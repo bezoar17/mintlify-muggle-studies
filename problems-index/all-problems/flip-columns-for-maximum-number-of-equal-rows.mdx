@@ -1,0 +1,47 @@
+---
+title: '🧀 Flip Columns For Maximum Number of Equal Rows'
+description: '[leetcode link](https://leetcode.com/problems/flip-columns-for-maximum-number-of-equal-rows/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an <code>m x n</code> binary matrix <code>matrix</code>.</p>  <p>You can choose any number of columns in the matrix and flip every cell in that column (i.e., Change the value of the cell from <code>0</code> to <code>1</code> or vice versa).</p>  <p>Return <em>the maximum number of rows that have all values equal after some number of flips</em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> matrix = [[0,1],[1,1]] <br/> <strong>Output:</strong> 1 <br/> <strong>Explanation:</strong> After flipping no values, 1 row has all values equal.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> matrix = [[0,1],[1,0]] <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> After flipping values in the first column, both rows have equal values.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> matrix = [[0,0,0],[0,0,1],[1,1,0]] <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> After flipping values in the first two columns, the last two rows have equal values.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>m == matrix.length</code></li>  <li><code>n == matrix[i].length</code></li>  <li><code>1 &lt;= m, n &lt;= 300</code></li>  <li><code>matrix[i][j]</code> is either&nbsp;<code>0</code> or <code>1</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Suppose rows are a,b,a',c,a. 
+
+If we flip such that a becomes case1. all 0 or  case2. all 1. Then there are 2 as, but considering a row a', which is a flipped counterpart, but exactly as a when flipped, then, for case1., a' will become all 1 and in case2. become all 0. 
+
+So the row which has most count of identical+complement rows should be maximised. And this max result is the answer.
+
+Now to check complement and identical count, keep count of a pattern, update its count when seen, and 0 when seen first.
+
+But do same for complement of a, if it is present, update a' count;
+
+By the end, both a and a' will have same counts.
+
+E,g,  a = 0 0 1 0 1;   a' = 1 1 0 1 0; b = 11100, c = 11000
+
+Note/Thought: It can become a dp question if we wanted to minimize no. of flips.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Flip Columns For Maximum Number of Equal Rows" lines
+# @param {Integer[][]} matrix
+# @return {Integer}
+
+def max_equal_rows_after_flips(matrix)  
+  matrix.reduce(Hash.new(0)) do |hash_, row|
+    hash_[row] += 1
+    hash_[row.map{ |x| (1-x)}] += 1
+    hash_
+  end.values.max
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

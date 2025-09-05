@@ -1,0 +1,63 @@
+---
+title: '❗️ Minimum Number of Removals to Make Mountain Array'
+description: '[leetcode link](https://leetcode.com/problems/minimum-number-of-removals-to-make-mountain-array/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You may recall that an array <code>arr</code> is a <strong>mountain array</strong> if and only if:</p>  <ul>  <li><code>arr.length &gt;= 3</code></li>  <li>There exists some index <code>i</code> (<strong>0-indexed</strong>) with <code>0 &lt; i &lt; arr.length - 1</code> such that:  <ul>   <li><code>arr[0] &lt; arr[1] &lt; ... &lt; arr[i - 1] &lt; arr[i]</code></li>   <li><code>arr[i] &gt; arr[i + 1] &gt; ... &gt; arr[arr.length - 1]</code></li>  </ul>  </li> </ul>  <p>Given an integer array <code>nums</code>​​​, return <em>the <strong>minimum</strong> number of elements to remove to make </em><code>nums<em>​​​</em></code><em> </em><em>a <strong>mountain array</strong>.</em></p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [1,3,1] <br/> <strong>Output:</strong> 0 <br/> <strong>Explanation:</strong> The array itself is a mountain array so we do not need to remove any elements.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [2,1,1,5,6,2,3,1] <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> One solution is to remove the elements at indices 0, 1, and 5, making the array nums = [1,5,6,3,1].    <p><strong>Constraints:</strong></p>  <ul>  <li><code>3 &lt;= nums.length &lt;= 1000</code></li>  <li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>  <li>It is guaranteed that you can make a mountain array out of <code>nums</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      LIS(i) is length of longest increasing subsequnce ending at i.
+Elements to remove from left if i was peak element is i+1-LIS(i)
+
+Similarly LDS(i) length of longest decreasing starting at i.
+Elements to remove from right if i was peak element is n-i-LDS(i)
+
+Total is N+1-LIS(i)-LDS(i)
+
+also peak cant be start or end, so lis and lds both should be &gt; 1.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Minimum Number of Removals to Make Mountain Array" lines
+# @param {Integer[]} nums
+# @return {Integer}
+def minimum_mountain_removals(nums)
+  lis = lis(nums)
+  lds = lds(nums)
+  nums.size+1 - lis.zip(lds).select{|x,y| x>1 && y>1}.map {|x,y| x+y}.max
+end
+
+def lis(nums)
+  dp = Array.new(nums.length,1)
+  nums.each_with_index do| elm, i|
+    for x in 0..i-1
+      if nums[i] > nums[x]
+        dp[i] = [dp[i], dp[x] + 1].max
+      end
+    end
+  end
+  dp
+end
+
+def lds(nums)
+  dp = Array.new(nums.length,1)
+  n = nums.length
+  (n-1).downto(0).each do |i|
+    ((i+1)...n).each do |x|
+      if nums[i] > nums[x]
+        dp[i] = [dp[i], dp[x]+1].max
+      end
+    end
+  end
+  dp
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

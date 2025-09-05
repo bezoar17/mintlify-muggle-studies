@@ -1,0 +1,47 @@
+---
+title: '🧀 Longest Repeating Character Replacement'
+description: '[leetcode link](https://leetcode.com/problems/longest-repeating-character-replacement/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a string <code>s</code> and an integer <code>k</code>. You can choose any character of the string and change it to any other uppercase English character. You can perform this operation at most <code>k</code> times.</p>  <p>Return <em>the length of the longest substring containing the same letter you can get after performing the above operations</em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> s = &quot;ABAB&quot;, k = 2 <br/> <strong>Output:</strong> 4 <br/> <strong>Explanation:</strong> Replace the two &#39;A&#39;s with two &#39;B&#39;s or vice versa.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> s = &quot;AABABBA&quot;, k = 1 <br/> <strong>Output:</strong> 4 <br/> <strong>Explanation:</strong> Replace the one &#39;A&#39; in the middle with &#39;B&#39; and form &quot;AABBBBA&quot;. The substring &quot;BBBB&quot; has the longest repeating letters, which is 4. There may exists other ways to achieve this answer too.   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= s.length &lt;= 10<sup>5</sup></code></li>  <li><code>s</code> consists of only uppercase English letters.</li>  <li><code>0 &lt;= k &lt;= s.length</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Longest Repeating Character Replacement" lines
+# @param {String} s
+# @param {Integer} k
+# @return {Integer}
+# ababba
+def character_replacement(s, k)
+  hash_ = Hash.new(0)
+  lp = 0; rp = 0; max_len = 0
+  most_freq_count = 0
+
+  while(rp < s.size)
+    hash_[s[rp]]+=1
+    # most freq can be what it was earlier or a newer value added in the window
+    most_freq_count = [most_freq_count, hash_[s[rp]]].max 
+    # most_freq_count = hash_.to_a.max_by{|elem| elem[1]}[1]
+    window_len = rp-lp+1
+    if(window_len - most_freq_count > k)
+      hash_[s[lp]]-=1; lp+=1;
+    else
+      max_len = [max_len, window_len].max
+    end
+    rp+=1
+  end
+  max_len
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

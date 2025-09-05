@@ -1,0 +1,66 @@
+---
+title: '❗️ String Compression II'
+description: '[leetcode link](https://leetcode.com/problems/string-compression-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p><a href="http://en.wikipedia.org/wiki/Run-length_encoding">Run-length encoding</a> is a string compression method that works by&nbsp;replacing consecutive identical characters (repeated 2 or more times) with the concatenation of the character and the number marking the count of the characters (length of the run). For example, to compress the string&nbsp;<code>&quot;aabccc&quot;</code>&nbsp;we replace <font face="monospace"><code>&quot;aa&quot;</code></font>&nbsp;by&nbsp;<font face="monospace"><code>&quot;a2&quot;</code></font>&nbsp;and replace <font face="monospace"><code>&quot;ccc&quot;</code></font>&nbsp;by&nbsp;<font face="monospace"><code>&quot;c3&quot;</code></font>. Thus the compressed string becomes <font face="monospace"><code>&quot;a2bc3&quot;</code>.</font></p>  <p>Notice that in this problem, we are not adding&nbsp;<code>&#39;1&#39;</code>&nbsp;after single characters.</p>  <p>Given a&nbsp;string <code>s</code>&nbsp;and an integer <code>k</code>. You need to delete <strong>at most</strong>&nbsp;<code>k</code> characters from&nbsp;<code>s</code>&nbsp;such that the run-length encoded version of <code>s</code>&nbsp;has minimum length.</p>  <p>Find the <em>minimum length of the run-length encoded&nbsp;version of </em><code>s</code><em> after deleting at most </em><code>k</code><em> characters</em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> s = &quot;aaabcccd&quot;, k = 2 <br/> <strong>Output:</strong> 4 <b>Explanation: </b>Compressing s without deleting anything will give us &quot;a3bc3d&quot; of length 6. Deleting any of the characters &#39;a&#39; or &#39;c&#39; would at most decrease the length of the compressed string to 5, for instance delete 2 &#39;a&#39; then we will have s = &quot;abcccd&quot; which compressed is abc3d. Therefore, the optimal way is to delete &#39;b&#39; and &#39;d&#39;, then the compressed version of s will be &quot;a3c3&quot; of length 4.  <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> s = &quot;aabbaa&quot;, k = 2 <br/> <strong>Output:</strong> 2 <b>Explanation: </b>If we delete both &#39;b&#39; characters, the resulting compressed string would be &quot;a4&quot; of length 2.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> s = &quot;aaaaaaaaaaa&quot;, k = 0 <br/> <strong>Output:</strong> 3 <strong>Explanation: </strong>Since k is zero, we cannot delete anything. The compressed string is &quot;a11&quot; of length 3.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= s.length &lt;= 100</code></li>  <li><code>0 &lt;= k &lt;= s.length</code></li>  <li><code>s</code> contains only lowercase English letters.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Consider simulating 2 cases, keep and delete current char. 
+
+These 2 actions can have 2 contexts, when the prev_char is same as current_char or not.
+
+When, we have prev_char != current_char, we can consider keeping or deleting this char. 
+
+When, prev_char == current_char, means streak is of atleast 2 chars, in this case, deleting this char does not change the encoding length. For e.g, deleting any 1 char from 6 x's like xxxxxx, would result in a 5x string, no matter which char is deleted, so deletion case is only considered when the streak is initialized, i.e, when the first char from the streak is deleted.
+
+Hence, we only have the keep option, also when prev_char == current_char, is when the count of streak is increasing, so here we check if RN encoding length would increase for the current streak, which happens when count crosses 1,9 or 99. 
+
+https://www.youtube.com/watch?v=ISIG3o-Xofg
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```python3 title="String Compression II" lines
+class Solution:
+    def getLengthOfOptimalCompression(self, s: str, k: int) -> int:
+        n = len(s)
+        cache = {}
+        
+        def calc(idx, k_left, prev_char, prev_char_count):
+            if k_left < 0:
+                return float('inf')
+            
+            if idx >= n:
+                return 0
+            
+            cache_key = f"{idx}-{k_left}-{prev_char}-{prev_char_count}"
+            
+            if cache_key in cache:
+                return cache[cache_key]
+            
+            if idx < n and s[idx] == prev_char:
+                # Continuation of previous character streak
+                increment = 1 if prev_char_count in [1, 9, 99] else 0
+                keep_option = increment + calc(idx + 1, k_left, prev_char, prev_char_count + 1)
+                cache[cache_key] = keep_option
+                return keep_option
+            
+            # Two options: delete or keep the current character
+            delete_option = calc(idx + 1, k_left - 1, prev_char, prev_char_count)
+            keep_option = 1 + calc(idx + 1, k_left, s[idx], 1)
+            
+            result = min(delete_option, keep_option)
+            cache[cache_key] = result
+            return result
+        
+        return calc(0, k, '', 0)
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

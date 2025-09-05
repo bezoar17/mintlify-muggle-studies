@@ -1,0 +1,30 @@
+---
+title: '🧩 Count Largest Group'
+description: '[leetcode link](https://leetcode.com/problems/count-largest-group/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer <code>n</code>.</p>  <p>We need to group the numbers from <code>1</code> to <code>n</code> according to the sum of its digits. For example, the numbers 14 and 5 belong to the <strong>same</strong> group, whereas 13 and 3 belong to <strong>different</strong> groups.</p>  <p>Return the number of groups that have the largest size, i.e. the <strong>maximum</strong> number of elements.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> n = 13 <br/> <strong>Output:</strong> 4 <br/> <strong>Explanation:</strong> There are 9 groups in total, they are grouped according sum of its digits of numbers from 1 to 13: [1,10], [2,11], [3,12], [4,13], [5], [6], [7], [8], [9]. There are 4 groups with largest size.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> n = 2 <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> There are 2 groups [1], [2] of size 1.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= n &lt;= 10<sup>4</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Count Largest Group" lines
+# @param {Integer} n
+# @return {Integer}
+def count_largest_group(n)
+  freq = (1..n).map(&:digits).map(&:sum).tally.values
+  max_f = freq.max
+  freq.count(max_f)
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

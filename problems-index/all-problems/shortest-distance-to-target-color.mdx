@@ -1,0 +1,63 @@
+---
+title: '🧀 Shortest Distance to Target Color'
+description: '[leetcode link](https://leetcode.com/problems/shortest-distance-to-target-color/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an array <code>colors</code>, in which there are three colors: <code>1</code>, <code>2</code> and&nbsp;<code>3</code>.</p>  <p>You are also given some queries. Each query consists of two integers <code>i</code>&nbsp;and <code>c</code>, return&nbsp;the shortest distance between the given index&nbsp;<code>i</code> and the target color <code>c</code>. If there is no solution return <code>-1</code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> colors = [1,1,2,1,3,2,2,3,3], queries = [[1,3],[2,2],[6,1]] <br/> <strong>Output:</strong> [3,0,3] <strong>Explanation: </strong> The nearest 3 from index 1 is at index 4 (3 steps away). The nearest 2 from index 2 is at index 2 itself (0 steps away). The nearest 1 from index 6 is at index 3 (3 steps away).   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> colors = [1,2], queries = [[0,3]] <br/> <strong>Output:</strong> [-1] <strong>Explanation: </strong>There is no 3 in the array.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= colors.length &lt;= 5*10^4</code></li>  <li><code>1 &lt;= colors[i] &lt;= 3</code></li>  <li><code>1&nbsp;&lt;= queries.length &lt;= 5*10^4</code></li>  <li><code>queries[i].length == 2</code></li>  <li><code>0 &lt;= queries[i][0] &lt;&nbsp;colors.length</code></li>  <li><code>1 &lt;= queries[i][1] &lt;= 3</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      2 approaches, both have been implemented
+
+Approach 1: Binary search, store idxs of all colors in sorted order. When given a color and index, find the position of index in the stored idxs of the color, and return answer from left/right index.
+
+Approach 2: For each idx, store closest occurence, hence shortest distance to the left and to the right, by pre-processing it while going L-&gt;R and R-&gt;L, and keep min for each idx. 
+
+Each approach, think of solving for 1 colour, and replicate it for others, as there are only 3.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Shortest Distance to Target Color" lines
+# @param {Integer[]} colors
+# @param {Integer[][]} queries
+# @return {Integer[]}
+def shortest_distance_color(colors, queries)
+  solution_left_right_sweep(colors, queries)
+  # solution_binary_search(colors, queries)
+end
+
+def solution_left_right_sweep(colors, queries)
+  min_dist = Array.new(4) { Array.new(colors.size, Float::INFINITY) }
+  # L->R, mark zeros and min dist to left
+  (0...colors.size).each { |i| (1..3).each { |color| min_dist[color][i] = color == colors[i] ? 0 : min_dist[color][i-1]+1 } }
+  
+  # reduce min_dist based on dist to right
+  (colors.size-2).downto(0).each { |i| (1..3).each { |color| min_dist[color][i] = [min_dist[color][i], min_dist[color][i+1]+1].min } }
+
+  queries.map {|i,c| min_dist[c][i]==Float::INFINITY ? -1 : min_dist[c][i] }
+end
+
+def solution_binary_search(colors, queries)
+  idx_store = Array.new(4) { Array.new() }
+  colors.each_with_index {|c,i| idx_store[c]<<i }
+  queries.map do |i, c|
+    if idx_store[c].size < 1
+      -1
+    else
+      idx = idx_store[c].bsearch_index {|x| x>=i } || idx_store[c].size-1
+      min_dist = (i-idx_store[c][idx]).abs
+      min_dist = [min_dist, (i-idx_store[c][idx+1]).abs].min if idx+1 < idx_store[c].size
+      min_dist = [min_dist, (i-idx_store[c][idx-1]).abs].min if idx > 0
+      min_dist
+    end
+  end
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

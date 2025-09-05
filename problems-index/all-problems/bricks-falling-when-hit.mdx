@@ -1,0 +1,115 @@
+---
+title: '❗️ Bricks Falling When Hit'
+description: '[leetcode link](https://leetcode.com/problems/bricks-falling-when-hit/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an <code>m x n</code> binary <code>grid</code>, where each <code>1</code> represents a brick and <code>0</code> represents an empty space. A brick is <strong>stable</strong> if:</p>  <ul>  <li>It is directly connected to the top of the grid, or</li>  <li>At least one other brick in its four adjacent cells is <strong>stable</strong>.</li> </ul>  <p>You are also given an array <code>hits</code>, which is a sequence of erasures we want to apply. Each time we want to erase the brick at the location <code>hits[i] = (row<sub>i</sub>, col<sub>i</sub>)</code>. The brick on that location&nbsp;(if it exists) will disappear. Some other bricks may no longer be stable because of that erasure and will <strong>fall</strong>. Once a brick falls, it is <strong>immediately</strong> erased from the <code>grid</code> (i.e., it does not land on other stable bricks).</p>  <p>Return <em>an array </em><code>result</code><em>, where each </em><code>result[i]</code><em> is the number of bricks that will <strong>fall</strong> after the </em><code>i<sup>th</sup></code><em> erasure is applied.</em></p>  <p><strong>Note</strong> that an erasure may refer to a location with no brick, and if it does, no bricks drop.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> grid = [[1,0,0,0],[1,1,1,0]], hits = [[1,0]] <br/> <strong>Output:</strong> [2] <strong>Explanation: </strong>Starting with the grid: [[1,0,0,0],  [<u>1</u>,1,1,0]] We erase the underlined brick at (1,0), resulting in the grid: [[1,0,0,0],  [0,<u>1</u>,<u>1</u>,0]] The two underlined bricks are no longer stable as they are no longer connected to the top nor adjacent to another stable brick, so they will fall. The resulting grid is: [[1,0,0,0],  [0,0,0,0]] Hence the result is [2].   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> grid = [[1,0,0,0],[1,1,0,0]], hits = [[1,1],[1,0]] <br/> <strong>Output:</strong> [0,0] <strong>Explanation: </strong>Starting with the grid: [[1,0,0,0],  [1,<u>1</u>,0,0]] We erase the underlined brick at (1,1), resulting in the grid: [[1,0,0,0],  [1,0,0,0]] All remaining bricks are still stable, so no bricks fall. The grid remains the same: [[1,0,0,0],  [<u>1</u>,0,0,0]] Next, we erase the underlined brick at (1,0), resulting in the grid: [[1,0,0,0],  [0,0,0,0]] Once again, all remaining bricks are still stable, so no bricks fall. Hence the result is [0,0].    <p><strong>Constraints:</strong></p>  <ul>  <li><code>m == grid.length</code></li>  <li><code>n == grid[i].length</code></li>  <li><code>1 &lt;= m, n &lt;= 200</code></li>  <li><code>grid[i][j]</code> is <code>0</code> or <code>1</code>.</li>  <li><code>1 &lt;= hits.length &lt;= 4 * 10<sup>4</sup></code></li>  <li><code>hits[i].length == 2</code></li>  <li><code>0 &lt;= x<sub>i&nbsp;</sub>&lt;= m - 1</code></li>  <li><code>0 &lt;=&nbsp;y<sub>i</sub> &lt;= n - 1</code></li>  <li>All <code>(x<sub>i</sub>, y<sub>i</sub>)</code> are unique.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Union-Find, apply it from the end, connecting new bricks which were hit, increase in component count is the answer.
+
+So, first duplicate grid to live grid, then apply all hits. Now, not all remaining bricks are stable, update the stable bricks.
+
+Now, process hits in reverse, simulating reversing time, if last hit was not made, that hit position is now a brick. Also, if this was on the top row, it gets connected to stablility component. And also connect it with surrounding bricks, so if this is a linking brick which was hit, it can connect stable top component to some other component which was hanging in isolation. How the component size of stable component changes is how many bricks would have fallen. To be exact it is change -1, i.e if there is a change in stable component size, it was due to this brick which was hit, which will not be counted in falling bricks, as this was erased.
+
+Another clever union-find problem. https://leetcode.com/problems/last-day-where-you-can-still-cross/
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Bricks Falling When Hit" lines
+# @param {Integer[][]} grid
+# @param {Integer[][]} hits
+# @return {Integer[]}
+class UnionFind
+  attr_accessor :nodes, :sizes
+  attr_reader :max_set_size
+
+  def initialize(node_keys=[])
+    @nodes = {}
+    @sizes = {}
+    @max_set_size = 0
+    node_keys.each { |i| root(i) }
+  end
+
+  # this will create a node key if it doesnt exist
+  def root(i)
+    nodes[i] ||= i; sizes[i] ||= 1; # create node if it doesnt exist
+
+    while nodes[i] != i
+      nodes[i] = nodes[nodes[i]] # path compression
+      i = nodes[i]
+    end
+    i
+  end
+
+  def size_for(i)
+    sizes[root(i)]
+  end
+
+  def union(i, j)
+    root_of_i = root(i)
+    root_of_j = root(j)
+
+    return false if root_of_i == root_of_j
+
+    if sizes[root_of_j] > sizes[root_of_i]
+      nodes[root_of_i] = root_of_j
+      sizes[root_of_j] += sizes[root_of_i]
+    else
+      nodes[root_of_j] = root_of_i
+      sizes[root_of_i] += sizes[root_of_j]
+    end
+    @max_set_size = [@max_set_size, sizes[root_of_i], sizes[root_of_j]].max
+  end
+end
+
+def hit_bricks(grid, hits)
+  m = grid.size; n = grid[0].size
+  idx =->(i,j) { n*i + j } # compression of (i,j) to 1 num idx 
+  live_grid = grid.map(&:dup); hits.each {|i,j| live_grid[i][j]=0 }
+  
+  uf = UnionFind.new([-1]) # -1 represents stability
+  
+  # top nodes are definitely stable
+  live_grid[0].each_with_index { |val, j| uf.union(-1, j) if val == 1 }
+  
+  # update current stability of nodes, remove ones which are unstable due to hits
+  (1...m).each do |i|
+    (0...n).each do |j|
+      next if live_grid[i][j] == 0
+      uf.union(idx[i,j], idx[i-1,j]) if i>0 && live_grid[i-1][j] == 1
+      uf.union(idx[i,j], idx[i,j-1]) if j>0 && live_grid[i][j-1] == 1
+    end
+  end
+  
+  # apply hits in reverse, and send result
+  result = Array.new(hits.size)
+  (hits.size-1).downto(0).each do |h|
+    i,j = hits[h]
+    (result[h] = 0 ;next) if grid[i][j] == 0
+    old_count = uf.sizes[uf.root(-1)] # size count of stable component
+    
+    live_grid[i][j] = 1 # this was a brick, so revert it
+    uf.union(-1, idx[i,j]) if i == 0 # connect to stable component if row is 0
+    
+    # connect this brick with neighbor bricks
+    [[1,0],[-1,0],[0,1],[0,-1]].each do |di, dj| 
+      uf.union(idx[i,j], idx[i+di, j+dj]) if (i+di).between?(0,m-1) && (j+dj).between?(0,n-1) && live_grid[i+di][j+dj] == 1
+    end
+    
+    new_count = uf.sizes[uf.root(-1)] # size count of stable component
+    result[h] = [0, new_count - old_count - 1].max
+  end
+
+  result
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

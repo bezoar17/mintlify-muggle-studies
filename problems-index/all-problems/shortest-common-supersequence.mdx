@@ -1,0 +1,80 @@
+---
+title: '❗️ Shortest Common Supersequence '
+description: '[leetcode link](https://leetcode.com/problems/shortest-common-supersequence/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given two strings <code>str1</code> and <code>str2</code>, return <em>the shortest string that has both </em><code>str1</code><em> and </em><code>str2</code><em> as <strong>subsequences</strong></em>. If there are multiple valid strings, return <strong>any</strong> of them.</p>  <p>A string <code>s</code> is a <strong>subsequence</strong> of string <code>t</code> if deleting some number of characters from <code>t</code> (possibly <code>0</code>) results in the string <code>s</code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> str1 = &quot;abac&quot;, str2 = &quot;cab&quot; <br/> <strong>Output:</strong> &quot;cabac&quot; <br/> <strong>Explanation:</strong>  str1 = &quot;abac&quot; is a subsequence of &quot;cabac&quot; because we can delete the first &quot;c&quot;. str2 = &quot;cab&quot; is a subsequence of &quot;cabac&quot; because we can delete the last &quot;ac&quot;. The answer provided is the shortest such string that satisfies these properties.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> str1 = &quot;aaaaaaaa&quot;, str2 = &quot;aaaaaaaa&quot; <br/> <strong>Output:</strong> &quot;aaaaaaaa&quot;    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= str1.length, str2.length &lt;= 1000</code></li>  <li><code>str1</code> and <code>str2</code> consist of lowercase English letters.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Build string around lcs. Add chars to left and right of the lcs.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Shortest Common Supersequence " lines
+# @param {String} str1
+# @param {String} str2
+# @return {String}
+def shortest_common_supersequence(str1, str2)
+    m, n = str1.length, str2.length
+    
+    # Create dp table for LCS
+    dp = Array.new(m + 1) { Array.new(n + 1, "") }
+    
+    # Fill dp table with LCS
+    (1..m).each do |i|
+        (1..n).each do |j|
+            if str1[i-1] == str2[j-1]
+                dp[i][j] = dp[i-1][j-1] + str1[i-1]
+            else
+                dp[i][j] = dp[i-1][j].length > dp[i][j-1].length ? dp[i-1][j] : dp[i][j-1]
+            end
+        end
+    end
+    
+    # Build supersequence using dp table
+    result = ""
+    i, j = 0, 0
+    lcs = dp[m][n]
+    lcs_idx = 0
+    
+    # Process both strings simultaneously
+    while i < m || j < n
+        # If we still have characters in LCS
+        if lcs_idx < lcs.length
+            # Add characters from str1 until we find next LCS character
+            while i < m && str1[i] != lcs[lcs_idx]
+                result += str1[i]
+                i += 1
+            end
+            
+            # Add characters from str2 until we find next LCS character
+            while j < n && str2[j] != lcs[lcs_idx]
+                result += str2[j]
+                j += 1
+            end
+            
+            # Add the LCS character
+            result += lcs[lcs_idx]
+            lcs_idx += 1
+            i += 1
+            j += 1
+        else
+            # Add remaining characters from both strings
+            result += str1[i..-1] if i < m
+            result += str2[j..-1] if j < n
+            break
+        end
+    end
+    
+    result
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

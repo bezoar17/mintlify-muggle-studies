@@ -1,0 +1,49 @@
+---
+title: '❗️ N-Queens II'
+description: '[leetcode link](https://leetcode.com/problems/n-queens-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>The <strong>n-queens</strong> puzzle is the problem of placing <code>n</code> queens on an <code>n x n</code> chessboard such that no two queens attack each other.</p>  <p>Given an integer <code>n</code>, return <em>the number of distinct solutions to the&nbsp;<strong>n-queens puzzle</strong></em>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/11/13/queens.jpg" style="width: 600px; height: 268px;" />  <strong>Input:</strong> n = 4 <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> There are two distinct solutions to the 4-queens puzzle as shown.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> n = 1 <br/> <strong>Output:</strong> 1    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= n &lt;= 9</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```cpp title="N-Queens II" lines
+class Solution {
+public:
+    bool isValid(int n,int positions[],int row,int column){
+		for(int i=0;i<column;i++)
+			if(positions[i]==row || abs(positions[i]-row)== abs(i-column))
+				return false;
+		return true;
+	}
+	
+	int solveNQ(int n,int column,int positions[],int count){
+
+		if(column==n)
+			return count+1;
+		for(int i=0;i<n;i++)
+			if(isValid(n,positions,i,column)){
+				positions[column]=i;
+				count=solveNQ(n,column+1,positions,count);
+		}
+		return count;
+	}
+	
+    int totalNQueens(int n) {
+        int positions[n];
+       return solveNQ(n,0,positions,0);
+    }
+};
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

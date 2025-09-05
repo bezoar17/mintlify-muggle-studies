@@ -1,0 +1,53 @@
+---
+title: '❗️ Sliding Window Median'
+description: '[leetcode link](https://leetcode.com/problems/sliding-window-median/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>The <strong>median</strong> is the middle value in an ordered integer list. If the size of the list is even, there is no middle value. So the median is the mean of the two middle values.</p>  <ul>  <li>For examples, if <code>arr = [2,<u>3</u>,4]</code>, the median is <code>3</code>.</li>  <li>For examples, if <code>arr = [1,<u>2,3</u>,4]</code>, the median is <code>(2 + 3) / 2 = 2.5</code>.</li> </ul>  <p>You are given an integer array <code>nums</code> and an integer <code>k</code>. There is a sliding window of size <code>k</code> which is moving from the very left of the array to the very right. You can only see the <code>k</code> numbers in the window. Each time the sliding window moves right by one position.</p>  <p>Return <em>the median array for each window in the original array</em>. Answers within <code>10<sup>-5</sup></code> of the actual value will be accepted.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [1,3,-1,-3,5,3,6,7], k = 3 <br/> <strong>Output:</strong> [1.00000,-1.00000,-1.00000,3.00000,5.00000,6.00000] <br/> <strong>Explanation:</strong>  Window position                Median ---------------                ----- [<strong>1  3  -1</strong>] -3  5  3  6  7        1  1 [<strong>3  -1  -3</strong>] 5  3  6  7       -1  1  3 [<strong>-1  -3  5</strong>] 3  6  7       -1  1  3  -1 [<strong>-3  5  3</strong>] 6  7        3  1  3  -1  -3 [<strong>5  3  6</strong>] 7        5  1  3  -1  -3  5 [<strong>3  6  7</strong>]       6   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [1,2,3,4,2,3,1,4,2], k = 3 <br/> <strong>Output:</strong> [2.00000,3.00000,3.00000,3.00000,2.00000,3.00000,2.00000]    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= k &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>-2<sup>31</sup> &lt;= nums[i] &lt;= 2<sup>31</sup> - 1</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Have 2 heaps, which are essentially maintaining the sorted array. [left_heap, right_heap]. 
+Left would be a max heap, right would be a min heap. Their top elements decide what the median should be, in case k is even, sizes of both are same, and median is avg of top elements. If k is odd, we have to keep 1 of the sizes more, we can choose right min to have more elements, in this case, size of right min heap would be 1 more than left max heap.
+
+Then before we move to the next element, we remove the leftmost element from the heaps. And balance the heaps, i.e, if size of right min is &lt;= left max, right min will get the element. So, we first put the element in left max heap, and move the top element from here to right min. 
+
+When size of left max heap is less than right min, left one should get 1 element, so we put the element in right, and move the top of right which is a min value to the left heap. 
+
+In both cases, the one with more size gets a push and pop operation, so size remains same, while the one with lesser size gets a push op, increasing its size and maintaing the balance of heaps.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Sliding Window Median" lines
+# @param {Integer[]} nums
+# @param {Integer} k
+# @return {Float[]}
+def median_sliding_window(nums, k)
+  l_max_h, r_min_h  = MaxHeap.new(), MinHeap.new()
+  result = []
+
+  nums.each_with_index do|n, i|
+    # balance sizes of l,r heaps; when size is equal, r heap gets 1 more element
+    constant_h, increment_h = r_min_h.size <= l_max_h.size ? [l_max_h, r_min_h] : [r_min_h, l_max_h]
+    constant_h.push(n); increment_h.push(constant_h.pop)
+
+    # this condition remains true for all idxs after first k elements are processed
+    if r_min_h.size + l_max_h.size == k
+      # right_min size is more, r_size = l_size + 1, when k is odd
+      result << (k.odd? ? r_min_h.min.to_f : (l_max_h.max.to_f +  r_min_h.min.to_f)/2)
+     
+      start = i - k + 1 # remove the element going out of the window
+      r_min_h.has_key?(nums[start]) ? r_min_h.delete(nums[start]) : l_max_h.delete(nums[start])
+    end
+  end
+  result
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,54 @@
+---
+title: '🧀 Edit Distance'
+description: '[leetcode link](https://leetcode.com/problems/edit-distance/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given two strings <code>word1</code> and <code>word2</code>, return <em>the minimum number of operations required to convert <code>word1</code> to <code>word2</code></em>.</p>  <p>You have the following three operations permitted on a word:</p>  <ul>  <li>Insert a character</li>  <li>Delete a character</li>  <li>Replace a character</li> </ul>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> word1 = &quot;horse&quot;, word2 = &quot;ros&quot; <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong>  horse -&gt; rorse (replace &#39;h&#39; with &#39;r&#39;) rorse -&gt; rose (remove &#39;r&#39;) rose -&gt; ros (remove &#39;e&#39;)   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> word1 = &quot;intention&quot;, word2 = &quot;execution&quot; <br/> <strong>Output:</strong> 5 <br/> <strong>Explanation:</strong>  intention -&gt; inention (remove &#39;t&#39;) inention -&gt; enention (replace &#39;i&#39; with &#39;e&#39;) enention -&gt; exention (replace &#39;n&#39; with &#39;x&#39;) exention -&gt; exection (replace &#39;n&#39; with &#39;c&#39;) exection -&gt; execution (insert &#39;u&#39;)    <p><strong>Constraints:</strong></p>  <ul>  <li><code>0 &lt;= word1.length, word2.length &lt;= 500</code></li>  <li><code>word1</code> and <code>word2</code> consist of lowercase English letters.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Classic dp problem. Start from 0,0 in both strings, if char is same go to next, else simulate insert/delete, keeping 1 index fix, and advancing other. Or replace, i.e, advancing both indexes.
+
+If either of the string is completely built, i.e, idx reaches end, then we can return number of ops as remaining chars.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Edit Distance" lines
+# @param {String} word1
+# @param {String} word2
+# @return {Integer}
+def min_distance(word1, word2)
+  n1 = word1.size
+  n2 = word2.size
+  dp = Array.new(n1) { Array.new(n2) }
+  
+  dfs=->(i,j) {
+    return n1 - i if j == n2
+    return n2 - j if i == n1
+    
+    return dp[i][j] if dp[i][j]
+
+    if word1[i] == word2[j]
+      dp[i][j] = dfs.call(i + 1, j + 1)
+    else
+      dp[i][j] = [
+        1 + dfs.call(i, j + 1), # insert
+        1 + dfs.call(i + 1, j), # delete 
+        1 + dfs.call(i + 1, j + 1) # replace
+      ].min
+    end
+  }
+
+  
+  dfs.call(0, 0)
+end
+
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,79 @@
+---
+title: '❗️ Make the XOR of All Segments Equal to Zero'
+description: '[leetcode link](https://leetcode.com/problems/make-the-xor-of-all-segments-equal-to-zero/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an array <code>nums</code>​​​ and an integer <code>k</code>​​​​​. The <font face="monospace">XOR</font> of a segment <code>[left, right]</code> where <code>left &lt;= right</code> is the <code>XOR</code> of all the elements with indices between <code>left</code> and <code>right</code>, inclusive: <code>nums[left] XOR nums[left+1] XOR ... XOR nums[right]</code>.</p>  <p>Return <em>the minimum number of elements to change in the array </em>such that the <code>XOR</code> of all segments of size <code>k</code>​​​​​​ is equal to zero.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [1,2,0,3,0], k = 1 <br/> <strong>Output:</strong> 3 <strong>Explanation: </strong>Modify the array from [<u><strong>1</strong></u>,<u><strong>2</strong></u>,0,<u><strong>3</strong></u>,0] to from [<u><strong>0</strong></u>,<u><strong>0</strong></u>,0,<u><strong>0</strong></u>,0].   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [3,4,5,2,1,7,3,4,7], k = 3 <br/> <strong>Output:</strong> 3 <strong>Explanation: </strong>Modify the array from [3,4,<strong><u>5</u></strong>,<strong><u>2</u></strong>,<strong><u>1</u></strong>,7,3,4,7] to [3,4,<strong><u>7</u></strong>,<strong><u>3</u></strong>,<strong><u>4</u></strong>,7,3,4,7].   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> nums = [1,2,4,1,2,5,1,2,6], k = 3 <br/> <strong>Output:</strong> 3 <strong>Explanation: </strong>Modify the array from [1,2,<strong><u>4,</u></strong>1,2,<strong><u>5</u></strong>,1,2,<strong><u>6</u></strong>] to [1,2,<strong><u>3</u></strong>,1,2,<strong><u>3</u></strong>,1,2,<strong><u>3</u></strong>].   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= k &lt;= nums.length &lt;= 2000</code></li>  <li><code>​​​​​​0 &lt;= nums[i] &lt; 2<sup>10</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Suppose for any sequence of k no.s whose XOR is 0. Say k is 4 and we have for some a^b^c^d, now for the next 4 no.s to have XOR 0, that no. has to be a. So no.s at k distance should be same. Or no.s with same mod value with k should be same. If we get for each [0,k-1], the values that occur at each idx, we now have to choose a sequence for which minimal changes would be required for each idx. We make the least changes at each idx, and then for the last element, just make all of them to the remainder of all xor. This is the case where 1 element in k is not from nums, other case is when 0 elements in k are not from nums. 
+
+These 2 can be calculated separately. 
+Here is the same idea https://leetcode.com/problems/make-the-xor-of-all-segments-equal-to-zero/solutions/1097266/Python-Solution-with-some-explanation
+
+See solution for more explanation.
+
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Make the XOR of All Segments Equal to Zero" lines
+# @param {Integer[]} nums
+# @param {Integer} k
+# @return {Integer}
+def min_changes(nums, k)
+  # see notes for insight
+  n = nums.size;
+  tally_at_pos = Array.new(k) { [] }
+  nums.each_with_index {|num, i| tally_at_pos[i%k]<<num }
+  tally_at_pos = tally_at_pos.map(&:tally)
+
+  # case 1, one number is not from list
+  max_freqs = tally_at_pos.map { |x| x.to_a.sort_by{|i| -i[1]}.first[1] } # most freq for each pos
+  ans = n - (max_freqs.sum - max_freqs.min) # the min freq 1 will be changed to something else, rest remain as is
+  
+  # case 2, all k numbers are from list
+  # there is a way to choose 1 no. from each group such that XOR is 0
+  # if there are multiple combos, the optimal choice should have min changes
+  # for this we need to keep track of other xor values as well for each position, not only 0
+  # bcoz some no. for next position might pair up with one of the earlier options to give us 0 at any point
+
+  # suppose dp[j] is best choice for having xor of k choices from groups equaling j
+  # means, the k choices freq sum should be maximum for the changes to be minimal
+  # we calculate this, and in the end our answer would be n-d[0]
+
+  dp = Hash.new(0) 
+  dp.merge!(tally_at_pos[0].dup)
+  # start with position 0, and tally_dp of numbers
+  # for each position, calculate all possible combos of previous options(containing all options and their freq till i-1)
+  # and all options at position i, we calculate the max for all these options at each step, and update the dp/tally at each point
+  # 4 xor values at first position, at next position if we have 2 options, 8 xors will happen, which might get reduced to lesser unique count
+  # now for the next 1, we again get 3 new elements, so 3 * uniq in last, now this keeps on going till the end.
+
+  (1...k).each do |i|
+    new_tally_dp = Hash.new(0)
+  
+    dp.each do |x, x_freq|
+      tally_at_pos[i].each do |y, y_freq|
+        t = x^y
+        new_tally_dp[t] = [new_tally_dp[t], x_freq + y_freq ].max
+        # x+y freq is essentially total numbers reused; x_freq is freq of x till i-1 position, and y_freq is freq of y at i
+        # both of which are contributing to the t xor value
+        # calculating max resused and then taking min outside is easier than calculating min changes at each position i
+      end
+    end
+
+    dp = new_tally_dp.dup
+  end  
+  [ans, n-dp[0]].min
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

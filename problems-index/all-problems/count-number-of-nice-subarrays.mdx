@@ -1,0 +1,55 @@
+---
+title: '🧀 Count Number of Nice Subarrays'
+description: '[leetcode link](https://leetcode.com/problems/count-number-of-nice-subarrays/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an array of integers <code>nums</code> and an integer <code>k</code>. A continuous subarray is called <strong>nice</strong> if there are <code>k</code> odd numbers on it.</p>  <p>Return <em>the number of <strong>nice</strong> sub-arrays</em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [1,1,2,1,1], k = 3 <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> The only sub-arrays with 3 odd numbers are [1,1,2,1] and [1,2,1,1].   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [2,4,6], k = 1 <br/> <strong>Output:</strong> 0 <br/> <strong>Explanation:</strong> There are no odd numbers in the array.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> nums = [2,2,2,1,2,2,1,2,2,2], k = 2 <br/> <strong>Output:</strong> 16    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 50000</code></li>  <li><code>1 &lt;= nums[i] &lt;= 10^5</code></li>  <li><code>1 &lt;= k &lt;= nums.length</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Get indices of odd in an array. if its size is less than k, return 0.
+Else, first k elements in odd_indexes array forms the first subarray. This sub-array can be extended though to 
+left and right uptil the next odd element, i.e next or previous index of odd element in nums. So, immediate previous or next elem in odd_indices. These left and right extensions can be multiplied to get all subarrays that have these k odd indices. Then move to the next window of k, and compute the same thing. 
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Count Number of Nice Subarrays" lines
+# @param {Integer[]} nums
+# @param {Integer} k
+# @return {Integer}
+def number_of_subarrays(nums, k)
+  n = nums.size
+  odd_indexes = []
+  nums.each_with_index {|num, i| odd_indexes<<i if num.odd?}
+  return 0 if odd_indexes.size <k
+  
+  sub_array_count = 0; 
+  # left_ext = i==0 ? odd_indexes[l]+1 : odd_indexes[l] - odd_indexes[l-1] 
+  # right_ext = r+1 == n ? n-odd_indexes[r] : odd_indexes[r+1] - odd_indexes[r] 
+  # to simplify processing left and right extension at boundaries, update first and last
+  odd_index_calc =  [-1] + odd_indexes + [n] 
+  odd_calc_size = odd_index_calc.size
+
+  # process window of k on odd indexes
+  # i+k-1 <= odd_calc_size-2; compute till 2nd last elem of odd_index_calc, i.e last of odd_indexes
+  # above equation can be written as i < odd_calc_size-k
+  (1...(odd_calc_size-k)).each do |i|
+    left_p=i; right_p = i+k-1;
+
+    left_extension = odd_index_calc[left_p] - odd_index_calc[left_p-1]
+    right_extension = odd_index_calc[right_p+1] - odd_index_calc[right_p]
+
+    sub_array_count += (left_extension * right_extension);
+  end
+
+  sub_array_count
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

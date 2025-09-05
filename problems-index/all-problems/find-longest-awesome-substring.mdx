@@ -1,0 +1,49 @@
+---
+title: '❗️ Find Longest Awesome Substring'
+description: '[leetcode link](https://leetcode.com/problems/find-longest-awesome-substring/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a string <code>s</code>. An <strong>awesome</strong> substring is a non-empty substring of <code>s</code> such that we can make any number of swaps in order to make it a palindrome.</p>  <p>Return <em>the length of the maximum length <strong>awesome substring</strong> of</em> <code>s</code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> s = &quot;3242415&quot; <br/> <strong>Output:</strong> 5 <br/> <strong>Explanation:</strong> &quot;24241&quot; is the longest awesome substring, we can form the palindrome &quot;24142&quot; with some swaps.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> s = &quot;12345678&quot; <br/> <strong>Output:</strong> 1   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> s = &quot;213123&quot; <br/> <strong>Output:</strong> 6 <br/> <strong>Explanation:</strong> &quot;213123&quot; is the longest awesome substring, we can form the palindrome &quot;231132&quot; with some swaps.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= s.length &lt;= 10<sup>5</sup></code></li>  <li><code>s</code> consists only of digits.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      A string can be awesome, if it has even count of occurences except for 1 digit/char. There are 10 total chars here. At each idx, the odd even count for char can be represented by a 10 bit no. as a state mask, where a bit is 1 or 0 if that char is odd or even. Suppose at idx x, we have a state of bit_x. If the same exact state bit_x was seen before at an idx y, it means between these 2 idxs x-y, count of chars are all even. The other case we need to look for is if 1 char can have odd occurence. For this, we mutate bit_x 10 times, flipping 1 bit at a time, and check the first idx of these states, for these cases the bit that was modified has occured odd times between the 2 idxs. So, for each idx, we check 10 more neighbors for odd occurence. 
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Find Longest Awesome Substring" lines
+# @param {String} s
+# @return {Integer}
+def longest_awesome(s)
+  # awesome string check is just based on count of chars, if only 1 odd char count, it can be awesome ?
+  ch_count = Array.new(10, 0)
+  chars = s.chars.map(&:to_i)
+  n = chars.size
+  first_occurence_of_mask = {}
+  first_occurence_of_mask[0] = -1
+  max_len = 1
+
+  chars.each_with_index do |num, i|
+    ch_count[num]+=1
+    current_state_mask = ch_count.map{|x| x.odd? ? '1' : '0'}.join.to_i(2)
+
+    first_occurence_of_mask[current_state_mask] ||= i
+    max_len = [max_len, i-first_occurence_of_mask[current_state_mask]].max
+    
+    # neighbors at 1 difference
+    (0...10).each do |bit|
+      neighbor_mask = (current_state_mask ^ (1<<bit))
+      max_len = [max_len, i-first_occurence_of_mask[neighbor_mask]].max if first_occurence_of_mask.has_key?(neighbor_mask)
+    end
+  end
+  max_len
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

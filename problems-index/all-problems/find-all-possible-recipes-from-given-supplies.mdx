@@ -1,0 +1,61 @@
+---
+title: '🧀 Find All Possible Recipes from Given Supplies'
+description: '[leetcode link](https://leetcode.com/problems/find-all-possible-recipes-from-given-supplies/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You have information about <code>n</code> different recipes. You are given a string array <code>recipes</code> and a 2D string array <code>ingredients</code>. The <code>i<sup>th</sup></code> recipe has the name <code>recipes[i]</code>, and you can <strong>create</strong> it if you have <strong>all</strong> the needed ingredients from <code>ingredients[i]</code>. A recipe can also be an ingredient for <strong>other </strong>recipes, i.e., <code>ingredients[i]</code> may contain a string that is in <code>recipes</code>.</p>  <p>You are also given a string array <code>supplies</code> containing all the ingredients that you initially have, and you have an infinite supply of all of them.</p>  <p>Return <em>a list of all the recipes that you can create. </em>You may return the answer in <strong>any order</strong>.</p>  <p>Note that two recipes may contain each other in their ingredients.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> recipes = [&quot;bread&quot;], ingredients = [[&quot;yeast&quot;,&quot;flour&quot;]], supplies = [&quot;yeast&quot;,&quot;flour&quot;,&quot;corn&quot;] <br/> <strong>Output:</strong> [&quot;bread&quot;] <br/> <strong>Explanation:</strong> We can create &quot;bread&quot; since we have the ingredients &quot;yeast&quot; and &quot;flour&quot;.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> recipes = [&quot;bread&quot;,&quot;sandwich&quot;], ingredients = [[&quot;yeast&quot;,&quot;flour&quot;],[&quot;bread&quot;,&quot;meat&quot;]], supplies = [&quot;yeast&quot;,&quot;flour&quot;,&quot;meat&quot;] <br/> <strong>Output:</strong> [&quot;bread&quot;,&quot;sandwich&quot;] <br/> <strong>Explanation:</strong> We can create &quot;bread&quot; since we have the ingredients &quot;yeast&quot; and &quot;flour&quot;. We can create &quot;sandwich&quot; since we have the ingredient &quot;meat&quot; and can create the ingredient &quot;bread&quot;.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> recipes = [&quot;bread&quot;,&quot;sandwich&quot;,&quot;burger&quot;], ingredients = [[&quot;yeast&quot;,&quot;flour&quot;],[&quot;bread&quot;,&quot;meat&quot;],[&quot;sandwich&quot;,&quot;meat&quot;,&quot;bread&quot;]], supplies = [&quot;yeast&quot;,&quot;flour&quot;,&quot;meat&quot;] <br/> <strong>Output:</strong> [&quot;bread&quot;,&quot;sandwich&quot;,&quot;burger&quot;] <br/> <strong>Explanation:</strong> We can create &quot;bread&quot; since we have the ingredients &quot;yeast&quot; and &quot;flour&quot;. We can create &quot;sandwich&quot; since we have the ingredient &quot;meat&quot; and can create the ingredient &quot;bread&quot;. We can create &quot;burger&quot; since we have the ingredient &quot;meat&quot; and can create the ingredients &quot;bread&quot; and &quot;sandwich&quot;.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>n == recipes.length == ingredients.length</code></li>  <li><code>1 &lt;= n &lt;= 100</code></li>  <li><code>1 &lt;= ingredients[i].length, supplies.length &lt;= 100</code></li>  <li><code>1 &lt;= recipes[i].length, ingredients[i][j].length, supplies[k].length &lt;= 10</code></li>  <li><code>recipes[i], ingredients[i][j]</code>, and <code>supplies[k]</code> consist only of lowercase English letters.</li>  <li>All the values of <code>recipes</code> and <code>supplies</code>&nbsp;combined are unique.</li>  <li>Each <code>ingredients[i]</code> does not contain any duplicate values.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Find All Possible Recipes from Given Supplies" lines
+# @param {String[]} recipes
+# @param {String[][]} ingredients
+# @param {String[]} supplies
+# @return {String[]}
+def find_all_recipes(recipes, ingredients, supplies)
+  available = Set.new(supplies)
+  dependency_graph = Hash.new { |h, k| h[k] = [] }
+  recipe_to_index = recipes.each_with_index.to_h
+  in_degree = Array.new(recipes.size, 0)
+
+  ingredients.each_with_index do |ingredient_list, index|
+    ingredient_list.each do |ingredient|
+      unless available.include?(ingredient)
+        dependency_graph[ingredient] << recipes[index]
+        in_degree[index] += 1
+      end
+    end
+  end
+
+  queue = []
+  in_degree.each_with_index do |degree, index|
+    queue << recipes[index] if degree == 0
+  end
+  result = []
+
+  until queue.empty?
+    current_recipe = queue.shift
+    result << current_recipe
+
+    dependency_graph[current_recipe].each do |dependent_recipe|
+      recipe_index = recipe_to_index[dependent_recipe]
+      in_degree[recipe_index] -= 1
+      queue << dependent_recipe if in_degree[recipe_index] == 0
+    end
+  end
+
+  result
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

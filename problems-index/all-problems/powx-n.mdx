@@ -1,0 +1,48 @@
+---
+title: '🧀 Pow(x, n)'
+description: '[leetcode link](https://leetcode.com/problems/powx-n/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Implement <a href="http://www.cplusplus.com/reference/valarray/pow/" target="_blank">pow(x, n)</a>, which calculates <code>x</code> raised to the power <code>n</code> (i.e., <code>x<sup>n</sup></code>).</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> x = 2.00000, n = 10 <br/> <strong>Output:</strong> 1024.00000   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> x = 2.10000, n = 3 <br/> <strong>Output:</strong> 9.26100   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> x = 2.00000, n = -2 <br/> <strong>Output:</strong> 0.25000 <br/> <strong>Explanation:</strong> 2<sup>-2</sup> = 1/2<sup>2</sup> = 1/4 = 0.25    <p><strong>Constraints:</strong></p>  <ul>  <li><code>-100.0 &lt; x &lt; 100.0</code></li>  <li><code>-2<sup>31</sup> &lt;= n &lt;= 2<sup>31</sup>-1</code></li>  <li><code>n</code> is an integer.</li>  <li>Either <code>x</code> is not zero or <code>n &gt; 0</code>.</li>  <li><code>-10<sup>4</sup> &lt;= x<sup>n</sup> &lt;= 10<sup>4</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```java title="Pow(x, n)" lines
+public class Solution {
+
+public double power(double x, int n) {
+	if (n == 0)
+		return 1;
+ 
+	double v = power(x, n / 2);
+ 
+	if (n % 2 == 0) {
+		return v * v;
+	} else {
+		return v * v * x;
+	}
+}
+
+    public double myPow(double x, int n) {
+        if (n < 0) {
+		return 1 / power(x, -n);
+    	} else {
+    		return power(x, n);
+    	}
+    }
+}
+
+
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

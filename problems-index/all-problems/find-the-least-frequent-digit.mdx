@@ -1,0 +1,30 @@
+---
+title: '🧩 Find The Least Frequent Digit'
+description: '[leetcode link](https://leetcode.com/contest/biweekly-contest-164/problems/find-the-least-frequent-digit/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an integer <code>n</code>, find the digit that occurs <strong>least</strong> frequently in its decimal representation. If multiple digits have the same frequency, choose the <strong>smallest</strong> digit.</p>  <p>Return the chosen digit as an integer.</p> The <strong>frequency</strong> of a digit <code>x</code> is the number of times it appears in the decimal representation of <code>n</code>.  <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">n = 1553322</span></p>  <p><br/> <strong>Output:</strong> 1</p>  <p><br/> <strong>Explanation:</strong></p>  <p>The least frequent digit in <code>n</code> is 1, which appears only once. All other digits appear twice.</p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">n = 723344511</span></p>  <p><br/> <strong>Output:</strong> 2</p>  <p><br/> <strong>Explanation:</strong></p>  <p>The least frequent digits in <code>n</code> are 7, 2, and 5; each appears only once.</p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= n &lt;= 2<sup>31</sup>​​​​​​​ - 1</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Find The Least Frequent Digit" lines
+# @param {Integer} n
+# @return {Integer}
+def get_least_frequent_digit(n)
+  freq = n.to_s.chars.tally
+  min_freq = freq.values.min
+  freq.select {|k,v| v==min_freq}.map(&:first).min.to_i
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

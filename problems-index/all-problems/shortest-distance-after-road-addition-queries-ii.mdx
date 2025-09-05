@@ -1,0 +1,53 @@
+---
+title: '❗️ Shortest Distance After Road Addition Queries II'
+description: '[leetcode link](https://leetcode.com/problems/shortest-distance-after-road-addition-queries-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer <code>n</code> and a 2D integer array <code>queries</code>.</p>  <p>There are <code>n</code> cities numbered from <code>0</code> to <code>n - 1</code>. Initially, there is a <strong>unidirectional</strong> road from city <code>i</code> to city <code>i + 1</code> for all <code>0 &lt;= i &lt; n - 1</code>.</p>  <p><code>queries[i] = [u<sub>i</sub>, v<sub>i</sub>]</code> represents the addition of a new <strong>unidirectional</strong> road from city <code>u<sub>i</sub></code> to city <code>v<sub>i</sub></code>. After each query, you need to find the <strong>length</strong> of the <strong>shortest path</strong> from city <code>0</code> to city <code>n - 1</code>.</p>  <p>There are no two queries such that <code>queries[i][0] &lt; queries[j][0] &lt; queries[i][1] &lt; queries[j][1]</code>.</p>  <p>Return an array <code>answer</code> where for each <code>i</code> in the range <code>[0, queries.length - 1]</code>, <code>answer[i]</code> is the <em>length of the shortest path</em> from city <code>0</code> to city <code>n - 1</code> after processing the <strong>first </strong><code>i + 1</code> queries.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">n = 5, queries = [[2,4],[0,2],[0,4]]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">[3,2,1]</span></p>  <p><strong>Explanation: </strong></p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2024/06/28/image8.jpg" style="width: 350px; height: 60px;" /></p>  <p>After the addition of the road from 2 to 4, the length of the shortest path from 0 to 4 is 3.</p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2024/06/28/image9.jpg" style="width: 350px; height: 60px;" /></p>  <p>After the addition of the road from 0 to 2, the length of the shortest path from 0 to 4 is 2.</p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2024/06/28/image10.jpg" style="width: 350px; height: 96px;" /></p>  <p>After the addition of the road from 0 to 4, the length of the shortest path from 0 to 4 is 1.</p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">n = 4, queries = [[0,3],[0,2]]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">[1,1]</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2024/06/28/image11.jpg" style="width: 300px; height: 70px;" /></p>  <p>After the addition of the road from 0 to 3, the length of the shortest path from 0 to 3 is 1.</p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2024/06/28/image12.jpg" style="width: 300px; height: 70px;" /></p>  <p>After the addition of the road from 0 to 2, the length of the shortest path remains 1.</p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>3 &lt;= n &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= queries.length &lt;= 10<sup>5</sup></code></li>  <li><code>queries[i].length == 2</code></li>  <li><code>0 &lt;= queries[i][0] &lt; queries[i][1] &lt; n</code></li>  <li><code>1 &lt; queries[i][1] - queries[i][0]</code></li>  <li>There are no repeated roads among the queries.</li>  <li>There are no two queries such that <code>i != j</code> and <code>queries[i][0] &lt; queries[j][0] &lt; queries[i][1] &lt; queries[j][1]</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      If j_start &gt; i_start, then j_end &gt; i_end. If i_start==j_start, one of ends is higher. 
+
+Once an edge appears, say 2-&gt;5, there will never be a case where you will go to 3 or 4.
+
+Now if 3-&gt;7 appears, you will never go to 4,5,6. 
+
+If we simulate deleting nodes, size of set can give us distance to last node, as these are only the cities you will visit, and everything remaining has a length of 1.
+
+But, when deleting nodes, if we go from start to end, this can be huge, and we might not delete anything if everything in between has been deleted. 
+
+So, this has to be done in sorted array, where we start from start+1, and deleting until we reach end-1, if nodes were deleted before, we will have fewer iterations.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```python3 title="Shortest Distance After Road Addition Queries II" lines
+from sortedcontainers import SortedList
+
+class Solution:
+    def shortestDistanceAfterQueries(self, n: int, queries: List[List[int]]) -> List[int]:
+        cities = SortedList(list(range(n)))
+        results = []
+        
+        for u, v in queries:
+            # merge all edge between [i, j]
+            # == pop all node [i + 1, i + 2 ... j - 1]
+            idx1 = cities.bisect_left(u + 1)
+            idx2 = cities.bisect_right(v - 1) - 1
+            
+            for idx in reversed(range(idx1, idx2 + 1)):
+                cities.pop(idx)
+            
+            # Append the remaining size minus 1
+            results.append(len(cities) - 1)
+        
+        return results
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

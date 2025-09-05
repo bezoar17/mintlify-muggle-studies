@@ -1,0 +1,69 @@
+---
+title: '🧀 Zero Array Transformation II'
+description: '[leetcode link](https://leetcode.com/problems/zero-array-transformation-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer array <code>nums</code> of length <code>n</code> and a 2D array <code>queries</code> where <code>queries[i] = [l<sub>i</sub>, r<sub>i</sub>, val<sub>i</sub>]</code>.</p>  <p>Each <code>queries[i]</code> represents the following action on <code>nums</code>:</p>  <ul>  <li>Decrement the value at each index in the range <code>[l<sub>i</sub>, r<sub>i</sub>]</code> in <code>nums</code> by <strong>at most</strong> <code>val<sub>i</sub></code>.</li>  <li>The amount by which each value is decremented<!-- notionvc: b232c9d9-a32d-448c-85b8-b637de593c11 --> can be chosen <strong>independently</strong> for each index.</li> </ul>  <p>A <strong>Zero Array</strong> is an array with all its elements equal to 0.</p>  <p>Return the <strong>minimum</strong> possible <strong>non-negative</strong> value of <code>k</code>, such that after processing the first <code>k</code> queries in <strong>sequence</strong>, <code>nums</code> becomes a <strong>Zero Array</strong>. If no such <code>k</code> exists, return -1.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [2,0,2], queries = [[0,2,1],[0,2,1],[1,1,3]]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">2</span></p>  <p><br/> <strong>Explanation:</strong></p>  <ul>  <li><strong>For i = 0 (l = 0, r = 2, val = 1):</strong>   <ul>   <li>Decrement values at indices <code>[0, 1, 2]</code> by <code>[1, 0, 1]</code> respectively.</li>   <li>The array will become <code>[1, 0, 1]</code>.</li>  </ul>  </li>  <li><strong>For i = 1 (l = 0, r = 2, val = 1):</strong>  <ul>   <li>Decrement values at indices <code>[0, 1, 2]</code> by <code>[1, 0, 1]</code> respectively.</li>   <li>The array will become <code>[0, 0, 0]</code>, which is a Zero Array. Therefore, the minimum value of <code>k</code> is 2.</li>  </ul>  </li> </ul> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [4,3,2,1], queries = [[1,3,2],[0,2,1]]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">-1</span></p>  <p><br/> <strong>Explanation:</strong></p>  <ul>  <li><strong>For i = 0 (l = 1, r = 3, val = 2):</strong>   <ul>   <li>Decrement values at indices <code>[1, 2, 3]</code> by <code>[2, 2, 1]</code> respectively.</li>   <li>The array will become <code>[4, 1, 0, 0]</code>.</li>  </ul>  </li>  <li><strong>For i = 1 (l = 0, r = 2, val<span style="font-size: 13.3333px;"> </span>= 1):</strong>  <ul>   <li>Decrement values at indices <code>[0, 1, 2]</code> by <code>[1, 1, 0]</code> respectively.</li>   <li>The array will become <code>[3, 0, 0, 0]</code>, which is not a Zero Array.</li>  </ul>  </li> </ul> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>0 &lt;= nums[i] &lt;= 5 * 10<sup>5</sup></code></li>  <li><code>1 &lt;= queries.length &lt;= 10<sup>5</sup></code></li>  <li><code>queries[i].length == 3</code></li>  <li><code>0 &lt;= l<sub>i</sub> &lt;= r<sub>i</sub> &lt; nums.length</code></li>  <li><code>1 &lt;= val<sub>i</sub> &lt;= 5</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Like the part 1 of this problem. https://leetcode.com/problems/zero-array-transformation-i/
+We need to apply k queries at a time instead of all queries
+And do a binary search over the solution space of k, i.e, 0 to queries.size.
+
+
+Second solution
+If we think about it, we can also go in a step ladder fashion right and down(processing queries), right and down.
+We process, each num in nums array, and advance k and maintain transformation state till num and beyond.
+So for nums[0],  we advance till k0 when first element of transformation state exceeds nums[0]
+
+Now we go to the next index in nums where transformation state sum is lesser than num in nums.
+And from there on, advance more transformations. If queries are exhausted, we return -1.
+Else, when nums reaches end, we return the current k.
+
+https://leetcode.com/problems/zero-array-transformation-ii/solutions/6053366/c-sweeping-line-without-binary-search-4ms
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Zero Array Transformation II" lines
+# @param {Integer[]} nums
+# @param {Integer[][]} queries
+# @return {Integer}
+def min_zero_array(nums, queries)
+  n = nums.size; q = queries.size
+  transformation_state = Array.new(n+1, 0)
+  k = 0
+  current_deficit = 0
+
+  (0...n).each do |num_idx|
+    while nums[num_idx] > current_deficit + transformation_state[num_idx]
+      k+=1
+      
+      return -1 if k-1 >= q
+      l, r, val = queries[k-1]
+      
+      # this is important, considering num_idx, accumulated transformation will not affect if r < num_idx, skip to next query
+      next if num_idx > r 
+
+      # max of l and idx because we might have query where l < num_idx, but in this iteration num_idx will be affected
+      # so accumulate it on num_idx and further elements 
+      transformation_state[[l,num_idx].max] += val 
+      
+      transformation_state[r+1] -= val if r+1 <= n
+    end
+
+    current_deficit += transformation_state[num_idx]
+  end
+  
+  k
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

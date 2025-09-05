@@ -1,0 +1,47 @@
+---
+title: '🧀 Count Square Submatrices with All Ones'
+description: '[leetcode link](https://leetcode.com/problems/count-square-submatrices-with-all-ones/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a <code>m * n</code> matrix of ones and zeros, return how many <strong>square</strong> submatrices have all ones.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> matrix = [ &nbsp; [0,1,1,1], &nbsp; [1,1,1,1], &nbsp; [0,1,1,1] ] <br/> <strong>Output:</strong> 15 <br/> <strong>Explanation:</strong>  There are <strong>10</strong> squares of side 1. There are <strong>4</strong> squares of side 2. There is  <strong>1</strong> square of side 3. Total number of squares = 10 + 4 + 1 = <strong>15</strong>.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> matrix =  [   [1,0,1],   [1,1,0],   [1,1,0] ] <br/> <strong>Output:</strong> 7 <br/> <strong>Explanation:</strong>  There are <b>6</b> squares of side 1.   There is <strong>1</strong> square of side 2.  Total number of squares = 6 + 1 = <b>7</b>.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= arr.length&nbsp;&lt;= 300</code></li>  <li><code>1 &lt;= arr[0].length&nbsp;&lt;= 300</code></li>  <li><code>0 &lt;= arr[i][j] &lt;= 1</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      The main thing is if (i-1,j) (i,j-1) and (i-1,j-1) all have max square of length k where they are bottom right corner, then (i,j) has square of k+1 where it is the bottom right corner. Else, it has max square of min of all 3 from above.
+
+No. of 1 squares is no. of 1s
+No. of 2 squares is no. of (i,j) where it is bottom right corner. 
+
+So, in reverse calculation, for any (i,j), if it has square of size k, then it contributes to all square sizes from 1 to k, and adds k to the total score.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Count Square Submatrices with All Ones" lines
+# @param {Integer[][]} matrix
+# @return {Integer}
+def count_squares(matrix)
+  n, m = matrix.size, matrix[0].size
+  dp = Array.new(n) { Array.new(m, 0) }
+
+  (0...n).each do |i|
+    (0...m).each do |j|
+      (dp[i][j] = 0; next) if matrix[i][j] == 0
+      dp[i][j] = 1 + [ 
+        i>0 ? dp[i-1][j] : 0,
+        j> 0 ? dp[i][j-1] : 0,
+        j> 0 && i >0 ? dp[i-1][j-1] : 0
+      ].min
+    end
+  end
+  
+  dp.flatten.sum
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

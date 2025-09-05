@@ -1,0 +1,39 @@
+---
+title: '🧀 Largest Number'
+description: '[leetcode link](https://leetcode.com/problems/largest-number/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a list of non-negative integers <code>nums</code>, arrange them such that they form the largest number and return it.</p>  <p>Since the result may be very large, so you need to return a string instead of an integer.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [10,2] <br/> <strong>Output:</strong> &quot;210&quot;   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [3,30,34,5,9] <br/> <strong>Output:</strong> &quot;9534330&quot;    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 100</code></li>  <li><code>0 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```cpp title="Largest Number" lines
+class Solution {
+public:
+    static bool comp(const int &a,const int &b){
+        long long int aa=stol(to_string(a)+to_string(b));
+        long long int bb=stol(to_string(b)+to_string(a));
+        return aa > bb;
+    }
+    string largestNumber(vector<int>& nums) {
+        sort(nums.begin(),nums.end(),comp);
+        string s;
+        for(int i=0;i<nums.size();i++)
+        s+=to_string(nums[i]);
+        s.erase(1, s.find_first_not_of('0'));
+        return s;
+    }
+};
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

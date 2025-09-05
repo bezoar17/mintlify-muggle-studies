@@ -1,0 +1,35 @@
+---
+title: '🧀 Max Sum of a Pair With Equal Sum of Digits'
+description: '[leetcode link](https://leetcode.com/problems/max-sum-of-a-pair-with-equal-sum-of-digits/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a <strong>0-indexed</strong> array <code>nums</code> consisting of <strong>positive</strong> integers. You can choose two indices <code>i</code> and <code>j</code>, such that <code>i != j</code>, and the sum of digits of the number <code>nums[i]</code> is equal to that of <code>nums[j]</code>.</p>  <p>Return the <strong>maximum</strong> value of<em> </em><code>nums[i] + nums[j]</code><em> </em>that you can obtain over all possible indices <code>i</code> and <code>j</code> that satisfy the conditions. If no such pair of indices exists, return -1.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [18,43,36,13,7] <br/> <strong>Output:</strong> 54 <br/> <strong>Explanation:</strong> The pairs (i, j) that satisfy the conditions are: - (0, 2), both numbers have a sum of digits equal to 9, and their sum is 18 + 36 = 54. - (1, 4), both numbers have a sum of digits equal to 7, and their sum is 43 + 7 = 50. So the maximum sum that we can obtain is 54.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [10,12,19,14] <br/> <strong>Output:</strong> -1 <br/> <strong>Explanation:</strong> There are no two numbers that satisfy the conditions, so we return -1.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Sorting nums in desc and checking from start doesnt work, because M1, might combine with m22, and still be greater than M3+M4, so we cant exit when we get 2 matching in desc nums. We need to check all the values, and keep max and second max for each digit_sum.
+
+Or, store pair of [num, digit_sum], sort by digit_sum, and then num. For 2 consecutive nums if digit_sum is same, calc their sum and keep track of max.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Max Sum of a Pair With Equal Sum of Digits" lines
+# @param {Integer[]} nums
+# @return {Integer}
+def maximum_sum(nums)
+  pairs = nums.map { |num| [num.digits.sum, num] }.sort
+  pair_sum = -1
+  (1...pairs.size).each do |i|
+    pair_sum = [pair_sum, pairs[i][1] + pairs[i-1][1]].max if pairs[i][0] == pairs[i-1][0]
+  end
+  pair_sum
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

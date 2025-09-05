@@ -1,0 +1,29 @@
+---
+title: '🧩 Defuse the Bomb'
+description: '[leetcode link](https://leetcode.com/problems/defuse-the-bomb/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You have a bomb to defuse, and your time is running out! Your informer will provide you with a <strong>circular</strong> array <code>code</code>&nbsp;of length of <code>n</code>&nbsp;and a key <code>k</code>.</p>  <p>To decrypt the code, you must replace every number. All the numbers are replaced <strong>simultaneously</strong>.</p>  <ul>  <li>If <code>k &gt; 0</code>, replace the <code>i<sup>th</sup></code> number with the sum of the <strong>next</strong> <code>k</code> numbers.</li>  <li>If <code>k &lt; 0</code>, replace the <code>i<sup>th</sup></code> number with the sum of the <strong>previous</strong> <code>k</code> numbers.</li>  <li>If <code>k == 0</code>, replace the <code>i<sup>th</sup></code> number with <code>0</code>.</li> </ul>  <p>As <code>code</code> is circular, the next element of <code>code[n-1]</code> is <code>code[0]</code>, and the previous element of <code>code[0]</code> is <code>code[n-1]</code>.</p>  <p>Given the <strong>circular</strong> array <code>code</code> and an integer key <code>k</code>, return <em>the decrypted code to defuse the bomb</em>!</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> code = [5,7,1,4], k = 3 <br/> <strong>Output:</strong> [12,10,16,13] <br/> <strong>Explanation:</strong> Each number is replaced by the sum of the next 3 numbers. The decrypted code is [7+1+4, 1+4+5, 4+5+7, 5+7+1]. Notice that the numbers wrap around.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> code = [1,2,3,4], k = 0 <br/> <strong>Output:</strong> [0,0,0,0] <br/> <strong>Explanation:</strong> When k is zero, the numbers are replaced by 0.    <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> code = [2,4,9,3], k = -2 <br/> <strong>Output:</strong> [12,5,6,13] <br/> <strong>Explanation:</strong> The decrypted code is [3+9, 2+3, 4+2, 9+4]. Notice that the numbers wrap around again. If k is negative, the sum is of the <strong>previous</strong> numbers.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>n == code.length</code></li>  <li><code>1 &lt;= n&nbsp;&lt;= 100</code></li>  <li><code>1 &lt;= code[i] &lt;= 100</code></li>  <li><code>-(n - 1) &lt;= k &lt;= n - 1</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Defuse the Bomb" lines
+# @param {Integer[]} code
+# @param {Integer} k
+# @return {Integer[]}
+def decrypt(code, k)
+  code.map.with_index { |_, i| k.abs.times.sum { |j| code[(i + (j + 1) * k / k.abs) % code.size] } }
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

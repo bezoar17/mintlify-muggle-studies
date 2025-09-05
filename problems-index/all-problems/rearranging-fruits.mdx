@@ -1,0 +1,67 @@
+---
+title: '❗️ Rearranging Fruits'
+description: '[leetcode link](https://leetcode.com/problems/rearranging-fruits/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You have two fruit baskets containing <code>n</code> fruits each. You are given two <strong>0-indexed</strong> integer arrays <code>basket1</code> and <code>basket2</code> representing the cost of fruit in each basket. You want to make both baskets <strong>equal</strong>. To do so, you can use the following operation as many times as you want:</p>  <ul>  <li>Choose two indices <code>i</code> and <code>j</code>, and swap the <code>i<sup><font size="1">th</font></sup></code> fruit of <code>basket1</code> with the <code>j<sup><font size="1">th</font></sup></code> fruit of <code>basket2</code>.</li>  <li>The cost of the swap is <code>min(basket1[i], basket2[j])</code>.</li> </ul>  <p>Two baskets are considered equal if sorting them according to the fruit cost makes them exactly the same baskets.</p>  <p>Return <em>the minimum cost to make both the baskets equal or </em><code>-1</code><em> if impossible.</em></p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> basket1 = [4,2,2,2], basket2 = [1,4,1,2] <br/> <strong>Output:</strong> 1 <br/> <strong>Explanation:</strong> Swap index 1 of basket1 with index 0 of basket2, which has cost 1. Now basket1 = [4,1,2,2] and basket2 = [2,4,1,2]. Rearranging both the arrays makes them equal.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> basket1 = [2,3,4,1], basket2 = [3,2,5,1] <br/> <strong>Output:</strong> -1 <br/> <strong>Explanation:</strong> It can be shown that it is impossible to make both the baskets equal.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>basket1.length == basket2.length</code></li>  <li><code>1 &lt;= basket1.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= basket1[i], basket2[i] &lt;= 10<sup>9</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      We have to ensure same freq of numbers exists in both arrays. That is the task, we are allowed swaps between arrays, cost of which is mininum of numbers being swapped. 
+
+If a numbers total freq is odd, no way we can ensure equal freq in both arrays. Now, for the numbers with even freq, we can calculate the deficit/excess for each number. Say, number 4 occurs 3 times in one array, and 1 time in another, deficit/excess for 4 is 1, i.e (freq in one array - total freq/2).abs
+
+We can collect all such numbers along with their freq, so say 4 has excess of 1, 2 has excess of 2, 3 has excess of 1 etc. The collection would have [4, 2, 2, 3]. These are numbers which need movement. If we sort this collection, we have all numbers which have to be involved in a swap.
+
+Ideally, we can pair each lowest with each highest one. So that the cost of swap is taken from lower half, thus minimizing the overall cost. 
+
+**Insight**
+But, there is 1 more way we can swap, suppose we had to swap (x1, x2). We can swap it using another number. Suppose this number was m. And array was like
+[x1,m]    [x2, m]
+
+Finally array should look like [x2, m] and [x1, m], after the swaps.
+
+We'll do the first swap with (x1, m), then with (x2, m). So arrays would go like this
+[x1,m]    [x2, m] -&gt; [m,m]    [x2, x1] -&gt; [x2,m]    [x1, m]. 
+At the end of the swap m remains as it was in original array, we can use any number from original arrays as m.
+
+When is this method better than the direct swap of (x1, x2) (assuming x1 &lt;= x2) ? 
+
+When cost of direct swap, i.e x1, is higher than 2* m. That is cost of 2 swaps using m. Obviously, it makes sense only when m is even lower than x1. Optimally, m should be as low as it can be. 
+
+So, to give the best chance for the dual swap using m, we'll pick the lowest number as m. 
+
+Now, in the collection of numbers to be swapped, which is [cost1, cost2, cost3 .... higher_counterpart1, higher_counterpart2, higher_counterpart3], 
+we calculate for each lower half number, if the cost of swap is lower than 2 * m, if yes, we take that, else we take 2 * m for those swaps. 
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Rearranging Fruits" lines
+# @param {Integer[]} basket1
+# @param {Integer[]} basket2
+# @return {Integer}
+def min_cost(basket1, basket2)
+  extra_freq = Hash.new(0)
+  min_val = Float::INFINITY
+  
+  (0...basket1.size).each do |i| 
+    extra_freq[basket1[i]]+=1; extra_freq[basket2[i]]-=1;
+    min_val = [min_val, basket1[i], basket2[i]].min
+  end
+
+  nums_to_be_swapped = extra_freq.map {|k,v| return -1 if v.odd?; [k]* (v.abs/2) }.flatten.sort
+  alt_swap_cost = 2 * min_val
+
+  direct_swap_cost = nums_to_be_swapped.first(nums_to_be_swapped.size/2)
+
+  min_swap_cost = direct_swap_cost.reduce(0) { |result, dsc| result+=[dsc, alt_swap_cost].min }
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

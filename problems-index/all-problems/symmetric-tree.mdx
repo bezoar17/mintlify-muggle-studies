@@ -1,0 +1,52 @@
+---
+title: '🧩 Symmetric Tree'
+description: '[leetcode link](https://leetcode.com/problems/symmetric-tree/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given the <code>root</code> of a binary tree, <em>check whether it is a mirror of itself</em> (i.e., symmetric around its center).</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/02/19/symtree1.jpg" style="width: 354px; height: 291px;" />  <strong>Input:</strong> root = [1,2,2,3,4,4,3] <br/> <strong>Output:</strong> true   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/02/19/symtree2.jpg" style="width: 308px; height: 258px;" />  <strong>Input:</strong> root = [1,2,2,null,3,null,3] <br/> <strong>Output:</strong> false    <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in the tree is in the range <code>[1, 1000]</code>.</li>  <li><code>-100 &lt;= Node.val &lt;= 100</code></li> </ul>   <strong>Follow up:</strong> Could you solve it both recursively and iteratively?
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```cpp title="Symmetric Tree" lines
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int symetric(TreeNode *A, TreeNode *B){
+
+    if(!A && B)
+        return 0;
+    if(!B && A)
+        return 0;
+    if(!A)
+        return 1;
+    if(A->val != B->val)
+        return 0;
+    return (symetric(A->left,B->right) && symetric(A->right,B->left));
+    
+}
+    bool isSymmetric(TreeNode* A) {
+        return symetric(A,A);
+    }
+};
+
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

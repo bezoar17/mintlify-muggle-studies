@@ -1,0 +1,106 @@
+---
+title: '❗️ Checking Existence of Edge Length Limited Paths'
+description: '[leetcode link](https://leetcode.com/problems/checking-existence-of-edge-length-limited-paths/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>An undirected graph of <code>n</code> nodes is defined by <code>edgeList</code>, where <code>edgeList[i] = [u<sub>i</sub>, v<sub>i</sub>, dis<sub>i</sub>]</code> denotes an edge between nodes <code>u<sub>i</sub></code> and <code>v<sub>i</sub></code> with distance <code>dis<sub>i</sub></code>. Note that there may be <strong>multiple</strong> edges between two nodes.</p>  <p>Given an array <code>queries</code>, where <code>queries[j] = [p<sub>j</sub>, q<sub>j</sub>, limit<sub>j</sub>]</code>, your task is to determine for each <code>queries[j]</code> whether there is a path between <code>p<sub>j</sub></code> and <code>q<sub>j</sub></code><sub> </sub>such that each edge on the path has a distance <strong>strictly less than</strong> <code>limit<sub>j</sub></code> .</p>  <p>Return <em>a <strong>boolean array</strong> </em><code>answer</code><em>, where </em><code>answer.length == queries.length</code> <em>and the </em><code>j<sup>th</sup></code> <em>value of </em><code>answer</code> <em>is </em><code>true</code><em> if there is a path for </em><code>queries[j]</code><em> is </em><code>true</code><em>, and </em><code>false</code><em> otherwise</em>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/12/08/h.png" style="width: 267px; height: 262px;" />  <strong>Input:</strong> n = 3, edgeList = [[0,1,2],[1,2,4],[2,0,8],[1,0,16]], queries = [[0,1,2],[0,2,5]] <br/> <strong>Output:</strong> [false,true] <br/> <strong>Explanation:</strong> The above figure shows the given graph. Note that there are two overlapping edges between 0 and 1 with distances 2 and 16. For the first query, between 0 and 1 there is no path where each distance is less than 2, thus we return false for this query. For the second query, there is a path (0 -&gt; 1 -&gt; 2) of two edges with distances less than 5, thus we return true for this query.   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/12/08/q.png" style="width: 390px; height: 358px;" />  <strong>Input:</strong> n = 5, edgeList = [[0,1,10],[1,2,5],[2,3,9],[3,4,13]], queries = [[0,4,14],[1,4,13]] <br/> <strong>Output:</strong> [true,false] <br/> <strong>Explanation:</strong> The above figure shows the given graph.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>2 &lt;= n &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= edgeList.length, queries.length &lt;= 10<sup>5</sup></code></li>  <li><code>edgeList[i].length == 3</code></li>  <li><code>queries[j].length == 3</code></li>  <li><code>0 &lt;= u<sub>i</sub>, v<sub>i</sub>, p<sub>j</sub>, q<sub>j</sub> &lt;= n - 1</code></li>  <li><code>u<sub>i</sub> != v<sub>i</sub></code></li>  <li><code>p<sub>j</sub> != q<sub>j</sub></code></li>  <li><code>1 &lt;= dis<sub>i</sub>, limit<sub>j</sub> &lt;= 10<sup>9</sup></code></li>  <li>There may be <strong>multiple</strong> edges between two nodes.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Amongst all edges from a-&gt;b, we only consider the minimum one. All other edges between a-&gt;b are useless. Now that we have removed duplicates. path_val for a path from a-&gt;b is max(edge dists in path).
+Only max value is considered. So if we sort edges based on dist, and pick the first one, say min_dist_val.
+We process all edges which have dist &lt;= min_dist_val, and add nodes reachable to a component. This component holds all nodes which have path_val = min_dist_val. If a query comes for dist less than this value and both nodes are in this component, then we can return true. 
+
+Now, we process the next dist_val, and now component state has changed, it might have new elements, and for this dist_2, all nodes are within dist_2. We are simulating storing snapshots of component state after each dist value. And we can check the component at a particular state value &lt;= query dist. 
+
+Suppose, dist=2, component = {a,b,c}
+dist=5, component = {a,b,c,z}
+dist=7, component = {a,b,c,z}  {x,y}
+dist= 8, component = {a,b,c,x,y,z} and so on.
+
+x got connected with a at 8. Before that, they were not, so storing snapshots is required to store root of each different component that might only get merged later.
+
+But how do we actually store the snapshots and query them effectively ?
+We dont really need to if we process queries in order of dist too.
+
+As given in hint, we can reorder the queries based on dist, for the first query, process all edges till that dist, and maintain the component. Check if both are part of component, then for the next dist in query, process next set of edges. 
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Checking Existence of Edge Length Limited Paths" lines
+# @param {Integer} n
+# @param {Integer[][]} edge_list
+# @param {Integer[][]} queries
+# @return {Boolean[]}
+class UnionFind
+  attr_accessor :nodes, :sizes
+  attr_reader :max_set_size
+
+  def initialize(node_keys=[])
+    @nodes = {}
+    @sizes = {}
+    @max_set_size = 0
+    node_keys.each { |i| root(i) }
+  end
+
+  # this will create a node key if it doesnt exist
+  def root(i)
+    nodes[i] ||= i; sizes[i] ||= 1; # create node if it doesnt exist
+
+    while nodes[i] != i
+      nodes[i] = nodes[nodes[i]] # path compression
+      i = nodes[i]
+    end
+    i
+  end
+
+  def size_for(i)
+    sizes[root(i)]
+  end
+
+  def union(i, j)
+    root_of_i = root(i)
+    root_of_j = root(j)
+
+    return false if root_of_i == root_of_j
+
+    if sizes[root_of_j] > sizes[root_of_i]
+      nodes[root_of_i] = root_of_j
+      sizes[root_of_j] += sizes[root_of_i]
+    else
+      nodes[root_of_j] = root_of_i
+      sizes[root_of_i] += sizes[root_of_j]
+    end
+    @max_set_size = [@max_set_size, sizes[root_of_i], sizes[root_of_j]].max
+  end
+end
+
+def distance_limited_paths_exist(n, edge_list, queries)
+  # path_val for a->b is max(all dist values) in path
+  edges = edge_list.sort_by{|x| x[-1] }
+  e = edges.size;
+  queries = queries.each_with_index.sort_by{|x| x[0][-1]}
+  q = queries.size
+  query_res = Array.new(q, false)
+  uf = UnionFind.new
+  edge_pointer = 0;
+
+  queries.each do |(x,y,l), q_idx|
+    while (edge_pointer < e) && (edges[edge_pointer][2] < l) # process edges upto l
+      uf.union(edges[edge_pointer][0], edges[edge_pointer][1])
+      edge_pointer+=1
+    end
+    query_res[q_idx] = (uf.root(x) == uf.root(y)) # have been connected yet ?
+  end
+  query_res
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

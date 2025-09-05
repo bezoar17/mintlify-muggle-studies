@@ -1,0 +1,58 @@
+---
+title: '🧀 Number of Provinces'
+description: '[leetcode link](https://leetcode.com/problems/number-of-provinces/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>There are <code>n</code> cities. Some of them are connected, while some are not. If city <code>a</code> is connected directly with city <code>b</code>, and city <code>b</code> is connected directly with city <code>c</code>, then city <code>a</code> is connected indirectly with city <code>c</code>.</p>  <p>A <strong>province</strong> is a group of directly or indirectly connected cities and no other cities outside of the group.</p>  <p>You are given an <code>n x n</code> matrix <code>isConnected</code> where <code>isConnected[i][j] = 1</code> if the <code>i<sup>th</sup></code> city and the <code>j<sup>th</sup></code> city are directly connected, and <code>isConnected[i][j] = 0</code> otherwise.</p>  <p>Return <em>the total number of <strong>provinces</strong></em>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/12/24/graph1.jpg" style="width: 222px; height: 142px;" />  <strong>Input:</strong> isConnected = [[1,1,0],[1,1,0],[0,0,1]] <br/> <strong>Output:</strong> 2   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/12/24/graph2.jpg" style="width: 222px; height: 142px;" />  <strong>Input:</strong> isConnected = [[1,0,0],[0,1,0],[0,0,1]] <br/> <strong>Output:</strong> 3    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= n &lt;= 200</code></li>  <li><code>n == isConnected.length</code></li>  <li><code>n == isConnected[i].length</code></li>  <li><code>isConnected[i][j]</code> is <code>1</code> or <code>0</code>.</li>  <li><code>isConnected[i][i] == 1</code></li>  <li><code>isConnected[i][j] == isConnected[j][i]</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Simple union find
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Number of Provinces" lines
+# @param {Integer[][]} is_connected
+# @return {Integer}
+class UnionFind
+  attr_reader :nodes
+  def initialize(arr)
+    @nodes = {}
+    arr.each {|x| root(x)}
+  end
+
+  def root(x)
+    nodes[x] ||= x;
+    while x!=nodes[x]
+      nodes[x] = nodes[nodes[x]]
+      x=nodes[x]
+    end
+    nodes[x]
+  end
+
+  def union(x,y)
+    root_x = root(x)
+    root_y = root(y)
+    return if root_x == root_y
+    nodes[root_x] = root_y
+  end
+end
+def find_circle_num(is_connected)
+  n = is_connected.size
+  uf = UnionFind.new((0...n).to_a)
+  (0...n).each do |i|
+    (0...n).each do |j|
+      uf.union(i,j) if is_connected[i][j]==1
+    end
+  end
+  (0...n).count {|x| x == uf.root(x) }
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

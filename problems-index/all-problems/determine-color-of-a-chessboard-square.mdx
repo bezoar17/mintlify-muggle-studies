@@ -1,0 +1,28 @@
+---
+title: '🧩 Determine Color of a Chessboard Square'
+description: '[leetcode link](https://leetcode.com/problems/determine-color-of-a-chessboard-square/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given <code>coordinates</code>, a string that represents the coordinates of a square of the chessboard. Below is a chessboard for your reference.</p>  <p><img alt="" src="https://assets.leetcode.com/uploads/2021/02/19/screenshot-2021-02-20-at-22159-pm.png" style="width: 400px; height: 396px;" /></p>  <p>Return <code>true</code><em> if the square is white, and </em><code>false</code><em> if the square is black</em>.</p>  <p>The coordinate will always represent a valid chessboard square. The coordinate will always have the letter first, and the number second.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> coordinates = &quot;a1&quot; <br/> <strong>Output:</strong> false <br/> <strong>Explanation:</strong> From the chessboard above, the square with coordinates &quot;a1&quot; is black, so return false.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> coordinates = &quot;h3&quot; <br/> <strong>Output:</strong> true <br/> <strong>Explanation:</strong> From the chessboard above, the square with coordinates &quot;h3&quot; is white, so return true.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> coordinates = &quot;c7&quot; <br/> <strong>Output:</strong> false    <p><strong>Constraints:</strong></p>  <ul>  <li><code>coordinates.length == 2</code></li>  <li><code>&#39;a&#39; &lt;= coordinates[0] &lt;= &#39;h&#39;</code></li>  <li><code>&#39;1&#39; &lt;= coordinates[1] &lt;= &#39;8&#39;</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      just decode, and check parity of x+y
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Determine Color of a Chessboard Square" lines
+# @param {String} coordinates
+# @return {Boolean}
+def square_is_white(coordinates)
+  x = coordinates[0].ord-'a'.ord; y = coordinates[1].to_i; (x+y).even?
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,62 @@
+---
+title: '🧀 Reverse Linked List II'
+description: '[leetcode link](https://leetcode.com/problems/reverse-linked-list-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given the <code>head</code> of a singly linked list and two integers <code>left</code> and <code>right</code> where <code>left &lt;= right</code>, reverse the nodes of the list from position <code>left</code> to position <code>right</code>, and return <em>the reversed list</em>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/02/19/rev2ex2.jpg" style="width: 542px; height: 222px;" />  <strong>Input:</strong> head = [1,2,3,4,5], left = 2, right = 4 <br/> <strong>Output:</strong> [1,4,3,2,5]   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> head = [5], left = 1, right = 1 <br/> <strong>Output:</strong> [5]    <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in the list is <code>n</code>.</li>  <li><code>1 &lt;= n &lt;= 500</code></li>  <li><code>-500 &lt;= Node.val &lt;= 500</code></li>  <li><code>1 &lt;= left &lt;= right &lt;= n</code></li> </ul>   <strong>Follow up:</strong> Could you do it in one pass?
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```cpp title="Reverse Linked List II" lines
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseBetween(ListNode* A, int m, int n) {
+        if(m==n)
+        return A;
+    ListNode *previous,*current,*front,*start=NULL,*end=NULL;
+    previous=NULL;
+    current=A;
+    front=A->next;
+    int i=1;
+    while(front && i<n){
+        if(i==m){
+            start=current;
+        }
+        else if(i==m-1)
+            end=current;
+        previous=current;
+        current=front;
+        front=front->next;
+        if(i>=m)
+            current->next=previous;
+        i++;
+    }
+    if(start)
+        start->next=front;
+    if(end)
+        end->next=current;
+    else A=current;
+    return A;
+    }
+};
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

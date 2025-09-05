@@ -1,0 +1,78 @@
+---
+title: '🧀 Beautiful Towers I'
+description: '[leetcode link](https://leetcode.com/problems/beautiful-towers-i/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an array <code>heights</code> of <code>n</code> integers representing the number of bricks in <code>n</code> consecutive towers. Your task is to remove some bricks to form a <strong>mountain-shaped</strong> tower arrangement. In this arrangement, the tower heights are non-decreasing, reaching a maximum peak value with one or multiple consecutive towers and then non-increasing.</p>  <p>Return the <strong>maximum possible sum</strong> of heights of a mountain-shaped tower arrangement.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">heights = [5,3,4,1,1]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">13</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>We remove some bricks to make <code>heights =&nbsp;[5,3,3,1,1]</code>, the peak is at index 0.</p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">heights = [6,5,3,9,2,7]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">22</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>We remove some bricks to make <code>heights =&nbsp;[3,3,3,9,2,2]</code>, the peak is at index 3.</p> </div>  <p><strong class="example">Example 3:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">heights = [3,2,5,5,2,3]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">18</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>We remove some bricks to make <code>heights = [2,2,5,5,2,2]</code>, the peak is at index 2 or 3.</p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= n == heights.length &lt;= 10<sup>3</sup></code></li>  <li><code>1 &lt;= heights[i] &lt;= 10<sup>9</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Same as https://leetcode.com/problems/beautiful-towers-ii/
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Beautiful Towers I" lines
+# @param {Integer[]} heights
+# @return {Integer}
+def maximum_sum_of_heights(max_heights)
+  n = max_heights.size
+  # beautiful means, it has only 1 peak
+  # assume i is peak, and calculate left_peak_sum(sum of all left if i is peak) and right sums
+  # a b c d  < i > e f g h
+  # i is peak, with peak_val, going left first occurence where max_height is less than peak val
+  # lets call that j; Then left_peak_sum[i] = left_peak_sum[j] + peak_val * (i-j)
+  # left_peak_sum includes i, calculate on number line and see.
+  # left_peak_sum[j], ensures we dont have to recalculate minim etc before j, till j, peak property is satisfied
+  # for j+1 -> i, values are >=peak_val ,max height we can have is peak_val
+  # do the same thing for right hand side, go to right, first occurence.
+  # this first occurence of smaller element to left and right can be calculated using montonic stack
+  
+  prev_smaller_idx = smaller_idx(max_heights, -1)
+  next_smaller_idx = smaller_idx(max_heights, 1)
+  
+  left_peak_sum = []
+  right_peak_sum = []
+
+  (0...n).each do |i|
+    j = prev_smaller_idx[i]
+    left_peak_sum[i] = max_heights[i] * (i-j)
+    left_peak_sum[i] += left_peak_sum[j] if j!=-1
+  end
+
+  (n-1).downto(0).each do |i|
+    j = next_smaller_idx[i]
+    right_peak_sum[i] = max_heights[i] * (j-i)
+    right_peak_sum[i] += right_peak_sum[j] if j!=n
+  end
+
+  (0...n).reduce(0) do |res, i|
+    [res, left_peak_sum[i]+right_peak_sum[i]-max_heights[i]].max
+  end
+end
+
+def discard?(top,num) = top>=num;
+
+def smaller_idx(nums, direction)
+  n = nums.size
+  calculate_previous = direction == -1;
+  default, index_range = calculate_previous ? [-1, (0...n)] : [n, (n-1).downto(0)]
+
+  result = Array.new(nums.size, default)
+  stack = [] # stores only the index of element, not [element, idx]
+
+  index_range.each do |idx|
+    stack.pop while !stack.empty? && discard?(nums[stack.last], nums[idx])
+    result[idx] = stack.last unless stack.empty?
+    stack << idx
+  end
+  result
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

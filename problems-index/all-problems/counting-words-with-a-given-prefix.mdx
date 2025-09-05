@@ -1,0 +1,29 @@
+---
+title: '🧩 Counting Words With a Given Prefix'
+description: '[leetcode link](https://leetcode.com/problems/counting-words-with-a-given-prefix/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an array of strings <code>words</code> and a string <code>pref</code>.</p>  <p>Return <em>the number of strings in </em><code>words</code><em> that contain </em><code>pref</code><em> as a <strong>prefix</strong></em>.</p>  <p>A <strong>prefix</strong> of a string <code>s</code> is any leading contiguous substring of <code>s</code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> words = [&quot;pay&quot;,&quot;<strong><u>at</u></strong>tention&quot;,&quot;practice&quot;,&quot;<u><strong>at</strong></u>tend&quot;], <code>pref </code>= &quot;at&quot; <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> The 2 strings that contain &quot;at&quot; as a prefix are: &quot;<u><strong>at</strong></u>tention&quot; and &quot;<u><strong>at</strong></u>tend&quot;.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> words = [&quot;leetcode&quot;,&quot;win&quot;,&quot;loops&quot;,&quot;success&quot;], <code>pref </code>= &quot;code&quot; <br/> <strong>Output:</strong> 0 <br/> <strong>Explanation:</strong> There are no strings that contain &quot;code&quot; as a prefix.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= words.length &lt;= 100</code></li>  <li><code>1 &lt;= words[i].length, pref.length &lt;= 100</code></li>  <li><code>words[i]</code> and <code>pref</code> consist of lowercase English letters.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Counting Words With a Given Prefix" lines
+# @param {String[]} words
+# @param {String} pref
+# @return {Integer}
+def prefix_count(words, pref)
+  words.count {|x| x.start_with? pref }
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

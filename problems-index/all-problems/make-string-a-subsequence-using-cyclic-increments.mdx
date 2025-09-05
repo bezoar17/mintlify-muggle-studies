@@ -1,0 +1,43 @@
+---
+title: '🧀 Make String a Subsequence Using Cyclic Increments'
+description: '[leetcode link](https://leetcode.com/problems/make-string-a-subsequence-using-cyclic-increments/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given two <strong>0-indexed</strong> strings <code>str1</code> and <code>str2</code>.</p>  <p>In an operation, you select a <strong>set</strong> of indices in <code>str1</code>, and for each index <code>i</code> in the set, increment <code>str1[i]</code> to the next character <strong>cyclically</strong>. That is <code>&#39;a&#39;</code> becomes <code>&#39;b&#39;</code>, <code>&#39;b&#39;</code> becomes <code>&#39;c&#39;</code>, and so on, and <code>&#39;z&#39;</code> becomes <code>&#39;a&#39;</code>.</p>  <p>Return <code>true</code> <em>if it is possible to make </em><code>str2</code> <em>a subsequence of </em><code>str1</code> <em>by performing the operation <strong>at most once</strong></em>, <em>and</em> <code>false</code> <em>otherwise</em>.</p>  <p><strong>Note:</strong> A subsequence of a string is a new string that is formed from the original string by deleting some (possibly none) of the characters without disturbing the relative positions of the remaining characters.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> str1 = &quot;abc&quot;, str2 = &quot;ad&quot; <br/> <strong>Output:</strong> true <br/> <strong>Explanation:</strong> Select index 2 in str1. Increment str1[2] to become &#39;d&#39;.  Hence, str1 becomes &quot;abd&quot; and str2 is now a subsequence. Therefore, true is returned.  <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> str1 = &quot;zc&quot;, str2 = &quot;ad&quot; <br/> <strong>Output:</strong> true <br/> <strong>Explanation:</strong> Select indices 0 and 1 in str1.  Increment str1[0] to become &#39;a&#39;.  Increment str1[1] to become &#39;d&#39;.  Hence, str1 becomes &quot;ad&quot; and str2 is now a subsequence. Therefore, true is returned.  <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> str1 = &quot;ab&quot;, str2 = &quot;d&quot; <br/> <strong>Output:</strong> false <br/> <strong>Explanation:</strong> In this example, it can be shown that it is impossible to make str2 a subsequence of str1 using the operation at most once.  Therefore, false is returned.   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= str1.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= str2.length &lt;= 10<sup>5</sup></code></li>  <li><code>str1</code> and <code>str2</code> consist of only lowercase English letters.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Make String a Subsequence Using Cyclic Increments" lines
+# @param {String} str1
+# @param {String} str2
+# @return {Boolean}
+def can_make_subsequence(str1, str2)
+  n1 = str1.size; n2 = str2.size
+  return false if n2 > n1
+  # any no. of chars can be moved to next 1
+  # but only to next 1
+  # for ch1 in str2, valid starting points in str1 are ch1 and ch1-1
+  idx1 = 0; idx2= 0;
+
+  while idx2<n2
+    return false if idx1==n1
+    idx2+=1 if str2[idx2] == str1[idx1] || ( (str2[idx2]=='a' && str1[idx1]=='z') ||  ( str2[idx2]!='a' &&  str2[idx2].ord-1 == str1[idx1].ord))
+    idx1+=1
+  end
+
+  true
+end
+
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

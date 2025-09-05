@@ -1,0 +1,65 @@
+---
+title: '❗️ Count Subarrays With Median K'
+description: '[leetcode link](https://leetcode.com/problems/count-subarrays-with-median-k/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an array <code>nums</code> of size <code>n</code> consisting of <strong>distinct </strong>integers from <code>1</code> to <code>n</code> and a positive integer <code>k</code>.</p>  <p>Return <em>the number of non-empty subarrays in </em><code>nums</code><em> that have a <strong>median</strong> equal to </em><code>k</code>.</p>  <p><strong>Note</strong>:</p>  <ul>  <li>The median of an array is the <strong>middle </strong>element after sorting the array in <strong>ascending </strong>order. If the array is of even length, the median is the <strong>left </strong>middle element.   <ul>   <li>For example, the median of <code>[2,3,1,4]</code> is <code>2</code>, and the median of <code>[8,4,3,5,1]</code> is <code>4</code>.</li>  </ul>  </li>  <li>A subarray is a contiguous part of an array.</li> </ul>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [3,2,1,4,5], k = 4 <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> The subarrays that have a median equal to 4 are: [4], [4,5] and [1,4,5].   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [2,3,1], k = 3 <br/> <strong>Output:</strong> 1 <br/> <strong>Explanation:</strong> [3] is the only subarray that has a median equal to 3.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>n == nums.length</code></li>  <li><code>1 &lt;= n &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= nums[i], k &lt;= n</code></li>  <li>The integers in <code>nums</code> are distinct.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      We are only worried about whether an element is greater or less than or equal to k. Depending on that, it can go to right left or center of the median element. All less than elements are equal wrt positioning. 
+
+We can convert less thans to -1, greaters to 1, and equal to 0. 
+As integers are distinct, so only one k value is present. So, we start from there, and go to left or to right. 
+There can be 3 cases, we consider, 
+1. sb-arr with median elem as left-start
+2. sb-arr with median elem as right-end
+3. sb-arr with median elem as center, and extend to both left and right.
+
+Now, we want sub-array sum to be 0 or 1. Expanding from center, case 1, and 2 are really simple, the total sum should just be 0 or 1 when starting from center. For case 3, we can have sum of both directions add to 0 or 1. For this, we can store counts for each sum value when going to one of the sides, say to left. Then when going to right side, we are looking for total sum to become 0 or 1, so we are looking for -sum or sum+1.
+
+Good sub-array problem.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Count Subarrays With Median K" lines
+# @param {Integer[]} nums
+# @param {Integer} k
+# @return {Integer}
+def count_subarrays(nums, k)
+  center = nums.find_index(k)
+  return 0 if center.nil?
+  
+  result = 1 # sb array of [k] itself
+
+  # move from center to left
+  curr_sum = 0
+  sum_counts_on_left = Hash.new(0)
+  (center-1).downto(0).each do |i|
+    curr_sum += nums[i] < k ? -1 : 1
+    result+=1 if curr_sum == 0 || curr_sum == 1 # sb starts at i, ends at center
+    sum_counts_on_left[curr_sum]+=1 # sb is across left and right, store for further calc
+  end
+
+  # move from center to right
+  curr_sum = 0
+  (center+1...nums.size).each do |i|
+    curr_sum += nums[i] < k ? -1 : 1
+    result+=1 if curr_sum == 0 || curr_sum == 1 # sb starts at center, ends at i
+    
+    # sb is across left and right both, left side and right side sum to 0 or to 1
+    result+= sum_counts_on_left[-curr_sum] + sum_counts_on_left[-curr_sum+1]
+  end
+
+
+  result
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

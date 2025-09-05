@@ -1,0 +1,38 @@
+---
+title: '🧀 Count the Number of Special Characters II'
+description: '[leetcode link](https://leetcode.com/problems/count-the-number-of-special-characters-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a string <code>word</code>. A letter&nbsp;<code>c</code> is called <strong>special</strong> if it appears <strong>both</strong> in lowercase and uppercase in <code>word</code>, and <strong>every</strong> lowercase occurrence of <code>c</code> appears before the <strong>first</strong> uppercase occurrence of <code>c</code>.</p>  <p>Return the number of<em> </em><strong>special</strong> letters<em> </em>in<em> </em><code>word</code>.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">word = &quot;aaAbcBC&quot;</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">3</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>The special characters are <code>&#39;a&#39;</code>, <code>&#39;b&#39;</code>, and <code>&#39;c&#39;</code>.</p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">word = &quot;abc&quot;</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">0</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>There are no special characters in <code>word</code>.</p> </div>  <p><strong class="example">Example 3:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">word = &quot;AbBCab&quot;</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">0</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>There are no special characters in <code>word</code>.</p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= word.length &lt;= 2 * 10<sup>5</sup></code></li>  <li><code>word</code> consists of only lowercase and uppercase English letters.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Just simulate the conditions by storing idx of chars.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Count the Number of Special Characters II" lines
+# @param {String} word
+# @return {Integer}
+def number_of_special_chars(word)
+  lower_set = Set.new('a'..'z')
+  last_idx = {}
+  first_idx = {}
+  word.chars.each_with_index do |ch,idx|
+    if lower_set.include?(ch)
+      last_idx[ch]=idx
+    else
+      first_idx[ch]||=idx
+    end
+  end
+  lower_set.to_a.count{ |ch| last_idx.has_key?(ch) && first_idx.has_key?(ch.upcase) && last_idx[ch] < first_idx[ch.upcase] }
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

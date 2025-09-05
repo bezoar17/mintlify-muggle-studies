@@ -1,0 +1,62 @@
+---
+title: '🧀 Surrounded Regions'
+description: '[leetcode link](https://leetcode.com/problems/surrounded-regions/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an <code>m x n</code> matrix <code>board</code> containing <strong>letters</strong> <code>&#39;X&#39;</code> and <code>&#39;O&#39;</code>, <strong>capture regions</strong> that are <strong>surrounded</strong>:</p>  <ul>  <li><strong>Connect</strong>: A cell is connected to adjacent cells horizontally or vertically.</li>  <li><strong>Region</strong>: To form a region <strong>connect every</strong> <code>&#39;O&#39;</code> cell.</li>  <li><strong>Surround</strong>: The region is surrounded with <code>&#39;X&#39;</code> cells if you can <strong>connect the region </strong>with <code>&#39;X&#39;</code> cells and none of the region cells are on the edge of the <code>board</code>.</li> </ul>  <p>To capture a <strong>surrounded region</strong>, replace all <code>&#39;O&#39;</code>s with <code>&#39;X&#39;</code>s <strong>in-place</strong> within the original board. You do not need to return anything.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">board = [[&quot;X&quot;,&quot;X&quot;,&quot;X&quot;,&quot;X&quot;],[&quot;X&quot;,&quot;O&quot;,&quot;O&quot;,&quot;X&quot;],[&quot;X&quot;,&quot;X&quot;,&quot;O&quot;,&quot;X&quot;],[&quot;X&quot;,&quot;O&quot;,&quot;X&quot;,&quot;X&quot;]]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">[[&quot;X&quot;,&quot;X&quot;,&quot;X&quot;,&quot;X&quot;],[&quot;X&quot;,&quot;X&quot;,&quot;X&quot;,&quot;X&quot;],[&quot;X&quot;,&quot;X&quot;,&quot;X&quot;,&quot;X&quot;],[&quot;X&quot;,&quot;O&quot;,&quot;X&quot;,&quot;X&quot;]]</span></p>  <p><br/> <strong>Explanation:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/02/19/xogrid.jpg" style="width: 367px; height: 158px;" /> <p>In the above diagram, the bottom region is not captured because it is on the edge of the board and cannot be surrounded.</p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">board = [[&quot;X&quot;]]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">[[&quot;X&quot;]]</span></p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>m == board.length</code></li>  <li><code>n == board[i].length</code></li>  <li><code>1 &lt;= m, n &lt;= 200</code></li>  <li><code>board[i][j]</code> is <code>&#39;X&#39;</code> or <code>&#39;O&#39;</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Only a whole region can be captured, so for all regions which have an element on the border, they will not be captured, rest will be. 
+So start from each of the border 0's and find the region, only these will remain. 
+We can do bfs/dfs, and can do this inplace to mar
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Surrounded Regions" lines
+# @param {Character[][]} board
+# @return {Void} Do not return anything, modify board in-place instead.
+def solve(board)
+  qu = Queue.new
+  r,c = board.size, board[0].size
+
+  # start from border O's and mark all connected components as O
+  # these will be left out, rest Os will be converted
+  (0...r).to_a.each do |i|
+    (0...c).to_a.each do |j|
+      if i==0 || i == r-1 || j ==0 || j== c-1
+        qu.push([i,j]) if board[i][j] == 'O'
+      end
+    end
+  end
+
+  directions = [[0,1], [0,-1], [1,0], [-1,0]]
+  while !qu.empty?
+    x,y = qu.pop
+    board[x][y] = 'OO'
+    for i,j in directions do
+      dx = x+i; dy = y+j
+
+      if dx.between?(0, r-1) && dy.between?(0, c-1) && board[dx][dy] == 'O'
+        qu.push([dx,dy])
+      end
+    end
+  end
+
+  (0...r).to_a.each do |i|
+    (0...c).to_a.each do |j|
+      board[i][j] = 'X' if board[i][j] == 'O'
+      board[i][j] = 'O' if board[i][j] == 'OO'
+    end
+  end
+  board
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

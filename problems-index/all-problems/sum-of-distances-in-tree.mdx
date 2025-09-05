@@ -1,0 +1,90 @@
+---
+title: '❗️ Sum of Distances in Tree'
+description: '[leetcode link](https://leetcode.com/problems/sum-of-distances-in-tree/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>There is an undirected connected tree with <code>n</code> nodes labeled from <code>0</code> to <code>n - 1</code> and <code>n - 1</code> edges.</p>  <p>You are given the integer <code>n</code> and the array <code>edges</code> where <code>edges[i] = [a<sub>i</sub>, b<sub>i</sub>]</code> indicates that there is an edge between nodes <code>a<sub>i</sub></code> and <code>b<sub>i</sub></code> in the tree.</p>  <p>Return an array <code>answer</code> of length <code>n</code> where <code>answer[i]</code> is the sum of the distances between the <code>i<sup>th</sup></code> node in the tree and all other nodes.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/07/23/lc-sumdist1.jpg" style="width: 304px; height: 224px;" />  <strong>Input:</strong> n = 6, edges = [[0,1],[0,2],[2,3],[2,4],[2,5]] <br/> <strong>Output:</strong> [8,12,6,10,10,10] <br/> <strong>Explanation:</strong> The tree is shown above. We can see that dist(0,1) + dist(0,2) + dist(0,3) + dist(0,4) + dist(0,5) equals 1 + 1 + 2 + 2 + 2 = 8. Hence, answer[0] = 8, and so on.   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/07/23/lc-sumdist2.jpg" style="width: 64px; height: 65px;" />  <strong>Input:</strong> n = 1, edges = [] <br/> <strong>Output:</strong> [0]   <p><strong class="example">Example 3:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/07/23/lc-sumdist3.jpg" style="width: 144px; height: 145px;" />  <strong>Input:</strong> n = 2, edges = [[1,0]] <br/> <strong>Output:</strong> [1,1]    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= n &lt;= 3 * 10<sup>4</sup></code></li>  <li><code>edges.length == n - 1</code></li>  <li><code>edges[i].length == 2</code></li>  <li><code>0 &lt;= a<sub>i</sub>, b<sub>i</sub> &lt; n</code></li>  <li><code>a<sub>i</sub> != b<sub>i</sub></code></li>  <li>The given input represents a valid tree.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Re-rooting DP
+
+For these problems, calculate one of the metrics for each sub-tree, and express the result for root based on values of its children's sub-tree values. Then you can have some relation between root and its children, that you can use to calculate the result for its children while doing dfs. Usually, this calculation uses total value, and values of its children to derive the result for its children.
+
+Here, assume the result for sub-tree is calculated, how will you express the result for root using that ?
+
+We would need 2 things for this, sub-tree dist sum, and sub-tree count of nodes.
+ans(root) =  Sum of  { dist_sum(child_sbtree) + node_count(child_sbtree) } for all child nodes as roots in their own-subtree. 
+
+dist_sum is answer for child_node considering it as root of isolated sub-tree.
+
+When you go up from a child to its parent, for all nodes in the child-sub-tree extend the dist increases by 1 unit, hence the addition of node_count, to calculate the answer for the root.
+
+Now, fix 1 node as root, and calculate answer for that root. While calculating this, we pre-process answers for all child nodes as isolated sub-trees, and nodecounts for all sub-trees.
+
+Now that we have the answer for a root, how do we calculate the result for a particular child i, based on everything we have calculated.
+
+ans(child) = dist_sum(child_sbtree) + distances to rest_of_tree(tree remaining after child_sbtree is removed)
+First part we have calculated already.
+
+distances to rest_of_tree is  dist_sum(rest_of_tree from parent) + node_count(rest_of_tree). All nodes in rest_of_tree are 1 away from the parent,
+so we first get to parent, cost is node_count(rest_of_tree), then from there, we go to all nodes in rest_of_tree.
+node_count(rest_of_tree) is simply total_node_count - node_count(child)
+
+dist_sum(rest_of_tree from parent) = ans(parent) - (dist_sum(child_sbtree) + node_count(child_sbtree)), ans for parent has distances to all nodes, we subtract contribution of child_sbtree from it, to get distance_sum to nodes in rest_of_tree. 
+
+If we add all up, we will have ans(child) = ans(parent) + N - 2* node_count(child), where N is total node count in the tree.
+
+https://www.youtube.com/watch?v=nGhE4Ekmzbc&list=PLb3g_Z8nEv1j_BC-fmZWHFe6jmU_zv-8s&index=5
+
+
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Sum of Distances in Tree" lines
+# @param {Integer} n
+# @param {Integer[][]} edges
+# @return {Integer[]}
+def sum_of_distances_in_tree(n, edges)
+  graph = Hash.new {|h,k| h[k]=[]}
+  edges.each {|u,v| graph[u]<<v; graph[v]<<u}
+
+  sbtree_node_count = Array.new(n,0)
+  sbtree_i_dist_sum = Array.new(n,0) # sum of dist to all nodes for isolated subtree with i as root
+  answer = Array.new(n,0) # this is our result
+
+  pre_dfs_nc =->(node=0, parent=nil) { # calculate node counts for sb-trees
+    sbtree_node_count[node] = 1 + graph[node].select{|x| x!=parent}.sum {|x| pre_dfs_nc.call(x, node) }
+  }
+
+  pre_dfs_ds =->(node=0, parent=nil) { # calculate dist sum all for isolated sb-trees
+    sbtree_i_dist_sum[node] = graph[node].select{|x| x!=parent}.sum { |x| pre_dfs_ds.call(x, node) + sbtree_node_count[x] }
+  }
+  
+  # 0 will be our root
+  pre_dfs_nc.call
+  pre_dfs_ds.call
+  answer[0] = sbtree_i_dist_sum[0] # for root, i_dist_sum = answer
+  
+  # propagate the result from root to children nodes, using the recurrence relation
+  dp_dfs =->(node=0, parent=nil) {
+    graph[node].select{|x| x!=parent}.each do |child|
+      answer[child] = answer[node] + n - 2*sbtree_node_count[child] 
+      dp_dfs.call(child, node)
+    end
+  }
+
+  dp_dfs.call
+  answer
+end
+
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

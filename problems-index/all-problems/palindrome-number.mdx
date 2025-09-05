@@ -1,0 +1,42 @@
+---
+title: '🧩 Palindrome Number'
+description: '[leetcode link](https://leetcode.com/problems/palindrome-number/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an integer <code>x</code>, return <code>true</code><em> if </em><code>x</code><em> is a </em><span data-keyword="palindrome-integer"><em><strong>palindrome</strong></em></span><em>, and </em><code>false</code><em> otherwise</em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> x = 121 <br/> <strong>Output:</strong> true <br/> <strong>Explanation:</strong> 121 reads as 121 from left to right and from right to left.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> x = -121 <br/> <strong>Output:</strong> false <br/> <strong>Explanation:</strong> From left to right, it reads -121. From right to left, it becomes 121-. Therefore it is not a palindrome.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> x = 10 <br/> <strong>Output:</strong> false <br/> <strong>Explanation:</strong> Reads 01 from right to left. Therefore it is not a palindrome.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>-2<sup>31</sup>&nbsp;&lt;= x &lt;= 2<sup>31</sup>&nbsp;- 1</code></li> </ul>   <strong>Follow up:</strong> Could you solve it without converting the integer to a string?
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```cpp title="Palindrome Number" lines
+class Solution {
+public:
+    bool check(int x, int &y){
+        if (x==0) {return true;}
+        if (check(x/10,y)){
+            if (x%10==y%10){
+                y=y/10;
+                return true;
+            }
+        }
+        return false;
+    }
+    bool isPalindrome(int x) {
+        // Start typing your C/C++ solution below
+        // DO NOT write int main() function
+        if (x<0){return false;}
+        return check(x,x);
+    }
+};
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

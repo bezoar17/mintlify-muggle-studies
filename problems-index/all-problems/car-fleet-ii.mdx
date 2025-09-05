@@ -1,0 +1,55 @@
+---
+title: '❗️ Car Fleet II'
+description: '[leetcode link](https://leetcode.com/problems/car-fleet-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>There are <code>n</code> cars traveling at different speeds in the same direction along a one-lane road. You are given an array <code>cars</code> of length <code>n</code>, where <code>cars[i] = [position<sub>i</sub>, speed<sub>i</sub>]</code> represents:</p>  <ul>  <li><code>position<sub>i</sub></code> is the distance between the <code>i<sup>th</sup></code> car and the beginning of the road in meters. It is guaranteed that <code>position<sub>i</sub> &lt; position<sub>i+1</sub></code>.</li>  <li><code>speed<sub>i</sub></code> is the initial speed of the <code>i<sup>th</sup></code> car in meters per second.</li> </ul>  <p>For simplicity, cars can be considered as points moving along the number line. Two cars collide when they occupy the same position. Once a car collides with another car, they unite and form a single car fleet. The cars in the formed fleet will have the same position and the same speed, which is the initial speed of the <strong>slowest</strong> car in the fleet.</p>  <p>Return an array <code>answer</code>, where <code>answer[i]</code> is the time, in seconds, at which the <code>i<sup>th</sup></code> car collides with the next car, or <code>-1</code> if the car does not collide with the next car. Answers within <code>10<sup>-5</sup></code> of the actual answers are accepted.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> cars = [[1,2],[2,1],[4,3],[7,2]] <br/> <strong>Output:</strong> [1.00000,-1.00000,3.00000,-1.00000] <br/> <strong>Explanation:</strong> After exactly one second, the first car will collide with the second car, and form a car fleet with speed 1 m/s. After exactly 3 seconds, the third car will collide with the fourth car, and form a car fleet with speed 2 m/s.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> cars = [[3,4],[5,4],[6,3],[9,1]] <br/> <strong>Output:</strong> [2.00000,1.00000,1.50000,-1.00000]    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= cars.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= position<sub>i</sub>, speed<sub>i</sub> &lt;= 10<sup>6</sup></code></li>  <li><code>position<sub>i</sub> &lt; position<sub>i+1</sub></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      https://leetcode.com/problems/car-fleet-ii/solutions/1105620/java-clean-o-n-monotonic-stack-solution-detailed-explanations
+
+Monotonic stack
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Car Fleet II" lines
+# @param {Integer[][]} cars
+# @return {Float[]}
+def get_collision_times(cars)
+  # cars sorted by position, merge to slower speed
+  # if prev car is not faster, it cant collide, if it does, we have a new fleet speed for next set
+  # if c1 takes t1 time to catch up to c2, and c2 takes t2 for c3, if t2 < t1, both will happen earlier
+  # so go from R-L, and calculate, if a car ci collides with ci+1, speed will always be ci, if ci-1 collies with ci, speed reduces to ci, speed of any car cant increase
+  # ci-1 to ci time ti-1 if greater than ti, then ci speed is ci for ti, then its ci+1 for remaining time
+  n = cars.size
+  answer = Array.new(n, -1)
+  stack = []
+  i = n-1
+  catch_time=->(x,y) { (cars[y][0]-cars[x][0]).to_f/(cars[x][1]-cars[y][1]) }
+  while i >=0
+    c1 = cars[i]
+    until stack.empty? 
+        j = stack.last
+        c2 = cars[j]
+
+        if (c1[1]>c2[1]) && (answer[j]==-1 || (catch_time.call(i,j) <= answer[j])) 
+            answer[i] = catch_time.call(i,j)
+            break
+        end
+        stack.pop
+    end
+    stack << i
+    i-=1
+  end
+  answer
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,41 @@
+---
+title: '🧩 Plus One'
+description: '[leetcode link](https://leetcode.com/problems/plus-one/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a <strong>large integer</strong> represented as an integer array <code>digits</code>, where each <code>digits[i]</code> is the <code>i<sup>th</sup></code> digit of the integer. The digits are ordered from most significant to least significant in left-to-right order. The large integer does not contain any leading <code>0</code>&#39;s.</p>  <p>Increment the large integer by one and return <em>the resulting array of digits</em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> digits = [1,2,3] <br/> <strong>Output:</strong> [1,2,4] <br/> <strong>Explanation:</strong> The array represents the integer 123. Incrementing by one gives 123 + 1 = 124. Thus, the result should be [1,2,4].   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> digits = [4,3,2,1] <br/> <strong>Output:</strong> [4,3,2,2] <br/> <strong>Explanation:</strong> The array represents the integer 4321. Incrementing by one gives 4321 + 1 = 4322. Thus, the result should be [4,3,2,2].   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> digits = [9] <br/> <strong>Output:</strong> [1,0] <br/> <strong>Explanation:</strong> The array represents the integer 9. Incrementing by one gives 9 + 1 = 10. Thus, the result should be [1,0].    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= digits.length &lt;= 100</code></li>  <li><code>0 &lt;= digits[i] &lt;= 9</code></li>  <li><code>digits</code> does not contain any leading <code>0</code>&#39;s.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```cpp title="Plus One" lines
+class Solution {
+public:
+    vector<int> plusOne(vector<int>& digits) {
+        
+        int c=1;
+        for(int i=digits.size()-1;i>=0;i--){
+        	if(c==1){
+        	if(digits[i]==9) 
+        		digits[i]=0;
+        	else
+        		digits[i]+=1,c=0;
+        	}
+        }
+        if(c==1)
+        	digits.insert(digits.begin(),1);
+        return digits;
+    }
+};
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

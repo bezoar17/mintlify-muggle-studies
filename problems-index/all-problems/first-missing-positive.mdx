@@ -1,0 +1,34 @@
+---
+title: '❗️ First Missing Positive'
+description: '[leetcode link](https://leetcode.com/problems/first-missing-positive/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an unsorted integer array <code>nums</code>. Return the <em>smallest positive integer</em> that is <em>not present</em> in <code>nums</code>.</p>  <p>You must implement an algorithm that runs in <code>O(n)</code> time and uses <code>O(1)</code> auxiliary space.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [1,2,0] <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> The numbers in the range [1,2] are all in the array.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [3,4,-1,1] <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> 1 is in the array but 2 is missing.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> nums = [7,8,9,11,12] <br/> <strong>Output:</strong> 1 <br/> <strong>Explanation:</strong> The smallest positive integer 1 is missing.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>-2<sup>31</sup> &lt;= nums[i] &lt;= 2<sup>31</sup> - 1</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      If we could do it with extra space, we can mark presence of 1..n in an array. Here as we cant use extra space, reuse original nums as presence indicator. First of all, if we dont have 1, return 1 as answer. Now, any element that is outside the range of 1..n does not affect the answer, we can change all these values to 1. Now, for each number that is present, we mark its presence on the index of nums, just as we would in the presence array. To indicate presence, we make the num present at that location as negative. And while processing nums we only look at the absolute value, since some element might have updated the current num to negative. Once we have marked all the elements, the first non-negative number &gt;1(at index 1..n) we see, is our answer, if there is no such element, we have all the nums from 1..n, our answer is n+1.
+
+While marking something as negative, we multiply it by -1,  and we dont switch the state back if duplicate is found. 
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="First Missing Positive" lines
+# @param {Integer[]} nums
+# @return {Integer}
+def first_missing_positive(nums)
+  n = nums.size
+  return 1 unless nums.any? {|x| x==1} # beyond this point, 1 exists, and idx 0 will be ignored anyways
+  (0...n).each {|i| nums[i]=1 if nums[i]<1 || nums[i]>n  } # update all ignorable elements as 1
+  (0...n).each {|i| idx=nums[i].abs-1; nums[idx]*=-1 if nums[idx].positive? } # mark only elements once
+  1 + ((1...n).detect {|i| nums[i].positive? } || n)
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

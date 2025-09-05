@@ -1,0 +1,50 @@
+---
+title: '🧩 Reverse Linked List'
+description: '[leetcode link](https://leetcode.com/problems/reverse-linked-list/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given the <code>head</code> of a singly linked list, reverse the list, and return <em>the reversed list</em>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/02/19/rev1ex1.jpg" style="width: 542px; height: 222px;" />  <strong>Input:</strong> head = [1,2,3,4,5] <br/> <strong>Output:</strong> [5,4,3,2,1]   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/02/19/rev1ex2.jpg" style="width: 182px; height: 222px;" />  <strong>Input:</strong> head = [1,2] <br/> <strong>Output:</strong> [2,1]   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> head = [] <br/> <strong>Output:</strong> []    <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in the list is the range <code>[0, 5000]</code>.</li>  <li><code>-5000 &lt;= Node.val &lt;= 5000</code></li> </ul>   <p><strong>Follow up:</strong> A linked list can be reversed either iteratively or recursively. Could you implement both?</p> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Reverse Linked List" lines
+# Definition for singly-linked list.
+# class ListNode
+#     attr_accessor :val, :next
+#     def initialize(val = 0, _next = nil)
+#         @val = val
+#         @next = _next
+#     end
+# end
+# @param {ListNode} head
+# @return {ListNode}
+def reverse_list(head)
+  current_node = head
+  return nil if current_node.nil?
+  prev_node = nil
+  
+  while true
+    next_node = current_node.next # save info for intial next node
+
+    current_node.next = prev_node # switch current nodes pointer
+
+    prev_node = current_node # move the current and prev nodes to the next one in original
+    current_node = next_node
+    break if current_node.nil?
+  end
+
+  prev_node
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

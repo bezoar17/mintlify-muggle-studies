@@ -1,0 +1,54 @@
+---
+title: '🧀 Make Sum Divisible by P'
+description: '[leetcode link](https://leetcode.com/problems/make-sum-divisible-by-p/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an array of positive integers <code>nums</code>, remove the <strong>smallest</strong> subarray (possibly <strong>empty</strong>) such that the <strong>sum</strong> of the remaining elements is divisible by <code>p</code>. It is <strong>not</strong> allowed to remove the whole array.</p>  <p>Return <em>the length of the smallest subarray that you need to remove, or </em><code>-1</code><em> if it&#39;s impossible</em>.</p>  <p>A <strong>subarray</strong> is defined as a contiguous block of elements in the array.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [3,1,4,2], p = 6 <br/> <strong>Output:</strong> 1 <br/> <strong>Explanation:</strong> The sum of the elements in nums is 10, which is not divisible by 6. We can remove the subarray [4], and the sum of the remaining elements is 6, which is divisible by 6.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [6,3,5,2], p = 9 <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> We cannot remove a single element to get a sum divisible by 9. The best way is to remove the subarray [5,2], leaving us with [6,3] with sum 9.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> nums = [1,2,3], p = 3 <br/> <strong>Output:</strong> 0 <br/> <strong>Explanation:</strong> Here the sum is 6. which is already divisible by 3. Thus we do not need to remove anything.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>  <li><code>1 &lt;= p &lt;= 10<sup>9</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Firstly, convert all nums to mod values when divided by p. Calculate the mod p of sum of this array. If this is 0, we dont need any removals, return 0. 
+If this is some value target_mod, we need to find a subarray with this exact mod value, and remove it. We have to minimize the length of such subarray. 
+
+Going from L-&gt;R,  lets calculate the mod of sum of subarray from [0,x], and call it M(x). So when at a particular index j, we have M(j), all previous values of M(idx) have been processed. 
+
+Considering j as the end of a subarray [i,j], such that M[i..j] is equal to target_mod, we have to find minimum length of subarray [i..j]. Given we have M(j), and M[i..j] = target_mod, for all potential i values, we have M(i) = (target_mod-M(j)+p) %p (+p is to handle negative values, and keep M(x) within [0,p-1] ). 
+
+As we want minimum length, we want maximum i within potential i values. So, while going from L-&gt;R, keep storing latest idx for M(idx) in a hash. So, at each j, we can find its optimal counterpart M(i) from the hash, instead of checking all i values. 
+
+Now, for the case where M(j) == target_mod, which would mean removing [0,j],  length is j+1, so initialize the hash with {0=&gt;-1}. And also this case cant happen at j==n-1, which would mean we are removing the complete array.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Make Sum Divisible by P" lines
+# @param {Integer[]} nums
+# @param {Integer} p
+# @return {Integer}
+def min_subarray(nums, p)
+  n = nums.size
+  nums_mod = nums.map{|x| x%p}
+  target_mod = nums_mod.sum % p
+  return 0 if target_mod == 0
+  
+  mod_last_pos = {}; mod_last_pos[0]=-1
+  min_len = n
+  current_sum = 0
+  
+  nums_mod.each_with_index do |mod_val, i|
+    current_sum = (current_sum+mod_val) %p
+    mod_needed = (current_sum-target_mod+p)%p
+    min_len = [min_len, i-mod_last_pos[mod_needed]].min if mod_last_pos.has_key?(mod_needed)
+    mod_last_pos[current_sum] = i
+  end
+
+  min_len == n ? -1 : min_len
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

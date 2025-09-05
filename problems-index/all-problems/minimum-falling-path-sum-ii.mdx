@@ -1,0 +1,57 @@
+---
+title: '❗️ Minimum Falling Path Sum II'
+description: '[leetcode link](https://leetcode.com/problems/minimum-falling-path-sum-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an <code>n x n</code> integer matrix <code>grid</code>, return <em>the minimum sum of a <strong>falling path with non-zero shifts</strong></em>.</p>  <p>A <strong>falling path with non-zero shifts</strong> is a choice of exactly one element from each row of <code>grid</code> such that no two elements chosen in adjacent rows are in the same column.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/08/10/falling-grid.jpg" style="width: 244px; height: 245px;" />  <strong>Input:</strong> grid = [[1,2,3],[4,5,6],[7,8,9]] <br/> <strong>Output:</strong> 13 <br/> <strong>Explanation:</strong>  The possible falling paths are: [1,5,9], [1,5,7], [1,6,7], [1,6,8], [2,4,8], [2,4,9], [2,6,7], [2,6,8], [3,4,8], [3,4,9], [3,5,7], [3,5,9] The falling path with the smallest sum is&nbsp;[1,5,7], so the answer is&nbsp;13.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> grid = [[7]] <br/> <strong>Output:</strong> 7    <p><strong>Constraints:</strong></p>  <ul>  <li><code>n == grid.length == grid[i].length</code></li>  <li><code>1 &lt;= n &lt;= 200</code></li>  <li><code>-99 &lt;= grid[i][j] &lt;= 99</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Same as paint house long version, choose elem from each row, no two adjacent rows can have same column.
+
+And total sum has to be minimized.
+
+Can do it in-place.
+
+prefix and suffix min implementation, save it
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Minimum Falling Path Sum II" lines
+# @param {Integer[][]} grid
+# @return {Integer}
+def min_falling_path_sum(grid)
+  n = grid.size
+
+  (1...n).each do |i|
+    # precalculate prefix and suffix min, so that query for min value to left and min value to right for each idx is faster than computing each time
+    prefix_min_val = [Float::INFINITY]
+    suffix_min_val = [Float::INFINITY]
+    row = grid[i-1]
+
+    (1...n).each do |j|
+      prefix_min_val << [prefix_min_val.last, row[j-1]].min
+    end
+
+    (n-2).downto(0).each do |j|
+      suffix_min_val.unshift([suffix_min_val.first, row[j+1]].min)
+    end
+    
+    (0...n).each do |j|
+      # min_val = grid[i-1].each_with_index.reduce(Float::INFINITY) { |res, (num, i)| [(i==j ? Float::INFINITY : num), res].min }
+      grid[i][j] += [prefix_min_val[j] , suffix_min_val[j]].min
+    end
+  end
+
+  grid[n-1].min
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

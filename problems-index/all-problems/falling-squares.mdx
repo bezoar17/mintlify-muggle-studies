@@ -1,0 +1,50 @@
+---
+title: '❗️ Falling Squares'
+description: '[leetcode link](https://leetcode.com/problems/falling-squares/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>There are several squares being dropped onto the X-axis of a 2D plane.</p>  <p>You are given a 2D integer array <code>positions</code> where <code>positions[i] = [left<sub>i</sub>, sideLength<sub>i</sub>]</code> represents the <code>i<sup>th</sup></code> square with a side length of <code>sideLength<sub>i</sub></code> that is dropped with its left edge aligned with X-coordinate <code>left<sub>i</sub></code>.</p>  <p>Each square is dropped one at a time from a height above any landed squares. It then falls downward (negative Y direction) until it either lands <strong>on the top side of another square</strong> or <strong>on the X-axis</strong>. A square brushing the left/right side of another square does not count as landing on it. Once it lands, it freezes in place and cannot be moved.</p>  <p>After each square is dropped, you must record the <strong>height of the current tallest stack of squares</strong>.</p>  <p>Return <em>an integer array </em><code>ans</code><em> where </em><code>ans[i]</code><em> represents the height described above after dropping the </em><code>i<sup>th</sup></code><em> square</em>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/04/28/fallingsq1-plane.jpg" style="width: 500px; height: 505px;" />  <strong>Input:</strong> positions = [[1,2],[2,3],[6,1]] <br/> <strong>Output:</strong> [2,5,5] <br/> <strong>Explanation:</strong> After the first drop, the tallest stack is square 1 with a height of 2. After the second drop, the tallest stack is squares 1 and 2 with a height of 5. After the third drop, the tallest stack is still squares 1 and 2 with a height of 5. Thus, we return an answer of [2, 5, 5].   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> positions = [[100,100],[200,100]] <br/> <strong>Output:</strong> [100,100] <br/> <strong>Explanation:</strong> After the first drop, the tallest stack is square 1 with a height of 100. After the second drop, the tallest stack is either square 1 or square 2, both with heights of 100. Thus, we return an answer of [100, 100]. Note that square 2 only brushes the right side of square 1, which does not count as landing on it.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= positions.length &lt;= 1000</code></li>  <li><code>1 &lt;= left<sub>i</sub> &lt;= 10<sup>8</sup></code></li>  <li><code>1 &lt;= sideLength<sub>i</sub> &lt;= 10<sup>6</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Store settled square in order of max-height. Process each one starting from max-height to lowerheight. If there is an overlap, add the new square with height dimensions, else add square with default y which is 0, side_len. After each iteration, sort squares so that its ready for next iteration, and also pick the max-height value as the answer. 
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Falling Squares" lines
+# @param {Integer[][]} positions
+# @return {Integer[]}
+Square = Struct.new(:x_left, :x_right, :y_bottom, :y_top)
+def falling_squares(positions)
+  n = positions.size
+  settled_squares = []
+
+  interval_overlap= ->(int1, int2) {
+    int1, int2 = int2, int1 if int2[0] < int1[0]
+    int1[1] > int2[0]
+  }
+
+  positions.map do |(x, side_len)|
+    overlaps_with_some_square = false
+    settled_squares.each do |settled_square|
+      if interval_overlap.call([settled_square.x_left, settled_square.x_right], [x, x+side_len]) # insert and break
+        overlaps_with_one = true
+        settled_squares << Square.new(x, x+side_len, settled_square.y_top, settled_square.y_top+side_len)
+        break
+      end
+    end
+    settled_squares << Square.new(x, x+side_len, 0, side_len) unless overlaps_with_some_square
+    settled_squares.sort_by! { |x| -x.y_top  } # sort by max-height, so that last is at max-height
+
+    settled_squares.first.y_top
+  end
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

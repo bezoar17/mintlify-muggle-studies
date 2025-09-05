@@ -1,0 +1,47 @@
+---
+title: '🧀 Word Break'
+description: '[leetcode link](https://leetcode.com/problems/word-break/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a string <code>s</code> and a dictionary of strings <code>wordDict</code>, return <code>true</code> if <code>s</code> can be segmented into a space-separated sequence of one or more dictionary words.</p>  <p><strong>Note</strong> that the same word in the dictionary may be reused multiple times in the segmentation.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> s = &quot;leetcode&quot;, wordDict = [&quot;leet&quot;,&quot;code&quot;] <br/> <strong>Output:</strong> true <br/> <strong>Explanation:</strong> Return true because &quot;leetcode&quot; can be segmented as &quot;leet code&quot;.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> s = &quot;applepenapple&quot;, wordDict = [&quot;apple&quot;,&quot;pen&quot;] <br/> <strong>Output:</strong> true <br/> <strong>Explanation:</strong> Return true because &quot;applepenapple&quot; can be segmented as &quot;apple pen apple&quot;. Note that you are allowed to reuse a dictionary word.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> s = &quot;catsandog&quot;, wordDict = [&quot;cats&quot;,&quot;dog&quot;,&quot;sand&quot;,&quot;and&quot;,&quot;cat&quot;] <br/> <strong>Output:</strong> false    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= s.length &lt;= 300</code></li>  <li><code>1 &lt;= wordDict.length &lt;= 1000</code></li>  <li><code>1 &lt;= wordDict[i].length &lt;= 20</code></li>  <li><code>s</code> and <code>wordDict[i]</code> consist of only lowercase English letters.</li>  <li>All the strings of <code>wordDict</code> are <strong>unique</strong>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Simulate and mark possible indexes. 
+
+Break as soon as a possibility is found, and process larger words first.
+
+Also, in ruby memoization in order to have cache ||= , dont store true/false in cache, for a false case, cache will be recalculated and give tle, instead use nil, 1 and 0 as states.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Word Break" lines
+# @param {String} s
+# @param {String[]} word_dict
+# @return {Boolean}
+def word_break(s, word_dict)
+  n = s.size
+  @s = s; @dp = Array.new(n)
+  @word_dict = word_dict.map {|x| [x, x.size] }.sort_by {|x| -x[-1]}.to_h
+  possible(n-1) == 1
+end
+
+def possible(i)
+  return 1 if i < 0
+
+  @dp[i] ||= @word_dict.any? do |word, length|
+    start_idx = i + 1 - length
+    next if start_idx < 0
+    
+    @s[start_idx, length] == word && possible(start_idx-1) == 1
+  end ? 1 : 0
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

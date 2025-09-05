@@ -1,0 +1,81 @@
+---
+title: '❗️ Painting a Grid With Three Different Colors'
+description: '[leetcode link](https://leetcode.com/problems/painting-a-grid-with-three-different-colors/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given two integers <code>m</code> and <code>n</code>. Consider an <code>m x n</code> grid where each cell is initially white. You can paint each cell <strong>red</strong>, <strong>green</strong>, or <strong>blue</strong>. All cells <strong>must</strong> be painted.</p>  <p>Return<em> the number of ways to color the grid with <strong>no two adjacent cells having the same color</strong></em>. Since the answer can be very large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/06/22/colorthegrid.png" style="width: 200px; height: 50px;" />  <strong>Input:</strong> m = 1, n = 1 <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> The three possible colorings are shown in the image above.   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/06/22/copy-of-colorthegrid.png" style="width: 321px; height: 121px;" />  <strong>Input:</strong> m = 1, n = 2 <br/> <strong>Output:</strong> 6 <br/> <strong>Explanation:</strong> The six possible colorings are shown in the image above.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> m = 5, n = 5 <br/> <strong>Output:</strong> 580986    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= m &lt;= 5</code></li>  <li><code>1 &lt;= n &lt;= 1000</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      m is 5 at max, n is 1000
+
+Explainer for Linear Algebra: https://leetcode.com/problems/knight-dialer/editorial/#approach-5-linear-algebra
+
+Similar to https://leetcode.com/problems/number-of-ways-to-build-sturdy-brick-wall/. But here, ops is greater, i.e 1000, and valid state space would be lower.
+
+Each row in isolation has only a few valid colorings. For each coloring state in a row, next row would have few valid options and so on. Since we have 3 colors, we can represent them as 0,1,2, and as a string as length is at max m. Once you have all states, 2 states are compatible if you can move between them, they essentially are connected, imagine a undirected edge between them. For each state, the connected states then form the valid states for the next row/prev row. When this state transition is modelled through a matrix, we can apply it n-1 times to get the resulting counts for each state. In each operation, for each state, we are essentially taking sum of previous values of all its compatible states. And we have to do this n-1 times. 
+
+In the sturdy brick wall problem, sub-set sum over dp could be used, because calculation of all sum of all compatible(no common set bits) states, was easier through bit operations. Getting sum of submasks in the complement mask etc.
+
+And valid states space was larger. Here, valid state space is small, compatibility check cant be done using a simple bitmask, hence building submask sum is also not trivial , also n is larger here.
+
+Perfect example of n being huge, and m being small is here. https://leetcode.com/problems/number-of-ways-to-paint-n-3-grid/description/ 
+In this problem, the matrix M can be precalculated for 3, and it remains the same. Based on n, the result changes. Which can also be precalculated upto n.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Painting a Grid With Three Different Colors" lines
+# @param {Integer} m
+# @param {Integer} n
+# @return {Integer}
+def color_the_grid(m, n)
+  # find valid states, find valid next_states for each state, make connections in transition matrix
+  # then exponentiate to n-1 times
+  big_mod = 10**9 + 7
+  next_colors = {0=>[1,2], 1=>[0,2], 2=>[0,1]}
+    
+  # Generate all valid row configurations, start with a color, and build out the state
+  states = []
+  generate =->(order) {
+    return states << order.dup if order.size == m
+    next_colors[order[-1]].each {|nc| generate.call(order + [nc]) }
+  }
+  next_colors.keys.each { |x| generate[[x]] }
+  
+  compatible=->(a,b) { (0...m).all? { |i| a[i]!=b[i] } }
+  
+  s = states.size
+  transition_matrix = Array.new(s) { Array.new(s, 0) }
+  (0...s).each { |i| ((i+1)...s).each { |j| 
+    (transition_matrix[i][j]=1; transition_matrix[j][i]=1) if (compatible[states[i],states[j]]) 
+  } }
+  
+  matrix_pow = ->(mat, pow) {
+    result = Array.new(s) { |i| Array.new(s) { |j| i == j ? 1 : 0 } }
+    base = mat.map(&:dup)
+    
+    while pow > 0
+      if pow.odd?
+        result = (0...s).map do |i|
+          (0...s).map { |j| (0...s).sum { |k| result[i][k] * base[k][j] } % big_mod }
+        end
+      end
+      base = (0...s).map do |i|
+        (0...s).map { |j| (0...s).sum { |k| base[i][k] * base[k][j] } % big_mod }
+      end
+      pow >>= 1
+    end
+    result
+  }
+
+  matrix_pow.call(transition_matrix, n-1).flatten.sum % big_mod
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

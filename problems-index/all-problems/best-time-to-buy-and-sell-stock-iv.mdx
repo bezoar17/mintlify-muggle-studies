@@ -1,0 +1,48 @@
+---
+title: '❗️ Best Time to Buy and Sell Stock IV'
+description: '[leetcode link](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer array <code>prices</code> where <code>prices[i]</code> is the price of a given stock on the <code>i<sup>th</sup></code> day, and an integer <code>k</code>.</p>  <p>Find the maximum profit you can achieve. You may complete at most <code>k</code> transactions: i.e. you may buy at most <code>k</code> times and sell at most <code>k</code> times.</p>  <p><strong>Note:</strong> You may not engage in multiple transactions simultaneously (i.e., you must sell the stock before you buy again).</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> k = 2, prices = [2,4,1] <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> Buy on day 1 (price = 2) and sell on day 2 (price = 4), profit = 4-2 = 2.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> k = 2, prices = [3,2,6,5,0,3] <br/> <strong>Output:</strong> 7 <br/> <strong>Explanation:</strong> Buy on day 2 (price = 2) and sell on day 3 (price = 6), profit = 6-2 = 4. Then buy on day 5 (price = 0) and sell on day 6 (price = 3), profit = 3-0 = 3.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= k &lt;= 100</code></li>  <li><code>1 &lt;= prices.length &lt;= 1000</code></li>  <li><code>0 &lt;= prices[i] &lt;= 1000</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      stock -&gt; 1 txn
+stock - 3 -&gt; 2 txns only
+stock - 2 -&gt; n txns;
+stock - fee -&gt; n txns; 
+stock - cooldown -&gt; n txns; 
+
+stock - 4 -&gt; k txnx only
+(Similar to n txns, you maintained holding and not holding, we need to have k states and for each starting price, try to generate those states and calculate profits)
+
+
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Best Time to Buy and Sell Stock IV" lines
+# @param {Integer} k
+# @param {Integer[]} prices
+# @return {Integer}
+def max_profit(k, prices)
+    holding = Array.new(k+1, -Float::INFINITY)
+    empty = Array.new(k+1, 0)
+
+    prices.each do |price|
+        (1..k).each do |i|
+            holding[i] = [holding[i], empty[i-1] - price ].max
+            empty[i] = [empty[i], holding[i] + price ].max
+        end
+    end
+    empty.last
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,38 @@
+---
+title: '🧀 Maximum Subarray'
+description: '[leetcode link](https://leetcode.com/problems/maximum-subarray/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an integer array <code>nums</code>, find the <span data-keyword="subarray-nonempty">subarray</span> with the largest sum, and return <em>its sum</em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [-2,1,-3,4,-1,2,1,-5,4] <br/> <strong>Output:</strong> 6 <br/> <strong>Explanation:</strong> The subarray [4,-1,2,1] has the largest sum 6.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [1] <br/> <strong>Output:</strong> 1 <br/> <strong>Explanation:</strong> The subarray [1] has the largest sum 1.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> nums = [5,4,-1,7,8] <br/> <strong>Output:</strong> 23 <br/> <strong>Explanation:</strong> The subarray [5,4,-1,7,8] has the largest sum 23.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>-10<sup>4</sup> &lt;= nums[i] &lt;= 10<sup>4</sup></code></li> </ul>   <p><strong>Follow up:</strong> If you have figured out the <code>O(n)</code> solution, try coding another solution using the <strong>divide and conquer</strong> approach, which is more subtle.</p> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Maximum Subarray" lines
+# @param {Integer[]} nums
+# @return {Integer}
+def max_sub_array(nums)
+  res = nums[0]
+  max_ending_at_i = nums[0]
+
+  nums[1, nums.size].each do |n|
+    # Find the maximum sum ending at index i by either extending 
+    # the maximum sum subarray ending at index i - 1 or by
+    # starting a new subarray from index i
+    max_ending_at_i = [max_ending_at_i + n, n].max
+    res = [max_ending_at_i, res].max
+  end
+  res
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

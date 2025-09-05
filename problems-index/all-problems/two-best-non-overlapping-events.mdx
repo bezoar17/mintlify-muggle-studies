@@ -1,0 +1,60 @@
+---
+title: '🧀 Two Best Non-Overlapping Events'
+description: '[leetcode link](https://leetcode.com/problems/two-best-non-overlapping-events/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a <strong>0-indexed</strong> 2D integer array of <code>events</code> where <code>events[i] = [startTime<sub>i</sub>, endTime<sub>i</sub>, value<sub>i</sub>]</code>. The <code>i<sup>th</sup></code> event starts at <code>startTime<sub>i</sub></code><sub> </sub>and ends at <code>endTime<sub>i</sub></code>, and if you attend this event, you will receive a value of <code>value<sub>i</sub></code>. You can choose <strong>at most</strong> <strong>two</strong> <strong>non-overlapping</strong> events to attend such that the sum of their values is <strong>maximized</strong>.</p>  <p>Return <em>this <strong>maximum</strong> sum.</em></p>  <p>Note that the start time and end time is <strong>inclusive</strong>: that is, you cannot attend two events where one of them starts and the other ends at the same time. More specifically, if you attend an event with end time <code>t</code>, the next event must start at or after <code>t + 1</code>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/09/21/picture5.png" style="width: 400px; height: 75px;" />  <strong>Input:</strong> events = [[1,3,2],[4,5,2],[2,4,3]] <br/> <strong>Output:</strong> 4 <strong>Explanation: </strong>Choose the green events, 0 and 1 for a sum of 2 + 2 = 4.   <p><strong class="example">Example 2:</strong></p> <img alt="Example 1 Diagram" src="https://assets.leetcode.com/uploads/2021/09/21/picture1.png" style="width: 400px; height: 77px;" />  <strong>Input:</strong> events = [[1,3,2],[4,5,2],[1,5,5]] <br/> <strong>Output:</strong> 5 <strong>Explanation: </strong>Choose event 2 for a sum of 5.   <p><strong class="example">Example 3:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/09/21/picture3.png" style="width: 400px; height: 66px;" />  <strong>Input:</strong> events = [[1,5,3],[1,5,1],[6,6,5]] <br/> <strong>Output:</strong> 8 <strong>Explanation: </strong>Choose events 0 and 2 for a sum of 3 + 5 = 8.   <p><strong>Constraints:</strong></p>  <ul>  <li><code>2 &lt;= events.length &lt;= 10<sup>5</sup></code></li>  <li><code>events[i].length == 3</code></li>  <li><code>1 &lt;= startTime<sub>i</sub> &lt;= endTime<sub>i</sub> &lt;= 10<sup>9</sup></code></li>  <li><code>1 &lt;= value<sub>i</sub> &lt;= 10<sup>6</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Two Best Non-Overlapping Events" lines
+# @param {Integer[][]} events
+# @return {Integer}
+def max_two_events(events)
+  # sorted by start_time, and then process all intervals
+  # also store for each idx, max value of single event from right to idx; in suffix array
+  # for each interval at idx, we find first non-overlapping event in [idx+1,], and get max_value for that first element
+  # to find first non-overlapping interval to right, we have to use binary search instead of linear scan. if there is no
+  # such interval, then only 1 will be picked which is current sum, get max after processing all intervals
+  
+  events.sort_by! { |event| event[0] }
+  n = events.size
+  suffix_max = Array.new(n)
+  suffix_max[n - 1] = events[n - 1][2]  # Initialize the last event's value
+  (n - 2).downto(0) { |i| suffix_max[i] = [events[i][2], suffix_max[i + 1]].max }
+
+  max_sum =  0
+  (0...n).each do |i|
+    left, right = i + 1, n - 1
+    next_event_index = -1
+
+    # Perform binary search to find the next non-overlapping event
+    while left <= right
+      mid = left + (right - left) / 2
+      if events[mid][0] > events[i][1]
+        next_event_index = mid
+        right = mid - 1
+      else
+        left = mid + 1
+      end
+    end
+
+    # update max_sum
+    max_sum = [max_sum, events[i][2] + ((next_event_index != -1) ? suffix_max[next_event_index] : 0)].max
+  end
+
+  max_sum
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

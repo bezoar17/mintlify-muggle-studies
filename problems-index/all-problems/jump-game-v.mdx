@@ -1,0 +1,67 @@
+---
+title: '❗️ Jump Game V'
+description: '[leetcode link](https://leetcode.com/problems/jump-game-v/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an array of&nbsp;integers <code>arr</code> and an integer <code>d</code>. In one step you can jump from index <code>i</code> to index:</p>  <ul>  <li><code>i + x</code> where:&nbsp;<code>i + x &lt; arr.length</code> and <code> 0 &lt;&nbsp;x &lt;= d</code>.</li>  <li><code>i - x</code> where:&nbsp;<code>i - x &gt;= 0</code> and <code> 0 &lt;&nbsp;x &lt;= d</code>.</li> </ul>  <p>In addition, you can only jump from index <code>i</code> to index <code>j</code>&nbsp;if <code>arr[i] &gt; arr[j]</code> and <code>arr[i] &gt; arr[k]</code> for all indices <code>k</code> between <code>i</code> and <code>j</code> (More formally <code>min(i,&nbsp;j) &lt; k &lt; max(i, j)</code>).</p>  <p>You can choose any index of the array and start jumping. Return <em>the maximum number of indices</em>&nbsp;you can visit.</p>  <p>Notice that you can not jump outside of the array at any time.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/01/23/meta-chart.jpeg" style="width: 633px; height: 419px;" />  <strong>Input:</strong> arr = [6,4,14,6,8,13,9,7,10,6,12], d = 2 <br/> <strong>Output:</strong> 4 <br/> <strong>Explanation:</strong> You can start at index 10. You can jump 10 --&gt; 8 --&gt; 6 --&gt; 7 as shown. Note that if you start at index 6 you can only jump to index 7. You cannot jump to index 5 because 13 &gt; 9. You cannot jump to index 4 because index 5 is between index 4 and 6 and 13 &gt; 9. Similarly You cannot jump from index 3 to index 2 or index 1.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> arr = [3,3,3,3,3], d = 3 <br/> <strong>Output:</strong> 1 <br/> <strong>Explanation:</strong> You can start at any index. You always cannot jump to any index.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> arr = [7,6,5,4,3,2,1], d = 1 <br/> <strong>Output:</strong> 7 <br/> <strong>Explanation:</strong> Start at index 0. You can visit all the indicies.     <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= arr.length &lt;= 1000</code></li>  <li><code>1 &lt;= arr[i] &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= d &lt;= arr.length</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      idx to next possible indexes after jump, an edge is there, we find the max depth of dag. Cycle is not possible. We can jump to anyplace before next/previous greater element within d idxs.
+For any valley, we cant jump anywhere, so score=1 for valleys, these are starting points in dag.
+Consider possible jumps left and right, for this get next/prev greater= element within d dist
+and connect indexes to each other in the graph
+Based on that get max length DAG, or max depth of dag.
+
+To build, edges, when finding next ge, elements popped from stack are smaller and to the right. So, for all these, build edge from current to popped if its within d dist. Applies for both prev and next iterations.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Jump Game V" lines
+# @param {Integer[]} arr
+# @param {Integer} d
+# @return {Integer}
+def max_jumps(arr, d)
+  n = arr.size
+  graph = Hash.new {|h,k| h[k]=[]}
+  in_deg = Array.new(n, 0)
+  
+  # build_edges is next/prev ge element finder, and updates graph if within reach
+  # elements discarded from stack are the ones which we can jump to, as they are smaller
+  discard_fn=->(top,num) { top<num }
+  
+  build_edges=->(index_range) {
+    stack = []
+    index_range.each do |idx|
+      while !stack.empty? && discard_fn.call(arr[stack.last], arr[idx])
+        jumpable_idx = stack.pop
+        if (jumpable_idx-idx).abs <= d
+          graph[idx] << jumpable_idx; in_deg[jumpable_idx]+=1; # edge from idx to popped from stack, smaller elems
+        end
+      end
+      stack << idx
+    end
+  }
+  build_edges.call((0...n)) # prev ge, backward jumps
+  build_edges.call((n-1).downto(0)) # next ge, forward jumps
+
+  max_depth = Array.new(n, -1)
+  queue = (0...n).select {|x| in_deg[x]==0 }.map {|x| [x,1]}
+
+  until queue.empty?
+    node, depth = queue.pop
+    max_depth[node] = [max_depth[node], depth].max
+    graph[node].each { |neighbor| queue<<[neighbor, depth+1] }
+  end
+  
+  max_depth.max
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

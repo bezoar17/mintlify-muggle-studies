@@ -1,0 +1,52 @@
+---
+title: '❗️ Frog Jump'
+description: '[leetcode link](https://leetcode.com/problems/frog-jump/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>A frog is crossing a river. The river is divided into some number of units, and at each unit, there may or may not exist a stone. The frog can jump on a stone, but it must not jump into the water.</p>  <p>Given a list of <code>stones</code>&nbsp;positions (in units) in sorted <strong>ascending order</strong>, determine if the frog can cross the river by landing on the last stone. Initially, the frog is on the first stone and assumes the first jump must be <code>1</code> unit.</p>  <p>If the frog&#39;s last jump was <code>k</code> units, its next jump must be either <code>k - 1</code>, <code>k</code>, or <code>k + 1</code> units. The frog can only jump in the forward direction.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> stones = [0,1,3,5,6,8,12,17] <br/> <strong>Output:</strong> true <br/> <strong>Explanation:</strong> The frog can jump to the last stone by jumping 1 unit to the 2nd stone, then 2 units to the 3rd stone, then 2 units to the 4th stone, then 3 units to the 6th stone, 4 units to the 7th stone, and 5 units to the 8th stone.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> stones = [0,1,2,3,4,8,9,11] <br/> <strong>Output:</strong> false <br/> <strong>Explanation:</strong> There is no way to jump to the last stone as the gap between the 5th and 6th stone is too large.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>2 &lt;= stones.length &lt;= 2000</code></li>  <li><code>0 &lt;= stones[i] &lt;= 2<sup>31</sup> - 1</code></li>  <li><code>stones[0] == 0</code></li>  <li><code>stones</code>&nbsp;is sorted in a strictly increasing order.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      From constraints, N^2 will work. For each stone, we can check if it can be reached from last stone. 
+This can be reversed, from each stone, update the next stones that can be reached from there. 
+
+First jump is always 1 unit. So, jump from 0 of 1 unit can always be made. Now, from here, 3 more jumps can be made, so from 1, update 1 + 0, 1+1, 1+2 positions for these 3 jumps. Now for the next stone, check if it can come from any previous stone or not. If it can, then update 3 more stones for the next jump. At any point if you reach last stone, true can be returned.
+
+We have to update all possible jumps from previous stones. Based on if a jump can be made from a previous stone, the jump would be of diff units, and if it is, next jumps are diff-1, diff, diff+1 from i. So update those values.
+
+https://leetcode.com/problems/frog-jump/solutions/193816/concise-and-fast-dp-solution-using-2d-array-instead-of-hashmap-with-text-and-video-explanation/
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Frog Jump" lines
+# @param {Integer[]} stones
+# @return {Boolean}
+def can_cross(stones)
+  n = stones.size
+  dp = Array.new(n) { Array.new(n+1, false) }
+  dp[0][1] = true
+  
+  (1...n).each do |i|
+    (0...i).each do |j|
+      diff = stones[i]-stones[j]
+      next if diff < 0 || diff >n || !dp[j][diff]
+      # can jump from j to i, if dp[j][diff] is true
+      dp[i][diff] = true # now update next jumps from i, which are diff-1, diff, diff+1
+      dp[i][diff-1]=true if diff-1>=0
+      dp[i][diff+1]=true if diff<=n-1
+
+      return true if i==n-1
+    end
+  end
+
+  false
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

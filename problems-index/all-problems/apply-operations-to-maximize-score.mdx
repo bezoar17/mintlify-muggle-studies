@@ -1,0 +1,101 @@
+---
+title: '❗️ Apply Operations to Maximize Score'
+description: '[leetcode link](https://leetcode.com/problems/apply-operations-to-maximize-score/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an array <code>nums</code> of <code>n</code> positive integers and an integer <code>k</code>.</p>  <p>Initially, you start with a score of <code>1</code>. You have to maximize your score by applying the following operation at most <code>k</code> times:</p>  <ul>  <li>Choose any <strong>non-empty</strong> subarray <code>nums[l, ..., r]</code> that you haven&#39;t chosen previously.</li>  <li>Choose an element <code>x</code> of <code>nums[l, ..., r]</code> with the highest <strong>prime score</strong>. If multiple such elements exist, choose the one with the smallest index.</li>  <li>Multiply your score by <code>x</code>.</li> </ul>  <p>Here, <code>nums[l, ..., r]</code> denotes the subarray of <code>nums</code> starting at index <code>l</code> and ending at the index <code>r</code>, both ends being inclusive.</p>  <p>The <strong>prime score</strong> of an integer <code>x</code> is equal to the number of distinct prime factors of <code>x</code>. For example, the prime score of <code>300</code> is <code>3</code> since <code>300 = 2 * 2 * 3 * 5 * 5</code>.</p>  <p>Return <em>the <strong>maximum possible score</strong> after applying at most </em><code>k</code><em> operations</em>.</p>  <p>Since the answer may be large, return it modulo <code>10<sup>9 </sup>+ 7</code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [8,3,9,3,8], k = 2 <br/> <strong>Output:</strong> 81 <br/> <strong>Explanation:</strong> To get a score of 81, we can apply the following operations: - Choose subarray nums[2, ..., 2]. nums[2] is the only element in this subarray. Hence, we multiply the score by nums[2]. The score becomes 1 * 9 = 9. - Choose subarray nums[2, ..., 3]. Both nums[2] and nums[3] have a prime score of 1, but nums[2] has the smaller index. Hence, we multiply the score by nums[2]. The score becomes 9 * 9 = 81. It can be proven that 81 is the highest score one can obtain.  <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [19,12,14,6,10,18], k = 3 <br/> <strong>Output:</strong> 4788 <br/> <strong>Explanation:</strong> To get a score of 4788, we can apply the following operations:  - Choose subarray nums[0, ..., 0]. nums[0] is the only element in this subarray. Hence, we multiply the score by nums[0]. The score becomes 1 * 19 = 19. - Choose subarray nums[5, ..., 5]. nums[5] is the only element in this subarray. Hence, we multiply the score by nums[5]. The score becomes 19 * 18 = 342. - Choose subarray nums[2, ..., 3]. Both nums[2] and nums[3] have a prime score of 2, but nums[2] has the smaller index. Hence, we multipy the score by nums[2]. The score becomes 342 * 14 = 4788. It can be proven that 4788 is the highest score one can obtain.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length == n &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= k &lt;= min(n * (n + 1) / 2, 10<sup>9</sup>)</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      TLE unless prime_score_calculation is cached on class level, so its reused throughout all test cases.
+
+Monotonic Stack question, see for each number which arrays can it contribute to ? To the right, they can contribute till a greater pf value is found, to the left they contribute till ge_eq pf is found. For each element, once we find the limit of valid sub-array, [l,r], for all sub-arrays this element will be picked. 
+Since we want to maximize the score, we sort the nums, start from the max number, and use it sb_count times, reduce k by sb_count, and go to next max number.
+
+Due to same prime factor numbers being picked by least index first. 
+If same pf repeats for indexes i to j, and pf for j+1 is different for all these elements, only nums[i] will be picked.
+So, for nums[i], the valid right ext is uptil j, if we only consider same pf, pf array after j doesnt matter for now. 
+
+And for all nums from i+1 to j, left valid extension is 0, inlcuding the num, left_ext is 1 for all of these.
+
+So, for, for previous idx, we find greater or equal element, for next idx we find the greater pf, to find limits of the sub-array in which an element can be considered.
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Apply Operations to Maximize Score" lines
+# @param {Integer[]} nums
+# @param {Integer} k
+# @return {Integer}
+require 'prime'
+@primes = Prime.each(Math.sqrt(1_000_00).floor).to_a # primes upto 315
+@prime_score_h = {}
+
+def prime_score(num)
+  prime_factors = Set[]
+  i = 0
+  until num == 1 || i == @primes.length
+    if num % @primes[i] == 0
+      prime_factors.add(@primes[i])
+      num /= @primes[i]
+    else
+      i += 1
+    end
+  end
+  prime_factors << num unless num == 1
+  prime_factors.length
+end
+
+def fast_pow(num, exp, mod)
+  num %= mod; res = 1
+  (res = (res*num) % mod if exp.odd?; exp >>= 1; num = (num * num) % mod) while exp > 0
+  res
+end
+
+def maximum_score(nums, k)
+  prime_scores = nums.map {|i| @prime_score_h[i]||=prime_score(i) }
+  pr_gt_idx = mono_stack_idx(prime_scores, -1, ->(top,num) { top<num }) # this has to be greater of equal
+  nx_gt_idx = mono_stack_idx(prime_scores, 1, ->(top,num) { top<=num })
+
+  big_mod = 1_000_000_000 + 7
+  num_sorted = nums.each_with_index.to_a.sort_by{|v,i| [-v,i]}
+
+  score = 1
+
+  while k>0
+    num, i = num_sorted.shift
+    l = pr_gt_idx[i]
+    r = nx_gt_idx[i]
+    sb_count = (i-l) * (r-i)
+    ops_taken = [sb_count, k].min
+    score = (score * fast_pow(num, ops_taken, big_mod)) % big_mod
+    k-=ops_taken
+  end
+  
+  score%big_mod
+end
+
+def mono_stack_idx(nums, direction, discard_fn)
+  n = nums.size
+  calculate_previous = direction == -1;
+  default, index_range = calculate_previous ? [-1, (0...n)] : [n, (n-1).downto(0)]
+
+  result = Array.new(nums.size, default)
+  stack = [] # stores only the index of element, not [element, idx]
+
+  index_range.each do |idx|
+    stack.pop while !stack.empty? && discard_fn.call(nums[stack.last], nums[idx])
+    result[idx] = stack.last unless stack.empty?
+    stack << idx
+  end
+  result
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

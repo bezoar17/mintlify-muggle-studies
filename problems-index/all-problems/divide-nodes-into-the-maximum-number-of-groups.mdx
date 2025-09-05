@@ -1,0 +1,89 @@
+---
+title: '❗️ Divide Nodes Into the Maximum Number of Groups'
+description: '[leetcode link](https://leetcode.com/problems/divide-nodes-into-the-maximum-number-of-groups/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a positive integer <code>n</code> representing the number of nodes in an <strong>undirected</strong> graph. The nodes are labeled from <code>1</code> to <code>n</code>.</p>  <p>You are also given a 2D integer array <code>edges</code>, where <code>edges[i] = [a<sub>i, </sub>b<sub>i</sub>]</code> indicates that there is a <strong>bidirectional</strong> edge between nodes <code>a<sub>i</sub></code> and <code>b<sub>i</sub></code>. <strong>Notice</strong> that the given graph may be disconnected.</p>  <p>Divide the nodes of the graph into <code>m</code> groups (<strong>1-indexed</strong>) such that:</p>  <ul>  <li>Each node in the graph belongs to exactly one group.</li>  <li>For every pair of nodes in the graph that are connected by an edge <code>[a<sub>i, </sub>b<sub>i</sub>]</code>, if <code>a<sub>i</sub></code> belongs to the group with index <code>x</code>, and <code>b<sub>i</sub></code> belongs to the group with index <code>y</code>, then <code>|y - x| = 1</code>.</li> </ul>  <p>Return <em>the maximum number of groups (i.e., maximum </em><code>m</code><em>) into which you can divide the nodes</em>. Return <code>-1</code> <em>if it is impossible to group the nodes with the given conditions</em>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2022/10/13/example1.png" style="width: 352px; height: 201px;" />  <strong>Input:</strong> n = 6, edges = [[1,2],[1,4],[1,5],[2,6],[2,3],[4,6]] <br/> <strong>Output:</strong> 4 <br/> <strong>Explanation:</strong> As shown in the image we: - Add node 5 to the first group. - Add node 1 to the second group. - Add nodes 2 and 4 to the third group. - Add nodes 3 and 6 to the fourth group. We can see that every edge is satisfied. It can be shown that that if we create a fifth group and move any node from the third or fourth group to it, at least on of the edges will not be satisfied.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> n = 3, edges = [[1,2],[2,3],[3,1]] <br/> <strong>Output:</strong> -1 <br/> <strong>Explanation:</strong> If we add node 1 to the first group, node 2 to the second group, and node 3 to the third group to satisfy the first two edges, we can see that the third edge will not be satisfied. It can be shown that no grouping is possible.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= n &lt;= 500</code></li>  <li><code>1 &lt;= edges.length &lt;= 10<sup>4</sup></code></li>  <li><code>edges[i].length == 2</code></li>  <li><code>1 &lt;= a<sub>i</sub>, b<sub>i</sub> &lt;= n</code></li>  <li><code>a<sub>i</sub> != b<sub>i</sub></code></li>  <li>There is at most one edge between any pair of vertices.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      **Bipartite-Graph: If graph has odd-cycle, not bipartite, if not then always bipartite.**
+** Diameter of a Graph: Longest shortest path between 2 nodes, no better algo present apart from doing BFS from each node**
+
+Can you put a cycle of 3 in 2 groups without violating the condition. What about group of 5, 7 etc. Odd cycle will always violate the condtion. Also, if graph is not bipartite, colour one node, its neighbour **should** have other colour, we will always violate the condition. If we have a acyclic chain, for bipartite, imagine creating a zig-zag line starting from 1 node, next goes to other colour. Expand this zig-zag line and you have arranged it in the manner its given, into consecutive groups. So, for possibility, all we have to check is graph is bipartite or not. If it is, then we can root the tree like structure, max height would be max group count. For disconnected components, answer is sum of each component. 
+
+
+Root the tree like structure, max height would be max group count. For this, for a particular node, we get max-dist in bfs for a node. But how do we get for which node this value will be maximum. We can try bfs for each node. There isnt a better approach for this.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Divide Nodes Into the Maximum Number of Groups" lines
+# @param {Integer} n
+# @param {Integer[][]} edges
+# @return {Integer}
+def magnificent_sets(n, edges)
+  # we start calculation from each unvisited node
+  # first we get the component, check if it is bipartite, then do bfs for all nodes
+  # to check bipartite, we can also do using bfs, when we see an already visited node, check if it belongs to other color
+  graph = Hash.new {|h,k| h[k]=[]}
+  edges.each { |u,v| graph[u]<<v; graph[v]<<u }
+  visited = Array.new(n+1, 0) # will be used as coloring also, 0 uncoloures/unvisited, 1 or 2.
+  bipartite = false
+  
+  # checks bipartite, and returns component
+  component_bfs=->(start) {
+    component = []
+    queue = [start]
+    visited[start] = 1 # starting color
+
+    until queue.empty?
+      node = queue.shift
+      component << node
+      graph[node].each do |neighbor|
+        return bipartite=true if visited[neighbor] == visited[node] # neighbor colors are same
+        if visited[neighbor]==0
+          visited[neighbor] = 3-visited[node] # switch color of neighbor, and mark it as visited
+          queue << neighbor
+        end
+      end
+    end
+    component
+  }
+  
+  # returns longest shortest dist, or max-depth from a node
+  max_dist_bfs=->(start) {
+    visited_bfs = Hash.new(false)
+    max_dist = 0
+    visited_bfs[start]=true
+    queue = [[start, 0]]
+
+    until queue.empty?
+      node, d  = queue.shift
+      max_dist = [max_dist, d].max
+      graph[node].each do |neighbor|
+        next if visited_bfs[neighbor]
+        visited_bfs[neighbor]=true; queue << [neighbor, d+1]
+      end
+    end
+    max_dist
+  }
+  
+  group_count = 0
+  (1..n).each do |node|
+    next unless visited[node]==0
+    current_component = component_bfs.call(node)
+    return -1 if bipartite
+    group_count += 1 + current_component.map {|x| max_dist_bfs.call(x) }.max
+  end
+
+  group_count
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,46 @@
+---
+title: '🧀 Shifting Letters II'
+description: '[leetcode link](https://leetcode.com/problems/shifting-letters-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a string <code>s</code> of lowercase English letters and a 2D integer array <code>shifts</code> where <code>shifts[i] = [start<sub>i</sub>, end<sub>i</sub>, direction<sub>i</sub>]</code>. For every <code>i</code>, <strong>shift</strong> the characters in <code>s</code> from the index <code>start<sub>i</sub></code> to the index <code>end<sub>i</sub></code> (<strong>inclusive</strong>) forward if <code>direction<sub>i</sub> = 1</code>, or shift the characters backward if <code>direction<sub>i</sub> = 0</code>.</p>  <p>Shifting a character <strong>forward</strong> means replacing it with the <strong>next</strong> letter in the alphabet (wrapping around so that <code>&#39;z&#39;</code> becomes <code>&#39;a&#39;</code>). Similarly, shifting a character <strong>backward</strong> means replacing it with the <strong>previous</strong> letter in the alphabet (wrapping around so that <code>&#39;a&#39;</code> becomes <code>&#39;z&#39;</code>).</p>  <p>Return <em>the final string after all such shifts to </em><code>s</code><em> are applied</em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> s = &quot;abc&quot;, shifts = [[0,1,0],[1,2,1],[0,2,1]] <br/> <strong>Output:</strong> &quot;ace&quot; <br/> <strong>Explanation:</strong> Firstly, shift the characters from index 0 to index 1 backward. Now s = &quot;zac&quot;. Secondly, shift the characters from index 1 to index 2 forward. Now s = &quot;zbd&quot;. Finally, shift the characters from index 0 to index 2 forward. Now s = &quot;ace&quot;.  <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> s = &quot;dztz&quot;, shifts = [[0,0,0],[1,1,1]] <br/> <strong>Output:</strong> &quot;catz&quot; <br/> <strong>Explanation:</strong> Firstly, shift the characters from index 0 to index 0 backward. Now s = &quot;cztz&quot;. Finally, shift the characters from index 1 to index 1 forward. Now s = &quot;catz&quot;.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= s.length, shifts.length &lt;= 5 * 10<sup>4</sup></code></li>  <li><code>shifts[i].length == 3</code></li>  <li><code>0 &lt;= start<sub>i</sub> &lt;= end<sub>i</sub> &lt; s.length</code></li>  <li><code>0 &lt;= direction<sub>i</sub> &lt;= 1</code></li>  <li><code>s</code> consists of lowercase English letters.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Map the number of operations for each index. And apply the final operation to each idx. Signify left shift as -1, so convert direction 0 to -1 while storing operations for an index.
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Shifting Letters II" lines
+# @param {String} s
+# @param {Integer[][]} shifts
+# @return {String}
+def shifting_letters(s, shifts)
+  n = s.size
+  alphabets = ('a'..'z').to_a
+  op_map = Array.new(n+1, 0)
+  
+  shifts.each do |start_i, end_i, direction|
+    dir = direction == 0 ? -1 : 1
+    op_map[start_i] += dir
+    op_map[end_i+1] -= dir
+  end
+
+  net_op = 0
+  s_chars = s.chars
+
+  s_chars.each_with_index.map do |ch, i|
+    net_op+=op_map[i]
+    alphabets[(ch.ord - 'a'.ord + net_op)%26]
+  end.join
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

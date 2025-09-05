@@ -1,0 +1,33 @@
+---
+title: '🧀 Kth Largest Element in an Array'
+description: '[leetcode link](https://leetcode.com/problems/kth-largest-element-in-an-array/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an integer array <code>nums</code> and an integer <code>k</code>, return <em>the</em> <code>k<sup>th</sup></code> <em>largest element in the array</em>.</p>  <p>Note that it is the <code>k<sup>th</sup></code> largest element in the sorted order, not the <code>k<sup>th</sup></code> distinct element.</p>  <p>Can you solve it without sorting?</p>   <p><strong class="example">Example 1:</strong></p> <strong>Input:</strong> nums = [3,2,1,5,6,4], k = 2 <br/> <strong>Output:</strong> 5 <p><strong class="example">Example 2:</strong></p> <strong>Input:</strong> nums = [3,2,3,1,2,4,5,5,6], k = 4 <br/> <strong>Output:</strong> 4   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= k &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>-10<sup>4</sup> &lt;= nums[i] &lt;= 10<sup>4</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Kth Largest Element in an Array" lines
+# @param {Integer[]} nums
+# @param {Integer} k
+# @return {Integer}
+def find_kth_largest(nums, k)
+  # use min heap of size k, replace top and heapify whenever new elem is greater than top.
+  # ignore when new elem is smaller than top of heap(which is min)
+
+  # this is a cheesy solution as we dont have heaps in ruby, will have to code it out
+  nums.sort.reverse[k-1]
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

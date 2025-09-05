@@ -1,0 +1,46 @@
+---
+title: '🧀 Car Pooling'
+description: '[leetcode link](https://leetcode.com/problems/car-pooling/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>There is a car with <code>capacity</code> empty seats. The vehicle only drives east (i.e., it cannot turn around and drive west).</p>  <p>You are given the integer <code>capacity</code> and an array <code>trips</code> where <code>trips[i] = [numPassengers<sub>i</sub>, from<sub>i</sub>, to<sub>i</sub>]</code> indicates that the <code>i<sup>th</sup></code> trip has <code>numPassengers<sub>i</sub></code> passengers and the locations to pick them up and drop them off are <code>from<sub>i</sub></code> and <code>to<sub>i</sub></code> respectively. The locations are given as the number of kilometers due east from the car&#39;s initial location.</p>  <p>Return <code>true</code><em> if it is possible to pick up and drop off all passengers for all the given trips, or </em><code>false</code><em> otherwise</em>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> trips = [[2,1,5],[3,3,7]], capacity = 4 <br/> <strong>Output:</strong> false   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> trips = [[2,1,5],[3,3,7]], capacity = 5 <br/> <strong>Output:</strong> true    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= trips.length &lt;= 1000</code></li>  <li><code>trips[i].length == 3</code></li>  <li><code>1 &lt;= numPassengers<sub>i</sub> &lt;= 100</code></li>  <li><code>0 &lt;= from<sub>i</sub> &lt; to<sub>i</sub> &lt;= 1000</code></li>  <li><code>1 &lt;= capacity &lt;= 10<sup>5</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Similar to zero array transformation, 
+line sweep to record the updates on the positions, and see if it will exceed capacity
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Car Pooling" lines
+# @param {Integer[][]} trips
+# @param {Integer} capacity
+# @return {Boolean}
+def car_pooling(trips, capacity)
+  last_position = trips.map(&:last).max
+
+  # record passengers getting in and out for all trips at given locations
+  capacity_at_position = Array.new(last_position+1, 0)
+
+  trips.each { |num, from, to|
+    capacity_at_position[from] += num # getting in at from
+    capacity_at_position[to] -= num # getting out at to
+  }
+
+  count = 0
+  (0..last_position).each do |position|
+    count += capacity_at_position[position]
+    return false if count > capacity
+  end
+
+  true
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

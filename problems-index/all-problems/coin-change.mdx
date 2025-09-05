@@ -1,0 +1,43 @@
+---
+title: '🧀 Coin Change'
+description: '[leetcode link](https://leetcode.com/problems/coin-change/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer array <code>coins</code> representing coins of different denominations and an integer <code>amount</code> representing a total amount of money.</p>  <p>Return <em>the fewest number of coins that you need to make up that amount</em>. If that amount of money cannot be made up by any combination of the coins, return <code>-1</code>.</p>  <p>You may assume that you have an infinite number of each kind of coin.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> coins = [1,2,5], amount = 11 <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> 11 = 5 + 5 + 1   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> coins = [2], amount = 3 <br/> <strong>Output:</strong> -1   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> coins = [1], amount = 0 <br/> <strong>Output:</strong> 0    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= coins.length &lt;= 12</code></li>  <li><code>1 &lt;= coins[i] &lt;= 2<sup>31</sup> - 1</code></li>  <li><code>0 &lt;= amount &lt;= 10<sup>4</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Coin Change" lines
+# @param {Integer[]} coins
+# @param {Integer} amount
+# @return {Integer}
+def coin_change(coins, amount)
+  coins_sorted = coins.sort.reverse
+  min_coins_for_amount = Array.new(amount+1)
+  min_coins_for_amount[0] = 0
+  
+  coins_sorted.select{|x| x<=amount}.each { |coin| min_coins_for_amount[coin] = 1 }
+
+  (1..amount).each do |target|
+    min_coins_for_amount[target] = coins_sorted.map do |coin|
+        next unless (target-coin).between?(0, amount)
+        next if min_coins_for_amount[target - coin].nil?
+        1 + min_coins_for_amount[target - coin]
+    end.compact.min
+  end
+
+  min_coins_for_amount[amount] || -1
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,56 @@
+---
+title: '🧀 01 Matrix'
+description: '[leetcode link](https://leetcode.com/problems/01-matrix/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an <code>m x n</code> binary matrix <code>mat</code>, return <em>the distance of the nearest </em><code>0</code><em> for each cell</em>.</p>  <p>The distance between two cells sharing a common edge is <code>1</code>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/04/24/01-1-grid.jpg" style="width: 253px; height: 253px;" />  <strong>Input:</strong> mat = [[0,0,0],[0,1,0],[0,0,0]] <br/> <strong>Output:</strong> [[0,0,0],[0,1,0],[0,0,0]]   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/04/24/01-2-grid.jpg" style="width: 253px; height: 253px;" />  <strong>Input:</strong> mat = [[0,0,0],[0,1,0],[1,1,1]] <br/> <strong>Output:</strong> [[0,0,0],[0,1,0],[1,2,1]]    <p><strong>Constraints:</strong></p>  <ul>  <li><code>m == mat.length</code></li>  <li><code>n == mat[i].length</code></li>  <li><code>1 &lt;= m, n &lt;= 10<sup>4</sup></code></li>  <li><code>1 &lt;= m * n &lt;= 10<sup>4</sup></code></li>  <li><code>mat[i][j]</code> is either <code>0</code> or <code>1</code>.</li>  <li>There is at least one <code>0</code> in <code>mat</code>.</li> </ul>   <p><strong>Note:</strong> This question is the same as 1765: <a href="https://leetcode.com/problems/map-of-highest-peak/description/" target="_blank">https://leetcode.com/problems/map-of-highest-peak/</a></p> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="01 Matrix" lines
+# @param {Integer[][]} mat
+# @return {Integer[][]}
+def update_matrix(mat)
+  visited = Set.new()
+  qu = Queue.new
+  directions = [[0,1], [0,-1], [1,0], [-1,0]]
+  r,c = mat.size, mat[0].size
+  # res = Array.new(r) { Array.new(c) }
+
+  (0...r).each do |i|
+    (0...c).each do |j|
+      if mat[i][j] == 0
+        visited.add([i,j]); qu.push([i,j]);
+        # res[i][j]=0; 
+      end
+    end
+  end
+
+  while !qu.empty?
+    x,y = qu.pop
+
+    for i,j in directions do
+      dx = x+i; dy = y+j
+      if dx.between?(0, r-1) && dy.between?(0, c-1) && !visited.include?([dx, dy])
+        mat[dx][dy] = mat[x][y] + 1
+        qu.push([dx,dy]); 
+        visited.add([dx,dy])
+      end
+    end
+
+  end
+  mat
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

@@ -1,0 +1,75 @@
+---
+title: '🧀 Most Profitable Path in a Tree'
+description: '[leetcode link](https://leetcode.com/problems/most-profitable-path-in-a-tree/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>There is an undirected tree with <code>n</code> nodes labeled from <code>0</code> to <code>n - 1</code>, rooted at node <code>0</code>. You are given a 2D integer array <code>edges</code> of length <code>n - 1</code> where <code>edges[i] = [a<sub>i</sub>, b<sub>i</sub>]</code> indicates that there is an edge between nodes <code>a<sub>i</sub></code> and <code>b<sub>i</sub></code> in the tree.</p>  <p>At every node <code>i</code>, there is a gate. You are also given an array of even integers <code>amount</code>, where <code>amount[i]</code> represents:</p>  <ul>  <li>the price needed to open the gate at node <code>i</code>, if <code>amount[i]</code> is negative, or,</li>  <li>the cash reward obtained on opening the gate at node <code>i</code>, otherwise.</li> </ul>  <p>The game goes on as follows:</p>  <ul>  <li>Initially, Alice is at node <code>0</code> and Bob is at node <code>bob</code>.</li>  <li>At every second, Alice and Bob <b>each</b> move to an adjacent node. Alice moves towards some <strong>leaf node</strong>, while Bob moves towards node <code>0</code>.</li>  <li>For <strong>every</strong> node along their path, Alice and Bob either spend money to open the gate at that node, or accept the reward. Note that:  <ul>   <li>If the gate is <strong>already open</strong>, no price will be required, nor will there be any cash reward.</li>   <li>If Alice and Bob reach the node <strong>simultaneously</strong>, they share the price/reward for opening the gate there. In other words, if the price to open the gate is <code>c</code>, then both Alice and Bob pay&nbsp;<code>c / 2</code> each. Similarly, if the reward at the gate is <code>c</code>, both of them receive <code>c / 2</code> each.</li>  </ul>  </li>  <li>If Alice reaches a leaf node, she stops moving. Similarly, if Bob reaches node <code>0</code>, he stops moving. Note that these events are <strong>independent</strong> of each other.</li> </ul>  <p>Return<em> the <strong>maximum</strong> net income Alice can have if she travels towards the optimal leaf node.</em></p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2022/10/29/eg1.png" style="width: 275px; height: 275px;" />  <strong>Input:</strong> edges = [[0,1],[1,2],[1,3],[3,4]], bob = 3, amount = [-2,4,2,-4,6] <br/> <strong>Output:</strong> 6 <br/> <strong>Explanation:</strong>  The above diagram represents the given tree. The game goes as follows: - Alice is initially on node 0, Bob on node 3. They open the gates of their respective nodes.   Alice&#39;s net income is now -2. - Both Alice and Bob move to node 1.  &nbsp; Since they reach here simultaneously, they open the gate together and share the reward. &nbsp; Alice&#39;s net income becomes -2 + (4 / 2) = 0. - Alice moves on to node 3. Since Bob already opened its gate, Alice&#39;s income remains unchanged. &nbsp; Bob moves on to node 0, and stops moving. - Alice moves on to node 4 and opens the gate there. Her net income becomes 0 + 6 = 6. Now, neither Alice nor Bob can make any further moves, and the game ends. It is not possible for Alice to get a higher net income.   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2022/10/29/eg2.png" style="width: 250px; height: 78px;" />  <strong>Input:</strong> edges = [[0,1]], bob = 1, amount = [-7280,2350] <br/> <strong>Output:</strong> -7280 <br/> <strong>Explanation:</strong>  Alice follows the path 0-&gt;1 whereas Bob follows the path 1-&gt;0. Thus, Alice opens the gate at node 0 only. Hence, her net income is -7280.     <p><strong>Constraints:</strong></p>  <ul>  <li><code>2 &lt;= n &lt;= 10<sup>5</sup></code></li>  <li><code>edges.length == n - 1</code></li>  <li><code>edges[i].length == 2</code></li>  <li><code>0 &lt;= a<sub>i</sub>, b<sub>i</sub> &lt; n</code></li>  <li><code>a<sub>i</sub> != b<sub>i</sub></code></li>  <li><code>edges</code> represents a valid tree.</li>  <li><code>1 &lt;= bob &lt; n</code></li>  <li><code>amount.length == n</code></li>  <li><code>amount[i]</code> is an <strong>even</strong> integer in the range <code>[-10<sup>4</sup>, 10<sup>4</sup>]</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Alice and Bob always move towards their respective goals. Alice has options, Bob just moves to 0. Bob only has 1 path and fixed time for each node in that path. For Alice, we can calculate income for all paths, if it visits a node that bob can also visit, we check who reaches that node at what time and calculate income accordingly. 
+
+So, calculate Bob's path and dist first. Then for Alice calculate income in all paths, taking into account updated income for nodes which are common with Bob's path.
+
+For finding bob's exact path and dist, instead of all out dfs, we cant maintain path array, memory limit exceeds, do backtracking kind of dfs, keep updating current path, and exit when path found for bob. Simple dfs is giving memory limit exceeded.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Most Profitable Path in a Tree" lines
+# @param {Integer[][]} edges
+# @param {Integer} bob
+# @param {Integer[]} amount
+# @return {Integer}
+def most_profitable_path(edges, bob, amount)
+  n = edges.size+1
+  adj_h = Hash.new{|h,k| h[k]=[]}; edges.each {|u,v| adj_h[u]<<v;adj_h[v]<<u;}
+  # for alice, amongst all paths to all leaf nodes, we need to pick max
+  # path of bob is fixed, nodes where bob will be present after t seconds, we just keep track of those
+  bob_path = {}
+  @found_bob_path = false
+  
+  def find_bob_path(node, parent, target, time, path, graph)
+    (path[node] = time; return @found_bob_path = true) if node == target
+    
+    graph[node].select{|x| x!=parent}.each do |next_node|
+      path[node] = time
+      return true if find_bob_path(next_node, node, target, time + 1, path, graph)
+    end
+    
+    path.delete(node) unless @found_bob_path
+    false
+  end
+  
+  find_bob_path(bob, -1, 0, 0, bob_path, adj_h)
+  bob_dist = Hash.new(Float::INFINITY).merge(bob_path)
+
+  max_income = -Float::INFINITY
+
+  queue = [[0,0,0]]
+  visited = Array.new(n, false)
+  visited[0]=true
+
+  while !queue.empty?
+    node, dist, income = queue.pop
+    if bob_dist[node] > dist
+      income += amount[node]
+    elsif bob_dist[node] == dist
+      income += amount[node]/2
+    end
+
+    neighbors = adj_h[node].select {|x| !visited[x] }
+    max_income = [max_income, income].max if neighbors.empty? # leaf
+
+    neighbors.each { |nn| visited[nn]=true; queue << [nn, dist+1, income]}
+  end
+  max_income
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

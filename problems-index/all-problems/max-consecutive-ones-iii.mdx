@@ -1,0 +1,40 @@
+---
+title: '🧀 Max Consecutive Ones III'
+description: '[leetcode link](https://leetcode.com/problems/max-consecutive-ones-iii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a binary array <code>nums</code> and an integer <code>k</code>, return <em>the maximum number of consecutive </em><code>1</code><em>&#39;s in the array if you can flip at most</em> <code>k</code> <code>0</code>&#39;s.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [1,1,1,0,0,0,1,1,1,1,0], k = 2 <br/> <strong>Output:</strong> 6 <br/> <strong>Explanation:</strong> [1,1,1,0,0,<u><strong>1</strong>,1,1,1,1,<strong>1</strong></u>] Bolded numbers were flipped from 0 to 1. The longest subarray is underlined.  <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [0,0,1,1,0,0,1,1,1,0,1,1,0,0,0,1,1,1,1], k = 3 <br/> <strong>Output:</strong> 10 <br/> <strong>Explanation:</strong> [0,0,<u>1,1,<strong>1</strong>,<strong>1</strong>,1,1,1,<strong>1</strong>,1,1</u>,0,0,0,1,1,1,1] Bolded numbers were flipped from 0 to 1. The longest subarray is underlined.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>nums[i]</code> is either <code>0</code> or <code>1</code>.</li>  <li><code>0 &lt;= k &lt;= nums.length</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      This problem is equivalent to finding the longest subarray with at most k zeroes.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Max Consecutive Ones III" lines
+# @param {Integer[]} nums
+# @param {Integer} k
+# @return {Integer}
+def longest_ones(nums, k)
+  n = nums.size
+  l = 0; zero_count = 0
+  (0...n).reduce(0) do |max_len, r|
+    zero_count+=1 if nums[r] == 0
+
+    while l <= r && zero_count > k
+      zero_count-=1 if nums[l]==0
+      l+=1
+    end
+
+    [max_len, r-l+1].max 
+  end
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

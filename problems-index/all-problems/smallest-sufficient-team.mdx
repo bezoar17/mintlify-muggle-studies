@@ -1,0 +1,56 @@
+---
+title: '❗️ Smallest Sufficient Team'
+description: '[leetcode link](https://leetcode.com/problems/smallest-sufficient-team/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>In a project, you have a list of required skills <code>req_skills</code>, and a list of people. The <code>i<sup>th</sup></code> person <code>people[i]</code> contains a list of skills that the person has.</p>  <p>Consider a sufficient team: a set of people such that for every required skill in <code>req_skills</code>, there is at least one person in the team who has that skill. We can represent these teams by the index of each person.</p>  <ul>  <li>For example, <code>team = [0, 1, 3]</code> represents the people with skills <code>people[0]</code>, <code>people[1]</code>, and <code>people[3]</code>.</li> </ul>  <p>Return <em>any sufficient team of the smallest possible size, represented by the index of each person</em>. You may return the answer in <strong>any order</strong>.</p>  <p>It is <strong>guaranteed</strong> an answer exists.</p>   <p><strong class="example">Example 1:</strong></p> <strong>Input:</strong> req_skills = ["java","nodejs","reactjs"], people = [["java"],["nodejs"],["nodejs","reactjs"]] <br/> <strong>Output:</strong> [0,2] <p><strong class="example">Example 2:</strong></p> <strong>Input:</strong> req_skills = ["algorithms","math","java","reactjs","csharp","aws"], people = [["algorithms","math","java"],["algorithms","math","reactjs"],["java","csharp","aws"],["reactjs","csharp"],["csharp","math"],["aws","java"]] <br/> <strong>Output:</strong> [1,2]   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= req_skills.length &lt;= 16</code></li>  <li><code>1 &lt;= req_skills[i].length &lt;= 16</code></li>  <li><code>req_skills[i]</code> consists of lowercase English letters.</li>  <li>All the strings of <code>req_skills</code> are <strong>unique</strong>.</li>  <li><code>1 &lt;= people.length &lt;= 60</code></li>  <li><code>0 &lt;= people[i].length &lt;= 16</code></li>  <li><code>1 &lt;= people[i][j].length &lt;= 16</code></li>  <li><code>people[i][j]</code> consists of lowercase English letters.</li>  <li>All the strings of <code>people[i]</code> are <strong>unique</strong>.</li>  <li>Every skill in <code>people[i]</code> is a skill in <code>req_skills</code>.</li>  <li>It is guaranteed a sufficient team exists.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Convert skills into bit positions, if s skills are present. 2^s-1 is skill mask required. All skills are present. Each person's skillset can be represented by a mask. Now, we have to choose min subset such that OR of people is complete skill mask.
+
+Subset gen similar to this, https://leetcode.com/problems/partition-equal-subset-sum/. Min people required is tracked. Subset is merged into skill mask space, so 2^skill_count-1. 
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Smallest Sufficient Team" lines
+# @param {String[]} req_skills
+# @param {String[][]} people
+# @return {Integer[]}
+def smallest_sufficient_team(req_skills, people)
+  # 16, means bitmask
+  skill_h = (req_skills + people.flatten).uniq.each_with_index.to_h
+  people_skills = people.map { |skill_list| skill_list.reduce(0) { |res, x| res | 1<<skill_h[x] } }
+  # people_skills.map {|x| p x.to_s(2).rjust(3,'0')}
+  # pick minimum people such that, their OR value is all 1s
+  # dp[mask] = min set of people for mask skillset, we need dp[2^s-1] as answer
+  
+  dp = {} # base case, for skill_req 0, no one is needed
+  dp[0]=[]
+  
+  # for 1, each persons skillset will be added
+  # for 2 people, do this again, for each person, calc all prev states, and add him
+  # first round, 01, 10, 11; all have 1 as min
+  # in second round, 01, will combine with 10(last state), and produce 2 required, but as this was already set
+  # we dont update the min value for 11 mask after 2 iterations
+  
+  people_skills.each_with_index do |skill_set, i|
+    last_states = dp.to_a # add this guys skills to all previous combos, and see if new info is found
+    last_states.each do |prev_state, req|
+      combo = prev_state | skill_set
+      next if combo==prev_state # no improvement by this person, duplicate skills for this state
+      dp[combo] = [i] + req  if !dp.has_key?(combo) || (dp[combo].size > req.size+1) # combo size is being improved by this person
+    end
+  end
+
+  dp[2**req_skills.size-1]
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

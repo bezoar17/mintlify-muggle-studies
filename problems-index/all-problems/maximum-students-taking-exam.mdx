@@ -1,0 +1,75 @@
+---
+title: '❗️ Maximum Students Taking Exam'
+description: '[leetcode link](https://leetcode.com/problems/maximum-students-taking-exam/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given a <code>m&nbsp;* n</code>&nbsp;matrix <code>seats</code>&nbsp;&nbsp;that represent seats distributions&nbsp;in a classroom.&nbsp;If a seat&nbsp;is&nbsp;broken, it is denoted by <code>&#39;#&#39;</code> character otherwise it is denoted by a <code>&#39;.&#39;</code> character.</p>  <p>Students can see the answers of those sitting next to the left, right, upper left and upper right, but he cannot see the answers of the student sitting&nbsp;directly in front or behind him. Return the <strong>maximum </strong>number of students that can take the exam together&nbsp;without any cheating being possible.</p>  <p>Students must be placed in seats in good condition.</p>   <p><strong class="example">Example 1:</strong></p> <img height="200" src="https://assets.leetcode.com/uploads/2020/01/29/image.png" width="339" />  <strong>Input:</strong> seats = [[&quot;#&quot;,&quot;.&quot;,&quot;#&quot;,&quot;#&quot;,&quot;.&quot;,&quot;#&quot;], &nbsp;               [&quot;.&quot;,&quot;#&quot;,&quot;#&quot;,&quot;#&quot;,&quot;#&quot;,&quot;.&quot;], &nbsp;               [&quot;#&quot;,&quot;.&quot;,&quot;#&quot;,&quot;#&quot;,&quot;.&quot;,&quot;#&quot;]] <br/> <strong>Output:</strong> 4 <br/> <strong>Explanation:</strong> Teacher can place 4 students in available seats so they don&#39;t cheat on the exam.    <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> seats = [[&quot;.&quot;,&quot;#&quot;], &nbsp;               [&quot;#&quot;,&quot;#&quot;], &nbsp;               [&quot;#&quot;,&quot;.&quot;], &nbsp;               [&quot;#&quot;,&quot;#&quot;], &nbsp;               [&quot;.&quot;,&quot;#&quot;]] <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> Place all students in available seats.     <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> seats = [[&quot;#&quot;,&quot;.&quot;,&quot;<strong>.</strong>&quot;,&quot;.&quot;,&quot;#&quot;], &nbsp;               [&quot;<strong>.</strong>&quot;,&quot;#&quot;,&quot;<strong>.</strong>&quot;,&quot;#&quot;,&quot;<strong>.</strong>&quot;], &nbsp;               [&quot;<strong>.</strong>&quot;,&quot;.&quot;,&quot;#&quot;,&quot;.&quot;,&quot;<strong>.</strong>&quot;], &nbsp;               [&quot;<strong>.</strong>&quot;,&quot;#&quot;,&quot;<strong>.</strong>&quot;,&quot;#&quot;,&quot;<strong>.</strong>&quot;], &nbsp;               [&quot;#&quot;,&quot;.&quot;,&quot;<strong>.</strong>&quot;,&quot;.&quot;,&quot;#&quot;]] <br/> <strong>Output:</strong> 10 <br/> <strong>Explanation:</strong> Place students in available seats in column 1, 3 and 5.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>seats</code>&nbsp;contains only characters&nbsp;<code>&#39;.&#39;<font face="sans-serif, Arial, Verdana, Trebuchet MS">&nbsp;and</font></code><code>&#39;#&#39;.</code></li>  <li><code>m ==&nbsp;seats.length</code></li>  <li><code>n ==&nbsp;seats[i].length</code></li>  <li><code>1 &lt;= m &lt;= 8</code></li>  <li><code>1 &lt;= n &lt;= 8</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Calculating all states using bitmask, similar to paint houses, where you try all possible combos from last row, but here combos are not straighforward in an array, but as bitmasks. Submask generation
+
+If you were given only 1 row, what would be the answer ? Now that you have the answer for current row, and you are given another row, how would that answer change ?
+
+Since cheating can happen only within current or previous row(when going from 0 to row_max). Result
+calculation only depends on current and last row. 
+
+Now, coming to the first question, if only 1 row was given, we seat max children such that no cheating happens within the row. If we represent seated children with 1s, and final arrangement as a bitmask, we have, no consecutive 1s should be present to avoid cheating within a row. Amongst the masks which follow this, valid_within_row[i] , we pick one with max 1 count, say x. Note that multiple masks might have same x.
+
+Now, when the next row is presented to us, for that row in isolation, we have only a set of masks which are valid_within_row[i+1]. Each mask in this set has to be paired with all valid masks of last row, i.e valid_within_row[i], valid meaning no cheating across rows, to get the final count for both rows. Local/Isolated maximums for each i, and i+1 row, might not even be valid together. So we have to try out all masks from previous row. Now, keep in mind, valid_within_row[i] has to include 0 too, to allow for the case for a row to be completely skipped to get optimal result.
+
+So, when we are processing i+1 row, for each mask in valid_within_row[i+1], which has a children_count, we add to it, the max of all masks valid_within_row[i] which are valid with this mask.
+
+This way, the masks in valid_within_row[i+1] will store max till i+1 row, given the mask in i+1 row.
+
+For implementation, we first need to find valid_within_row masks for each row in isolation. Then starting from row 0 to max_row, we process curr_mask with all masks for previous row, and keep storing the result. Now, valid_within_row[i] calculation needs to take 2 things, there is a empty seat, and no cheating within same row. For valid across rows, given a mask for i and mask for i-1, we need to check no cheating across rows.
+
+For all valid seats within same row, we can represent empty seats as 1, so our initial mask is empty mask, em. Now we generate all sub-masks of this mask, and pick only those who dont have consecutive 1s(right shift to see no overlap). Finally we also include 0 as a valid mask.
+
+For checking cheating across, we left shift and right shift by 1 and check if there is no overlap
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Maximum Students Taking Exam" lines
+# @param {Character[][]} seats
+# @return {Integer}
+def max_students(seats)
+  r = seats.size; c = seats[0].size
+
+  valid_masks_with_count=->(i) { # valid seat masks for a row, so no cheating within row, with count of children
+    em_mask = (0...c).reduce(0) {|m, j| seats[i][j]=='#' ? m : m|(1<<j) } # start with empty seats mask
+
+    valid_masks = [0] # all submasks of em_mask, such that no consecutive 1s are present
+    mask = em_mask
+    while mask > 0
+      valid_masks << mask if (mask & (mask>>1) ==0) # no consecutive 1s are present
+      mask = (mask-1) & em_mask
+    end
+
+    valid_masks.map { |mask| [mask, mask.to_s(2).count('1')] }.to_h
+  }
+  
+  # given prev_mask, is curr_mask valid ?, i.e no cheating between them
+  valid_across=->(cm, pm) { (cm>>1 & pm == 0) && (cm<<1 & pm == 0) }
+
+  prev_masks = valid_masks_with_count[0]
+  
+  (1...r).each do |i|
+    current_masks = valid_masks_with_count[i]
+    
+    current_masks.keys.each { |c_mask| current_masks[c_mask] += prev_masks.select { |p_mask| valid_across[p_mask, c_mask] }.values.max }
+    
+    prev_masks = current_masks
+  end
+  
+  prev_masks.values.max
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

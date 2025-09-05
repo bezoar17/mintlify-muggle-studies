@@ -1,0 +1,58 @@
+---
+title: '🧀 Find the Maximum Length of Valid Subsequence I'
+description: '[leetcode link](https://leetcode.com/problems/find-the-maximum-length-of-valid-subsequence-i/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      You are given an integer array <code>nums</code>. <p>A <span data-keyword="subsequence-array">subsequence</span> <code>sub</code> of <code>nums</code> with length <code>x</code> is called <strong>valid</strong> if it satisfies:</p>  <ul>  <li><code>(sub[0] + sub[1]) % 2 == (sub[1] + sub[2]) % 2 == ... == (sub[x - 2] + sub[x - 1]) % 2.</code></li> </ul>  <p>Return the length of the <strong>longest</strong> <strong>valid</strong> subsequence of <code>nums</code>.</p>  <p>A <strong>subsequence</strong> is an array that can be derived from another array by deleting some or no elements without changing the order of the remaining elements.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [1,2,3,4]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">4</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>The longest valid subsequence is <code>[1, 2, 3, 4]</code>.</p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [1,2,1,1,2,1,2]</span></p>  <p><br/> <strong>Output:</strong> 6</p>  <p><br/> <strong>Explanation:</strong></p>  <p>The longest valid subsequence is <code>[1, 2, 1, 2, 1, 2]</code>.</p> </div>  <p><strong class="example">Example 3:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">nums = [1,3]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">2</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>The longest valid subsequence is <code>[1, 3]</code>.</p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>2 &lt;= nums.length &lt;= 2 * 10<sup>5</sup></code></li>  <li><code>1 &lt;= nums[i] &lt;= 10<sup>7</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      all paired mods are 0 -&gt; all even, all are odd
+when all pair mods are 1 -&gt; alternating even-odd or odd-even
+
+Just do a linear run, and maintain counts for these, answer is max out of these.
+
+To check if no. belongs to even-odd or odd-even or none, see whether the counter is waiting for 
+1. pair to get completed OR 
+2. new pair to be formed
+
+Which can be checked by checking whether the counter is odd(case 1) or even(case 2)
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```golang title="Find the Maximum Length of Valid Subsequence I" lines
+func maximumLength(nums []int) int {
+    oddSum := 0
+    evenSum := 0
+    for _, v := range nums {
+      if v%2 == 0 {
+        evenSum += 1
+      } else {
+        oddSum +=1
+      }
+    }
+    previous := nums[0]
+    length := 1
+    for _, v := range nums {
+      if v%2 != previous%2{
+        previous = v
+        length += 1
+      }
+    }
+    if evenSum >= oddSum && evenSum >= length {
+      return evenSum
+   } else if oddSum >= evenSum && oddSum >= length {
+      return oddSum
+   } else {
+      return length
+   }
+}
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

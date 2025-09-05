@@ -1,0 +1,88 @@
+---
+title: '🧀 Minimum Number of Operations to Sort a Binary Tree by Level'
+description: '[leetcode link](https://leetcode.com/problems/minimum-number-of-operations-to-sort-a-binary-tree-by-level/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given the <code>root</code> of a binary tree with <strong>unique values</strong>.</p>  <p>In one operation, you can choose any two nodes <strong>at the same level</strong> and swap their values.</p>  <p>Return <em>the minimum number of operations needed to make the values at each level sorted in a <strong>strictly increasing order</strong></em>.</p>  <p>The <strong>level</strong> of a node is the number of edges along the path between it and the root node<em>.</em></p>   <p><strong class="example">Example 1:</strong></p> <img src="https://assets.leetcode.com/uploads/2022/09/18/image-20220918174006-2.png" style="width: 500px; height: 324px;" />  <strong>Input:</strong> root = [1,4,3,7,6,8,5,null,null,null,null,9,null,10] <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> - Swap 4 and 3. The 2<sup>nd</sup> level becomes [3,4]. - Swap 7 and 5. The 3<sup>rd</sup> level becomes [5,6,8,7]. - Swap 8 and 7. The 3<sup>rd</sup> level becomes [5,6,7,8]. We used 3 operations so return 3. It can be proven that 3 is the minimum number of operations needed.   <p><strong class="example">Example 2:</strong></p> <img src="https://assets.leetcode.com/uploads/2022/09/18/image-20220918174026-3.png" style="width: 400px; height: 303px;" />  <strong>Input:</strong> root = [1,3,2,7,6,5,4] <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> - Swap 3 and 2. The 2<sup>nd</sup> level becomes [2,3]. - Swap 7 and 4. The 3<sup>rd</sup> level becomes [4,6,5,7]. - Swap 6 and 5. The 3<sup>rd</sup> level becomes [4,5,6,7]. We used 3 operations so return 3. It can be proven that 3 is the minimum number of operations needed.   <p><strong class="example">Example 3:</strong></p> <img src="https://assets.leetcode.com/uploads/2022/09/18/image-20220918174052-4.png" style="width: 400px; height: 274px;" />  <strong>Input:</strong> root = [1,2,3,4,5,6] <br/> <strong>Output:</strong> 0 <br/> <strong>Explanation:</strong> Each level is already sorted in increasing order so return 0.    <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in the tree is in the range <code>[1, 10<sup>5</sup>]</code>.</li>  <li><code>1 &lt;= Node.val &lt;= 10<sup>5</sup></code></li>  <li>All the values of the tree are <strong>unique</strong>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Calculate minimum swaps needed for each level separately.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Minimum Number of Operations to Sort a Binary Tree by Level" lines
+# Definition for a binary tree node.
+# class TreeNode
+#     attr_accessor :val, :left, :right
+#     def initialize(val = 0, left = nil, right = nil)
+#         @val = val
+#         @left = left
+#         @right = right
+#     end
+# end
+# @param {TreeNode} root
+# @return {Integer}
+def minimum_operations(root)
+  queue = Queue.new
+  queue << root
+  total_count = 0
+  until queue.empty?
+    node_count = queue.size
+    arr = []
+    node_count.times do
+      node = queue.pop
+      arr << node.val
+      queue << node.left unless node.left.nil?
+      queue << node.right unless node.right.nil?
+    end
+
+    total_count += min_swaps(arr)
+  end
+  total_count
+end
+
+def min_swaps(arr)
+  # Create array of [value, index] pairs for tracking original positions
+  n = arr.length
+  arr_with_index = arr.each_with_index.map { |val, idx| [val, idx] }
+  
+  # Sort the array based on values
+  arr_with_index.sort_by! { |val, _| val }
+  
+  # Keep track of visited elements
+  visited = Array.new(n, false)
+  
+  # Count swaps
+  swaps = 0
+  
+  # Check each position
+  (0...n).each do |i|
+    # Skip if element is visited or already in correct position
+    next if visited[i] || arr_with_index[i][1] == i
+    
+    # Find cycle size
+    cycle_size = 0
+    j = i
+    
+    while !visited[j]
+      visited[j] = true
+      j = arr_with_index[j][1]
+      cycle_size += 1
+    end
+    
+    # Add required swaps (cycle_size - 1)
+    swaps += (cycle_size - 1) if cycle_size > 0
+  end
+  
+  swaps
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

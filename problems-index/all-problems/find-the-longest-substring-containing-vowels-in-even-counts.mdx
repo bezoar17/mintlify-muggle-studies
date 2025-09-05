@@ -1,0 +1,69 @@
+---
+title: '🧀 Find the Longest Substring Containing Vowels in Even Counts'
+description: '[leetcode link](https://leetcode.com/problems/find-the-longest-substring-containing-vowels-in-even-counts/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given the string <code>s</code>, return the size of the longest substring containing each vowel an even number of times. That is, &#39;a&#39;, &#39;e&#39;, &#39;i&#39;, &#39;o&#39;, and &#39;u&#39; must appear an even number of times.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> s = &quot;eleetminicoworoep&quot; <br/> <strong>Output:</strong> 13 <strong>Explanation: </strong>The longest substring is &quot;leetminicowor&quot; which contains two each of the vowels: <strong>e</strong>, <strong>i</strong> and <strong>o</strong> and zero of the vowels: <strong>a</strong> and <strong>u</strong>.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> s = &quot;leetcodeisgreat&quot; <br/> <strong>Output:</strong> 5 <br/> <strong>Explanation:</strong> The longest substring is &quot;leetc&quot; which contains two e&#39;s.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> s = &quot;bcbcbc&quot; <br/> <strong>Output:</strong> 6 <br/> <strong>Explanation:</strong> In this case, the given string &quot;bcbcbc&quot; is the longest because all vowels: <strong>a</strong>, <strong>e</strong>, <strong>i</strong>, <strong>o</strong> and <strong>u</strong> appear zero times.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= s.length &lt;= 5 x 10^5</code></li>  <li><code>s</code>&nbsp;contains only lowercase English letters.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Like max product sub-array, treat vowels as negatives, and we need to split string into halves when we encounter odd occuring vowel.
+Call for i,j, and recurse, and store in dp[i][j].
+But for each range, i,j, we recalculate the counts of vowels, but filtering the original range. This is not O(n).
+We need O(n) or O(nlogn).
+
+We can try to replicate max prod array sum. Do x iterations, where x is number of odd occuring vowels. For e.g, if a is occuring 3 times. treat a as -1 and calculate ans for only other vowels. similarly for others. 
+
+
+
+
+This thing can be done very sophisticatedly using xor and identifiers. See editorial and the code.
+
+
+
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```python3 title="Find the Longest Substring Containing Vowels in Even Counts" lines
+class Solution:
+    def findTheLongestSubstring(self, s: str) -> int:
+      # Track parity (odd/even) of each vowel count
+      # Using 0 for even, 1 for odd
+
+      parity = {'a': 0, 'e': 0, 'i': 0, 'o': 0, 'u': 0}
+      
+      # Store the earliest index for each parity combination
+      # Key: string representing odd vowels, Value: earliest index
+      first_occurrence = { "" : -1 }
+      max_length = 0
+      
+      for current_index, char in enumerate(s):
+        # Flip parity if character is a vowel
+        if char in parity:
+            parity[char] ^= 1  # Toggle between 0 and 1 using XOR
+        
+        # Create a key representing current odd vowels
+        odd_vowels = ''.join(sorted(
+            vowel for vowel, count in parity.items() 
+            if count == 1
+        ))
+        
+        # If we haven't seen this combination before, store its first occurrence
+        if odd_vowels not in first_occurrence:
+            first_occurrence[odd_vowels] = current_index
+        
+        # Calculate length of substring with even vowel counts
+        length = current_index - first_occurrence[odd_vowels]
+        max_length = max(max_length, length)
+    
+      return max_length
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

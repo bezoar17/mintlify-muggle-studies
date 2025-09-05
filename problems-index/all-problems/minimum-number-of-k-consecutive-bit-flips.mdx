@@ -1,0 +1,68 @@
+---
+title: '❗️ Minimum Number of K Consecutive Bit Flips'
+description: '[leetcode link](https://leetcode.com/problems/minimum-number-of-k-consecutive-bit-flips/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a binary array <code>nums</code> and an integer <code>k</code>.</p>  <p>A <strong>k-bit flip</strong> is choosing a <strong>subarray</strong> of length <code>k</code> from <code>nums</code> and simultaneously changing every <code>0</code> in the subarray to <code>1</code>, and every <code>1</code> in the subarray to <code>0</code>.</p>  <p>Return <em>the minimum number of <strong>k-bit flips</strong> required so that there is no </em><code>0</code><em> in the array</em>. If it is not possible, return <code>-1</code>.</p>  <p>A <strong>subarray</strong> is a <strong>contiguous</strong> part of an array.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [0,1,0], k = 1 <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> Flip nums[0], then flip nums[2].   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [1,1,0], k = 2 <br/> <strong>Output:</strong> -1 <br/> <strong>Explanation:</strong> No matter how we flip subarrays of size 2, we cannot make the array become [1,1,1].   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> nums = [0,0,0,1,0,1,1,0], k = 3 <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong>  Flip nums[0],nums[1],nums[2]: nums becomes [1,1,1,1,0,1,1,0] Flip nums[4],nums[5],nums[6]: nums becomes [1,1,1,1,1,0,0,0] Flip nums[5],nums[6],nums[7]: nums becomes [1,1,1,1,1,1,1,1]    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= k &lt;= nums.length</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      There are only n-k+1 options of flips, which can be defined by their starting points. Now, couple of observations which will lead us to the solution. First of all, out of n-k+1 options to flip, for each we either flip it or not. No option will be flipped more than once. Doesn't make sense.
+
+So, now we just have to choose x options out of n-k+1. Now that you have chosen the x options. If there is no overlap between the intervals, order doesn't matter. But even if there is overlap, suppose an idx requires f flips. That no. is determined by nums[i] being 0 or 1, in either case, order again doesnt matter. So overall, order of those x flips doesn't matter. 
+
+So, it is literally just choosing x options from n-k+1, and minimizing x such that we cover all nums to be 1.
+
+Now, think of the first idx, if that is 0, we have to flip it, no way around it, so we are definitely flipping idx 0. And theres only 1 option to flip it, start with window starting at 0.
+At this point, this intuition is sound enough to try a greedy approach. Flip the first discrepancy (i.e. 0).
+
+Now we can see the next k-1 elements, if it has no 1s, we dont need any more flips for the first window. 
+But as soon as we see the first 1 in the first window, we know we'll need 1 more flip which includes this idx.
+You can think of it as, as soon as we flip the first window, any 1 that is encountered has already been flipped to 0, so its essentially a 0 in the new flipped state, so we update the new flip needed starting at this idx, mark it in the count of flips. So, basically, we are tracking how many times current window has been flipped(we remove flips beyond start of current window), and also how many total flips we have done. 
+
+How do we efficiently track it, is tricky.
+
+To mark the first idx of a required flip, we can make it 2. So, we can have more than 1 2 marks within the first window itself, and current flip state might be affected by all these, the final state  effectively being odd or even.
+
+But as soon as first window ends, and we leave the window, the effect of the first window flip has to be removed from the current flip state, so whenever i-k is 2, i.e, flip window ended, we update flip state again.
+
+
+
+
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Minimum Number of K Consecutive Bit Flips" lines
+# @param {Integer[]} nums
+# @param {Integer} k
+# @return {Integer}
+def min_k_bit_flips(nums, k)
+  total_flips = 0
+  current_flip_parity = 0 # parity which requires a flip
+
+  (0...nums.size).each do |i|
+    if i>=k && nums[i-k] > 1 # checking if a flip window ended here
+      current_flip_parity^=1 # update flip state, remove effect of flip window that ended
+      nums[i-k] -= 2 # reset flip marker
+    end
+
+    if nums[i] == current_flip_parity # current flip parity requires a flip
+      return -1 if i+k > nums.size # valid window can't be started at i, which requires a flip
+      total_flips+=1
+      current_flip_parity^=1 # update flip parity
+      nums[i]+=2 # mark start of flip
+    end
+  end
+
+  total_flips
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

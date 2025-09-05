@@ -1,0 +1,55 @@
+---
+title: '🧀 Determine the Minimum Sum of a k-avoiding Array'
+description: '[leetcode link](https://leetcode.com/problems/determine-the-minimum-sum-of-a-k-avoiding-array/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given two integers,&nbsp;<code>n</code> and <code>k</code>.</p>  <p>An array of <strong>distinct</strong> positive integers is called a <b>k-avoiding</b> array if there does not exist any pair of distinct elements that sum to <code>k</code>.</p>  <p>Return <em>the <strong>minimum</strong> possible sum of a k-avoiding array of length </em><code>n</code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> n = 5, k = 4 <br/> <strong>Output:</strong> 18 <br/> <strong>Explanation:</strong> Consider the k-avoiding array [1,2,4,5,6], which has a sum of 18. It can be proven that there is no k-avoiding array with a sum less than 18.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> n = 2, k = 6 <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> We can construct the array [1,2], which has a sum of 3. It can be proven that there is no k-avoiding array with a sum less than 3.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= n, k &lt;= 50</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      minimum sum of n distinct positive integers will be for 1..n, sum will be n * (n+1)/2.
+We have to make changes to this to ensure it is k-avoiding. last_num is n for such array.
+
+While going left to right if we find a num and cntpt which sums to k. We have to delete any of num, cnpt. To add a value, the least no. we can add is last_num+1. Now, to minimize the addition value, we will choose maximum of num and cnpt, and delete this one.
+
+Keep track of deleted to avoid dual deletions.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Determine the Minimum Sum of a k-avoiding Array" lines
+# @param {Integer} n
+# @param {Integer} k
+# @return {Integer}
+def minimum_sum(n, k)
+  min_sum = (n * (n+1)) / 2
+
+  deleted = Set.new();
+  last_number = n
+
+  num = 1 
+  #  end of array or end of pairs for k
+  while num<=last_number && num < k
+    if deleted.include?(num)
+     num+=1; next
+    end
+
+    if k-num <= last_number && !deleted.include?(k-num) && k!=num*2
+      candidate = [num, k-num].max
+      last_number+=1
+      min_sum+= last_number - candidate
+      deleted.add(candidate)
+    end
+
+    num+=1
+  end
+  min_sum
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

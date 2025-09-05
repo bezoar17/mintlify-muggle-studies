@@ -1,0 +1,43 @@
+---
+title: '🧀 Subsets II'
+description: '[leetcode link](https://leetcode.com/problems/subsets-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an integer array <code>nums</code> that may contain duplicates, return <em>all possible</em> <span data-keyword="subset"><em>subsets</em></span><em> (the power set)</em>.</p>  <p>The solution set <strong>must not</strong> contain duplicate subsets. Return the solution in <strong>any order</strong>.</p>   <p><strong class="example">Example 1:</strong></p> <strong>Input:</strong> nums = [1,2,2] <br/> <strong>Output:</strong> [[],[1],[1,2],[1,2,2],[2],[2,2]] <p><strong class="example">Example 2:</strong></p> <strong>Input:</strong> nums = [0] <br/> <strong>Output:</strong> [[],[0]]   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length &lt;= 10</code></li>  <li><code>-10 &lt;= nums[i] &lt;= 10</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Subsets II" lines
+# @param {Integer[]} nums
+# @return {Integer[][]}
+def subsets_with_dup(nums)
+  @results = []
+  backtrack = ->(nums, current_subset, index) do
+    if index == nums.size
+      @results << current_subset.dup
+      return
+    end
+    
+    current_subset << nums[index]
+    backtrack.call(nums, current_subset.dup, index+1)
+    current_subset.pop
+    backtrack.call(nums, current_subset.dup, index+1)    
+  end
+
+  backtrack.call(nums.sort, [], 0)
+  @results.uniq
+end
+
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

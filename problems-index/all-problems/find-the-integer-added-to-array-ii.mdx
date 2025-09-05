@@ -1,0 +1,57 @@
+---
+title: '🧀 Find the Integer Added to Array II'
+description: '[leetcode link](https://leetcode.com/problems/find-the-integer-added-to-array-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given two integer arrays <code>nums1</code> and <code>nums2</code>.</p>  <p>From <code>nums1</code> two elements have been removed, and all other elements have been increased (or decreased in the case of negative) by an integer, represented by the variable <code>x</code>.</p>  <p>As a result, <code>nums1</code> becomes <strong>equal</strong> to <code>nums2</code>. Two arrays are considered <strong>equal</strong> when they contain the same integers with the same frequencies.</p>  <p>Return the <strong>minimum</strong> possible integer<em> </em><code>x</code><em> </em>that achieves this equivalence.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io" style="     font-family: Menlo,sans-serif;     font-size: 0.85rem; ">nums1 = [4,20,16,12,8], nums2 = [14,18,10]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io" style="     font-family: Menlo,sans-serif;     font-size: 0.85rem; ">-2</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>After removing elements at indices <code>[0,4]</code> and adding -2, <code>nums1</code> becomes <code>[18,14,10]</code>.</p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io" style="     font-family: Menlo,sans-serif;     font-size: 0.85rem; ">nums1 = [3,5,5,3], nums2 = [7,7]</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io" style="     font-family: Menlo,sans-serif;     font-size: 0.85rem; ">2</span></p>  <p><br/> <strong>Explanation:</strong></p>  <p>After removing elements at indices <code>[0,3]</code> and adding 2, <code>nums1</code> becomes <code>[7,7]</code>.</p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>3 &lt;= nums1.length &lt;= 200</code></li>  <li><code>nums2.length == nums1.length - 2</code></li>  <li><code>0 &lt;= nums1[i], nums2[i] &lt;= 1000</code></li>  <li>The test cases are generated in a way that there is an integer <code>x</code> such that <code>nums1</code> can become equal to <code>nums2</code> by removing two elements and adding <code>x</code> to each element of <code>nums1</code>.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Find the Integer Added to Array II" lines
+# @param {Integer[]} nums1
+# @param {Integer[]} nums2
+# @return {Integer}
+def minimum_added_integer(nums1, nums2)
+  # nums1 has exactly 2 more
+  # given the constraints, it can be just under n^3
+  # to get 2 removals, is n^2, to check if x is valid, we can break when there are 2 diffs
+  # so its not always O(n)
+  nums1.sort!; nums2.sort!;
+  n=nums2.size; n1= n+2;
+  x = Float::INFINITY
+  
+  x_for =->(i,j) {
+    idx1=0;idx2=0; res=nil;
+    while idx1<n1
+      unless idx1==i || idx1==j
+        diff = nums2[idx2]-nums1[idx1]
+        res = diff if res.nil?
+        return Float::INFINITY if res!=diff
+        idx2+=1
+      end
+      idx1+=1
+    end
+    res
+  }
+
+  (0...(n1-1)).each do |i|
+    ((i+1)...n1).each do |j|
+      x = [x, x_for.call(i,j)].min
+    end
+  end
+
+  x
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

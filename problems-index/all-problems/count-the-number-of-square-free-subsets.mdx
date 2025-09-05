@@ -1,0 +1,50 @@
+---
+title: '🧀 Count the Number of Square-Free Subsets'
+description: '[leetcode link](https://leetcode.com/problems/count-the-number-of-square-free-subsets/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a positive integer <strong>0-indexed</strong>&nbsp;array <code>nums</code>.</p>  <p>A subset of the array <code>nums</code> is <strong>square-free</strong> if the product of its elements is a <strong>square-free integer</strong>.</p>  <p>A <strong>square-free integer</strong> is an integer that is divisible by no square number other than <code>1</code>.</p>  <p>Return <em>the number of square-free non-empty subsets of the array</em> <strong>nums</strong>. Since the answer may be too large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>  <p>A <strong>non-empty</strong>&nbsp;<strong>subset</strong> of <code>nums</code> is an array that can be obtained by deleting some (possibly none but not all) elements from <code>nums</code>. Two subsets are different if and only if the chosen indices to delete are different.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> nums = [3,4,4,5] <br/> <strong>Output:</strong> 3 <br/> <strong>Explanation:</strong> There are 3 square-free subsets in this example: - The subset consisting of the 0<sup>th</sup> element [3]. The product of its elements is 3, which is a square-free integer. - The subset consisting of the 3<sup>rd</sup> element [5]. The product of its elements is 5, which is a square-free integer. - The subset consisting of 0<sup>th</sup> and 3<sup>rd</sup> elements [3,5]. The product of its elements is 15, which is a square-free integer. It can be proven that there are no more than 3 square-free subsets in the given array.  <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> nums = [1] <br/> <strong>Output:</strong> 1 <br/> <strong>Explanation:</strong> There is 1 square-free subset in this example: - The subset consisting of the 0<sup>th</sup> element [1]. The product of its elements is 1, which is a square-free integer. It can be proven that there is no more than 1 square-free subset in the given array.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= nums.length&nbsp;&lt;= 1000</code></li>  <li><code>1 &lt;= nums[i] &lt;= 30</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      The way to generate subsets when adding a new number, and going from left to right. The way is to add new number to all previous subsets. When we start with an empty set {}, this simulates all choices. Here, we have to do a similar thing. First of all
+a subset can only contain distinct primes, so we can represent a distinct subset with bitmask representing primes it has. Now, suppose the following subsets are present {2,3}-x, {5}-y, {3,5}-a {2,3,5}-b, where x,yz etc are counts of these subsets. Now, when the next element being added is 6 -&gt; which is essentially subset {2,3}. it can go to subset {5}, only. And the new subset becomes {2,3,5}.
+
+So, at each step, we process all masks, and for the mask representing {2,3,5}, due to this 6 element, we are merging y more subsets to the set {2,3,5}. Think of it like, this 6 element can go to all y subsets {5}, because there is no prime overlap. Hence the count for the final subset which is union of these non-overlapping, increases by y.
+
+In bitmask terms, for each num_mask being processed, if an earlier subset_mask does not have an overlap, then subset_mask | num_mask, gains count[subset_mask] subsets due to this num. And also, we have to update the num_masks subset count by 1, i.e the subset {2,3}'s count increases by 1.
+
+So, similar to subset generation, we process each element from left to right, but instead of adding it to all previous subsets, we update the counts of the relevant ones. Think of it like when processing a new element, we merge it with whatever subsets we can and increase their counts.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Count the Number of Square-Free Subsets" lines
+# @param {Integer[]} nums
+# @return {Integer}
+def square_free_subsets(nums)
+  forbidden = [4,8,12,16,20,24,28,9,18,27,25].to_set
+  f_nums = nums.select {|x| !forbidden.include?(x) }
+  primes = [2,3,5,7,11,13,17,19,23,29]
+
+  sb_count = Array.new(1<<10, 0)
+  prime_mask=->(x) { (0...10).reduce(0) {|m, i| x%primes[i] == 0 ? m|(1<<i) : m } }
+
+  f_nums.each do |num|
+    sb_num_mask = prime_mask[num] # mask representing subset for this num
+    # merge subset counts if its valid
+    (0...1<<10).each { |sb_mask| sb_count[sb_mask | sb_num_mask] += sb_count[sb_mask] if sb_mask & sb_num_mask == 0 }
+    sb_count[sb_num_mask]+=1 # increase count of subset
+  end
+
+  sb_count.sum % (10**9 + 7)
+end
+
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

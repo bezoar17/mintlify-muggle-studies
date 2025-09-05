@@ -1,0 +1,45 @@
+---
+title: '🧀 Permutation in String'
+description: '[leetcode link](https://leetcode.com/problems/permutation-in-string/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given two strings <code>s1</code> and <code>s2</code>, return <code>true</code> if <code>s2</code> contains a <span data-keyword="permutation-string">permutation</span> of <code>s1</code>, or <code>false</code> otherwise.</p>  <p>In other words, return <code>true</code> if one of <code>s1</code>&#39;s permutations is the substring of <code>s2</code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> s1 = &quot;ab&quot;, s2 = &quot;eidbaooo&quot; <br/> <strong>Output:</strong> true <br/> <strong>Explanation:</strong> s2 contains one permutation of s1 (&quot;ba&quot;).   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> s1 = &quot;ab&quot;, s2 = &quot;eidboaoo&quot; <br/> <strong>Output:</strong> false    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= s1.length, s2.length &lt;= 10<sup>4</sup></code></li>  <li><code>s1</code> and <code>s2</code> consist of lowercase English letters.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Permutation in String" lines
+# @param {String} s1
+# @param {String} s2
+# @return {Boolean}
+def check_inclusion(s1, s2)
+  # check if s1 is permutative substring of s2
+  return false if s1.size > s2.size
+  arr_ch_s1 = [0]*26; arr_ch_current = [0]*26
+
+  s1.chars.each { |ch| arr_ch_s1[ch.ord - 'a'.ord] +=1  }
+  s2[0, s1.size].chars.each { |ch| arr_ch_current[ch.ord - 'a'.ord] +=1 }
+  
+  return true if (0...26).detect{ |i| arr_ch_s1[i] != arr_ch_current[i] }.nil?
+
+  lp = 1;
+  while (rp = lp + s1.size - 1) < s2.size
+    arr_ch_current[s2[rp].ord - 'a'.ord] +=1;
+    arr_ch_current[s2[lp-1].ord - 'a'.ord] -=1;
+    return true if (0...26).detect{ |i| arr_ch_s1[i] != arr_ch_current[i] }.nil?
+    lp+=1
+  end
+  false
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

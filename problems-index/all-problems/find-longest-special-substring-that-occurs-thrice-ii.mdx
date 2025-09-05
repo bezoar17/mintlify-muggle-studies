@@ -1,0 +1,59 @@
+---
+title: '🧀 Find Longest Special Substring That Occurs Thrice II'
+description: '[leetcode link](https://leetcode.com/problems/find-longest-special-substring-that-occurs-thrice-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given a string <code>s</code> that consists of lowercase English letters.</p>  <p>A string is called <strong>special</strong> if it is made up of only a single character. For example, the string <code>&quot;abc&quot;</code> is not special, whereas the strings <code>&quot;ddd&quot;</code>, <code>&quot;zz&quot;</code>, and <code>&quot;f&quot;</code> are special.</p>  <p>Return <em>the length of the <strong>longest special substring</strong> of </em><code>s</code> <em>which occurs <strong>at least thrice</strong></em>, <em>or </em><code>-1</code><em> if no special substring occurs at least thrice</em>.</p>  <p>A <strong>substring</strong> is a contiguous <strong>non-empty</strong> sequence of characters within a string.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> s = &quot;aaaa&quot; <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> The longest special substring which occurs thrice is &quot;aa&quot;: substrings &quot;<u><strong>aa</strong></u>aa&quot;, &quot;a<u><strong>aa</strong></u>a&quot;, and &quot;aa<u><strong>aa</strong></u>&quot;. It can be shown that the maximum length achievable is 2.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> s = &quot;abcdef&quot; <br/> <strong>Output:</strong> -1 <br/> <strong>Explanation:</strong> There exists no special substring which occurs at least thrice. Hence return -1.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> s = &quot;abcaba&quot; <br/> <strong>Output:</strong> 1 <br/> <strong>Explanation:</strong> The longest special substring which occurs thrice is &quot;a&quot;: substrings &quot;<u><strong>a</strong></u>bcaba&quot;, &quot;abc<u><strong>a</strong></u>ba&quot;, and &quot;abcab<u><strong>a</strong></u>&quot;. It can be shown that the maximum length achievable is 1.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>3 &lt;= s.length &lt;= 5 * 10<sup>5</sup></code></li>  <li><code>s</code> consists of only lowercase English letters.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Find Longest Special Substring That Occurs Thrice II" lines
+# @param {String} s
+# @return {Integer}
+def maximum_length(s)
+  # find len of non-overlapping special substrings
+  # s1, s2, s3, s4, s5. Suppose s1 s3 s5 are of same char, as they are non-overlapping cant be adjacent
+  # then, ans is max(minof(s1,s2,s3), s1-2, s3-2, s5-2); the s1-2 is 3 maxlen substring within s1 itself
+  # if no char has count of 3, then answer is -1
+  char_lengths = Hash.new {|h,k| h[k]=[]}
+  n = s.size; chars = s.chars
+  pointer = 1; counter = 1;
+
+  # within substr, 3 of x-2, 2 of x-1, 1 of x.
+  while pointer <= n
+    if pointer <n && chars[pointer] == chars[pointer-1]
+      counter+=1;
+    else
+      char_lengths[chars[pointer-1]] << counter
+      counter=1
+    end
+    pointer+=1
+  end
+
+  max_3_substring = -1
+  char_lengths.each do |ch, lengths|
+    next if lengths.sum < 3    
+    lengths.sort!
+    max_1 = lengths[-1]
+    max_2 = lengths[-2] if lengths.size>1 
+    max_3 = lengths[-3] if lengths.size>2
+    max_3_substring = [max_3_substring, max_1-2].max
+    max_3_substring = [max_3_substring, [max_1-1, max_2].min].max unless max_2.nil?
+    max_3_substring = [max_3_substring, max_3].max unless max_3.nil?
+  end
+
+  max_3_substring
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

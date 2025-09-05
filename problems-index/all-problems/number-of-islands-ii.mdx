@@ -1,0 +1,105 @@
+---
+title: '❗️ Number of Islands II'
+description: '[leetcode link](https://leetcode.com/problems/number-of-islands-ii/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an empty 2D binary grid <code>grid</code> of size <code>m x n</code>. The grid represents a map where <code>0</code>&#39;s represent water and <code>1</code>&#39;s represent land. Initially, all the cells of <code>grid</code> are water cells (i.e., all the cells are <code>0</code>&#39;s).</p>  <p>We may perform an add land operation which turns the water at position into a land. You are given an array <code>positions</code> where <code>positions[i] = [r<sub>i</sub>, c<sub>i</sub>]</code> is the position <code>(r<sub>i</sub>, c<sub>i</sub>)</code> at which we should operate the <code>i<sup>th</sup></code> operation.</p>  <p>Return <em>an array of integers</em> <code>answer</code> <em>where</em> <code>answer[i]</code> <em>is the number of islands after turning the cell</em> <code>(r<sub>i</sub>, c<sub>i</sub>)</code> <em>into a land</em>.</p>  <p>An <strong>island</strong> is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/03/10/tmp-grid.jpg" style="width: 500px; height: 294px;" />  <strong>Input:</strong> m = 3, n = 3, positions = [[0,0],[0,1],[1,2],[2,1]] <br/> <strong>Output:</strong> [1,1,2,3] <br/> <strong>Explanation:</strong> Initially, the 2d grid is filled with water. - Operation #1: addLand(0, 0) turns the water at grid[0][0] into a land. We have 1 island. - Operation #2: addLand(0, 1) turns the water at grid[0][1] into a land. We still have 1 island. - Operation #3: addLand(1, 2) turns the water at grid[1][2] into a land. We have 2 islands. - Operation #4: addLand(2, 1) turns the water at grid[2][1] into a land. We have 3 islands.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> m = 1, n = 1, positions = [[0,0]] <br/> <strong>Output:</strong> [1]    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= m, n, positions.length &lt;= 10<sup>4</sup></code></li>  <li><code>1 &lt;= m * n &lt;= 10<sup>4</sup></code></li>  <li><code>positions[i].length == 2</code></li>  <li><code>0 &lt;= r<sub>i</sub> &lt; m</code></li>  <li><code>0 &lt;= c<sub>i</sub> &lt; n</code></li> </ul>   <p><strong>Follow up:</strong> Could you solve it in time complexity <code>O(k log(mn))</code>, where <code>k == positions.length</code>?</p> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Simple union find, and component size calculation. 
+
+So, we process each node as follows, add it to uf DS. Then get land node neighbors, and do union with all of them. Then report the current uf.component_size.
+
+Within union-find DS, when new node is added always increase component size by 1. For each successful union, i.e, case when they are not already part of same component, we decrease component count by 1.
+
+Following is not needed, we can keep node as [i,j], but 1 more optimization is as follows.
+Representing a cell (i,j) as a node in union-find. For that, we can do a conversion of cell to an integer value. This is done as follows. For a matrix mxn.
+
+r_pos = { i* n + j } # row_idx * col_size + col_idx;
+To get i,j back from r_pos we can then do (r_pos/col_size, r_pos % col_size)
+
+Here m,n are 10^4 at max, so the converted single integer values wont be large, will fit within int.
+
+
+
+
+
+
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Number of Islands II" lines
+# @param {Integer} m
+# @param {Integer} n
+# @param {Integer[][]} positions
+# @return {Integer[]}
+class UnionFind
+  attr_accessor :nodes, :sizes
+  attr_reader :component_size
+
+  def initialize(node_keys=[])
+    @nodes = {}
+    @sizes = {}
+    @component_size = 0
+    node_keys.each { |i| root(i) }
+  end
+
+  # this will create a node key if it doesnt exist
+  def root(i)
+    unless nodes.include?(i)
+      @component_size += 1
+      nodes[i] ||= i; sizes[i] ||= 1; # create node if it doesnt exist
+    end
+
+    while nodes[i] != i
+      nodes[i] = nodes[nodes[i]] # path compression
+      i = nodes[i]
+    end
+    i
+  end
+
+  def size_for(i)
+    sizes[root(i)]
+  end
+
+  def union(i, j)
+    root_of_i = root(i)
+    root_of_j = root(j)
+
+    return false if root_of_i == root_of_j
+
+    if sizes[root_of_j] > sizes[root_of_i]
+      nodes[root_of_i] = root_of_j
+      sizes[root_of_j] += sizes[root_of_i]
+    else
+      nodes[root_of_j] = root_of_i
+      sizes[root_of_i] += sizes[root_of_j]
+    end
+    @component_size-=1
+  end
+end
+
+def num_islands2(m, n, positions)
+  uf = UnionFind.new
+  r_pos=->(i,j) { i*n + j } # row_idx * col_size + col_idx; [r_pos/col_size, r_pos%col_size]
+  neighbors=->(i,j) { 
+    [[i-1,j], [i+1,j], [i,j-1], [i,j+1]].select { |u, v| (u).between?(0,m-1) && (v).between?(0,n-1) && uf.nodes.include?(r_pos.call(u,v)) }
+  }
+
+  positions.map do |x,y|
+    node = r_pos.call(x,y)
+    uf.root(node)
+    neighbors.call(x,y).each { |u,v| uf.union(node, r_pos.call(u,v)) }
+    uf.component_size
+  end
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

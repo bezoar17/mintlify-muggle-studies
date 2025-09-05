@@ -1,0 +1,34 @@
+---
+title: '🧩 Valid Anagram'
+description: '[leetcode link](https://leetcode.com/problems/valid-anagram/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given two strings <code>s</code> and <code>t</code>, return <code>true</code> if <code>t</code> is an <span data-keyword="anagram">anagram</span> of <code>s</code>, and <code>false</code> otherwise.</p>   <p><strong class="example">Example 1:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">s = &quot;anagram&quot;, t = &quot;nagaram&quot;</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">true</span></p> </div>  <p><strong class="example">Example 2:</strong></p>  <div class="example-block"> <p><strong>Input:</strong> <span class="example-io">s = &quot;rat&quot;, t = &quot;car&quot;</span></p>  <p><br/> <strong>Output:</strong> <span class="example-io">false</span></p> </div>   <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= s.length, t.length &lt;= 5 * 10<sup>4</sup></code></li>  <li><code>s</code> and <code>t</code> consist of lowercase English letters.</li> </ul>   <p><strong>Follow up:</strong> What if the inputs contain Unicode characters? How would you adapt your solution to such a case?</p> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Valid Anagram" lines
+# @param {String} s
+# @param {String} t
+# @return {Boolean}
+def is_anagram(s, t)
+  return false if s.size != t.size
+  
+  h_s = s.chars.reduce(Hash.new(0)){ |h_, ch| h_[ch]+=1; h_ }
+  h_t = t.chars.reduce(Hash.new(0)){ |h_, ch| h_[ch]+=1; h_ }
+
+  h_s == h_t
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

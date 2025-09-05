@@ -1,0 +1,47 @@
+---
+title: '❗️ Earliest Possible Day of Full Bloom'
+description: '[leetcode link](https://leetcode.com/problems/earliest-possible-day-of-full-bloom/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You have <code>n</code> flower seeds. Every seed must be planted first before it can begin to grow, then bloom. Planting a seed takes time and so does the growth of a seed. You are given two <strong>0-indexed</strong> integer arrays <code>plantTime</code> and <code>growTime</code>, of length <code>n</code> each:</p>  <ul>  <li><code>plantTime[i]</code> is the number of <strong>full days</strong> it takes you to <strong>plant</strong> the <code>i<sup>th</sup></code> seed. Every day, you can work on planting exactly one seed. You <strong>do not</strong> have to work on planting the same seed on consecutive days, but the planting of a seed is not complete <strong>until</strong> you have worked <code>plantTime[i]</code> days on planting it in total.</li>  <li><code>growTime[i]</code> is the number of <strong>full days</strong> it takes the <code>i<sup>th</sup></code> seed to grow after being completely planted. <strong>After</strong> the last day of its growth, the flower <strong>blooms</strong> and stays bloomed forever.</li> </ul>  <p>From the beginning of day <code>0</code>, you can plant the seeds in <strong>any</strong> order.</p>  <p>Return <em>the <strong>earliest</strong> possible day where <strong>all</strong> seeds are blooming</em>.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/12/21/1.png" style="width: 453px; height: 149px;" />  <strong>Input:</strong> plantTime = [1,4,3], growTime = [2,3,1] <br/> <strong>Output:</strong> 9 <br/> <strong>Explanation:</strong> The grayed out pots represent planting days, colored pots represent growing days, and the flower represents the day it blooms. One optimal way is: On day 0, plant the 0<sup>th</sup> seed. The seed grows for 2 full days and blooms on day 3. On days 1, 2, 3, and 4, plant the 1<sup>st</sup> seed. The seed grows for 3 full days and blooms on day 8. On days 5, 6, and 7, plant the 2<sup>nd</sup> seed. The seed grows for 1 full day and blooms on day 9. Thus, on day 9, all the seeds are blooming.   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/12/21/2.png" style="width: 454px; height: 184px;" />  <strong>Input:</strong> plantTime = [1,2,3,2], growTime = [2,1,2,1] <br/> <strong>Output:</strong> 9 <br/> <strong>Explanation:</strong> The grayed out pots represent planting days, colored pots represent growing days, and the flower represents the day it blooms. One optimal way is: On day 1, plant the 0<sup>th</sup> seed. The seed grows for 2 full days and blooms on day 4. On days 0 and 3, plant the 1<sup>st</sup> seed. The seed grows for 1 full day and blooms on day 5. On days 2, 4, and 5, plant the 2<sup>nd</sup> seed. The seed grows for 2 full days and blooms on day 8. On days 6 and 7, plant the 3<sup>rd</sup> seed. The seed grows for 1 full day and blooms on day 9. Thus, on day 9, all the seeds are blooming.   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> plantTime = [1], growTime = [1] <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> On day 0, plant the 0<sup>th</sup> seed. The seed grows for 1 full day and blooms on day 2. Thus, on day 2, all the seeds are blooming.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>n == plantTime.length == growTime.length</code></li>  <li><code>1 &lt;= n &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= plantTime[i], growTime[i] &lt;= 10<sup>4</sup></code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      Only way to save time is planting while blooming is already on, so maximize this bloom time usage by picking plants by max growTime, they give max usable time for planting others and increase the overlaps between bloom and plant optimally.
+
+1)We can only save time while the flower is "Growing". We are not occupied while some flower is growing
+2)So to save time
+=&gt;Pick the flower with highest growing time at each step
+=&gt;More growing time means more free time with us
+=&gt;More free time means we can occupy ourselves in planting some other flower
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Earliest Possible Day of Full Bloom" lines
+# @param {Integer[]} plant_time
+# @param {Integer[]} grow_time
+# @return {Integer}
+def earliest_full_bloom(plant_time, grow_time)
+  p_g_time = plant_time.zip(grow_time).sort_by! {|x| -x[1]}
+
+  # pick plants by max growTime, they give max usable time for planting others
+  # and increase the overlaps between bloom and plant optimally
+  max_bloom_time = 0
+  current_time = 0 # planting_times
+  p_g_time.each do |plant_time, grow_time|
+    current_time+=plant_time # time when flower is planted
+    bloom_time = current_time + grow_time # time for bloom for this flower
+    max_bloom_time = [bloom_time, max_bloom_time].max # max bloom times for all
+  end
+
+  max_bloom_time
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

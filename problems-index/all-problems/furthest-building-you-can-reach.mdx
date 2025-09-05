@@ -1,0 +1,52 @@
+---
+title: '🧀 Furthest Building You Can Reach'
+description: '[leetcode link](https://leetcode.com/problems/furthest-building-you-can-reach/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>You are given an integer array <code>heights</code> representing the heights of buildings, some <code>bricks</code>, and some <code>ladders</code>.</p>  <p>You start your journey from building <code>0</code> and move to the next building by possibly using bricks or ladders.</p>  <p>While moving from building <code>i</code> to building <code>i+1</code> (<strong>0-indexed</strong>),</p>  <ul>  <li>If the current building&#39;s height is <strong>greater than or equal</strong> to the next building&#39;s height, you do <strong>not</strong> need a ladder or bricks.</li>  <li>If the current building&#39;s height is <b>less than</b> the next building&#39;s height, you can either use <strong>one ladder</strong> or <code>(h[i+1] - h[i])</code> <strong>bricks</strong>.</li> </ul>  <p><em>Return the furthest building index (0-indexed) you can reach if you use the given ladders and bricks optimally.</em></p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2020/10/27/q4.gif" style="width: 562px; height: 561px;" />  <strong>Input:</strong> heights = [4,2,7,6,9,14,12], bricks = 5, ladders = 1 <br/> <strong>Output:</strong> 4 <br/> <strong>Explanation:</strong> Starting at building 0, you can follow these steps: - Go to building 1 without using ladders nor bricks since 4 &gt;= 2. - Go to building 2 using 5 bricks. You must use either bricks or ladders because 2 &lt; 7. - Go to building 3 without using ladders nor bricks since 7 &gt;= 6. - Go to building 4 using your only ladder. You must use either bricks or ladders because 6 &lt; 9. It is impossible to go beyond building 4 because you do not have any more bricks or ladders.   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> heights = [4,12,2,7,3,18,20,3,19], bricks = 10, ladders = 2 <br/> <strong>Output:</strong> 7   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> heights = [14,3,19,3], bricks = 17, ladders = 0 <br/> <strong>Output:</strong> 3    <p><strong>Constraints:</strong></p>  <ul>  <li><code>1 &lt;= heights.length &lt;= 10<sup>5</sup></code></li>  <li><code>1 &lt;= heights[i] &lt;= 10<sup>6</sup></code></li>  <li><code>0 &lt;= bricks &lt;= 10<sup>9</sup></code></li>  <li><code>0 &lt;= ladders &lt;= heights.length</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      If we just consider + jumpcosts, assume no ladder was present, we can go to right till cumulative jump_cost is &gt; bricks. At this point, we are out of bricks, we have to use a ladder, to maximize our chances, we would have used the ladder where jump cost was max, and reclaim max bricks from this 1 ladder use. We might have to use more than 1 ladder. We keep doing this until we run out of bricks and ladders both. To get max jump_cost while going L-&gt;R, we can use a pq.
+
+Use array as pq, insertion is O(N), but somehow its faster than pq container in ruby.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Furthest Building You Can Reach" lines
+# @param {Integer[]} heights
+# @param {Integer} bricks
+# @param {Integer} ladders
+# @return {Integer}
+def furthest_building(heights, bricks, ladders)
+  n = heights.size
+  pq_arr = []
+
+  (0...n).each do | i|
+    return i if (i == n-1)
+    jump_cost = heights[i+1]-heights[i]
+    next if jump_cost <=0
+
+    insert_sorted(pq_arr, jump_cost)
+    bricks -= jump_cost
+    while bricks < 0
+      return i if ladders == 0
+      ladders-=1;
+      bricks+= pq_arr.pop
+    end
+  end
+end
+
+def insert_sorted(arr, value)
+  index = arr.bsearch_index { |x| x >= value } || arr.size
+  arr.insert(index, value)
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

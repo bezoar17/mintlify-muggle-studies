@@ -1,0 +1,55 @@
+---
+title: '🧀 Binary Tree Level Order Traversal'
+description: '[leetcode link](https://leetcode.com/problems/binary-tree-level-order-traversal/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given the <code>root</code> of a binary tree, return <em>the level order traversal of its nodes&#39; values</em>. (i.e., from left to right, level by level).</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2021/02/19/tree1.jpg" style="width: 277px; height: 302px;" />  <strong>Input:</strong> root = [3,9,20,null,null,15,7] <br/> <strong>Output:</strong> [[3],[9,20],[15,7]]   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> root = [1] <br/> <strong>Output:</strong> [[1]]   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> root = [] <br/> <strong>Output:</strong> []    <p><strong>Constraints:</strong></p>  <ul>  <li>The number of nodes in the tree is in the range <code>[0, 2000]</code>.</li>  <li><code>-1000 &lt;= Node.val &lt;= 1000</code></li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Binary Tree Level Order Traversal" lines
+# Definition for a binary tree node.
+# class TreeNode
+#     attr_accessor :val, :left, :right
+#     def initialize(val = 0, left = nil, right = nil)
+#         @val = val
+#         @left = left
+#         @right = right
+#     end
+# end
+# @param {TreeNode} root
+# @return {Integer[][]}
+def level_order(root)
+  queue = Queue.new
+
+  queue << [root, 0];
+  h_ = Hash.new([])
+  
+  while !queue.empty?
+    node, level = queue.pop
+    next if node.nil?
+    h_[level] = [] unless h_.has_key?(level)
+    h_[level] = h_[level].push(node.val)
+    queue << [node.left, level + 1] unless node.left.nil?
+    queue << [node.right, level + 1] unless node.right.nil?
+  end
+
+  res = []
+  h_.keys.sort.each do |k|
+    res << h_[k];
+  end
+  return res
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

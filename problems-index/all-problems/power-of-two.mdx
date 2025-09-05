@@ -1,0 +1,29 @@
+---
+title: '🧩 Power of Two'
+description: '[leetcode link](https://leetcode.com/problems/power-of-two/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>Given an integer <code>n</code>, return <em><code>true</code> if it is a power of two. Otherwise, return <code>false</code></em>.</p>  <p>An integer <code>n</code> is a power of two, if there exists an integer <code>x</code> such that <code>n == 2<sup>x</sup></code>.</p>   <p><strong class="example">Example 1:</strong></p>   <strong>Input:</strong> n = 1 <br/> <strong>Output:</strong> true <strong>Explanation: </strong>2<sup>0</sup> = 1   <p><strong class="example">Example 2:</strong></p>   <strong>Input:</strong> n = 16 <br/> <strong>Output:</strong> true <strong>Explanation: </strong>2<sup>4</sup> = 16   <p><strong class="example">Example 3:</strong></p>   <strong>Input:</strong> n = 3 <br/> <strong>Output:</strong> false    <p><strong>Constraints:</strong></p>  <ul>  <li><code>-2<sup>31</sup> &lt;= n &lt;= 2<sup>31</sup> - 1</code></li> </ul>   <strong>Follow up:</strong> Could you solve it without loops/recursion?
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      No notes for this problem
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```cpp title="Power of Two" lines
+class Solution {
+public:
+    bool isPowerOfTwo(int n) {
+        return (n > 0) && ((n & (n - 1)) == 0);
+    }
+};
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>

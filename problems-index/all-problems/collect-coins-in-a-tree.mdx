@@ -1,0 +1,73 @@
+---
+title: '❗️ Collect Coins in a Tree'
+description: '[leetcode link](https://leetcode.com/problems/collect-coins-in-a-tree/description/)'
+mode: 'wide'
+---
+<Tabs>
+  <Tab title="Question" icon="circle-question" iconType="regular">
+    <Card>
+      <p>There exists an undirected and unrooted tree with <code>n</code> nodes indexed from <code>0</code> to <code>n - 1</code>. You are given an integer <code>n</code> and a 2D integer array edges of length <code>n - 1</code>, where <code>edges[i] = [a<sub>i</sub>, b<sub>i</sub>]</code> indicates that there is an edge between nodes <code>a<sub>i</sub></code> and <code>b<sub>i</sub></code> in the tree. You are also given&nbsp;an array <code>coins</code> of size <code>n</code> where <code>coins[i]</code> can be either <code>0</code> or <code>1</code>, where <code>1</code> indicates the presence of a coin in the vertex <code>i</code>.</p>  <p>Initially, you choose to start at any vertex in&nbsp;the tree.&nbsp;Then, you can perform&nbsp;the following operations any number of times:&nbsp;</p>  <ul>  <li>Collect all the coins that are at a distance of at most <code>2</code> from the current vertex, or</li>  <li>Move to any adjacent vertex in the tree.</li> </ul>  <p>Find <em>the minimum number of edges you need to go through to collect all the coins and go back to the initial vertex</em>.</p>  <p>Note that if you pass an edge several times, you need to count it into the answer several times.</p>   <p><strong class="example">Example 1:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2023/03/01/graph-2.png" style="width: 522px; height: 522px;" />  <strong>Input:</strong> coins = [1,0,0,0,0,1], edges = [[0,1],[1,2],[2,3],[3,4],[4,5]] <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> Start at vertex 2, collect the coin at vertex 0, move to vertex 3, collect the coin at vertex 5 then move back to vertex 2.   <p><strong class="example">Example 2:</strong></p> <img alt="" src="https://assets.leetcode.com/uploads/2023/03/02/graph-4.png" style="width: 522px; height: 522px;" />  <strong>Input:</strong> coins = [0,0,0,1,1,0,0,1], edges = [[0,1],[0,2],[1,3],[1,4],[2,5],[5,6],[5,7]] <br/> <strong>Output:</strong> 2 <br/> <strong>Explanation:</strong> Start at vertex 0, collect the coins at vertices 4 and 3, move to vertex 2,  collect the coin at vertex 7, then move back to vertex 0.    <p><strong>Constraints:</strong></p>  <ul>  <li><code>n == coins.length</code></li>  <li><code>1 &lt;= n &lt;= 3 * 10<sup>4</sup></code></li>  <li><code>0 &lt;= coins[i] &lt;= 1</code></li>  <li><code>edges.length == n - 1</code></li>  <li><code>edges[i].length == 2</code></li>  <li><code>0 &lt;= a<sub>i</sub>, b<sub>i</sub> &lt; n</code></li>  <li><code>a<sub>i</sub> != b<sub>i</sub></code></li>  <li><code>edges</code> represents a valid tree.</li> </ul> 
+    </Card>
+  </Tab>
+  <Tab title="Solution" icon="lightbulb" iconType="regular" >
+    <Card>
+      https://leetcode.com/problems/collect-coins-in-a-tree/solutions/6339970/ruby-100-explained-with-intuition-by-bez-ne8e
+
+If there is a leaf node which does not have a coin, we can just remove the node and edge from the tree, our answer will remain the same. So, we need to have coin in all leaf nodes. Imagine tree as a snowflake, with leaf nodes in all directions, we need to prune so that all leaf has coin. This is the max area we need to get all coins from. Now, lets say this area has a boundary of all leaf nodes, BN. All of these leaf nodes are covered when their grandparent(node at a dist of 2) is visited. So leaf nodes in BN and  BN-1 are covered if BN-2 is visited. So we prune the area of coverable nodes, 2 times, to get an area of must visit nodes. These must visit nodes must be visited. So, all edges will be traversed twice if we start at a point and come back, no matter what starting node we pick.
+
+2 steps, Step1: Ensure all leaves have coin, Step2: Prune leaves 2 times
+Imagine step 1 as defining the valid area, any node outside these dont have coin, need not be considered
+Imagine step 2 as squeezing the max area, by 2 levels, as all nodes within 2 dist are reachable
+After step1, we have a boundary of leaf nodes, this boundary and its immediate parent are both reachable
+by the innermost boundary that is inside the 2 boundary layers, hence we are just pruning boundary of leaves by 2 steps
+
+Try the diameter based approach. Same thing, but on a diameter. Find diameter, and arrange on string. Leaf nodes are separated, and form the start/end, and in sub-trees. Prune string to have only coins on leaf nodes. 
+For the 2 dist pruning, we prune elements on string, and in subtrees, prune by 2 depth in each sub-tree. Now just calcluate no. of nodes in final string.
+    </Card>
+  <Expandable title="code">
+    <CodeGroup dropdown>
+```ruby title="Collect Coins in a Tree" lines
+# @param {Integer[]} coins
+# @param {Integer[][]} edges
+# @return {Integer}
+def collect_the_coins(coins, edges)
+  return 0 if edges.empty?
+  n = coins.size
+  tree = Hash.new{|h,k| h[k]=Set.new}
+  edges.each {|a,b| tree[a]<<b; tree[b]<<a;}
+  
+  leaves = (0...n).select{|i| tree[i].size==1 }
+
+  delete_leaf=->(leaf){
+    parent = tree[leaf].first
+    tree.delete(leaf) # delete leaf
+    tree[parent].delete(leaf) # delete edge from parent to leaf
+    parent # return parent, used for first pruning
+  }
+  
+  # Prune leaves until all leaves have coin
+  until leaves.empty?
+    leaf = leaves.pop
+    if coins[leaf]==0
+      parent = delete_leaf.call(leaf)
+      leaves << parent if tree[parent].size==1 # parent is now a leaf
+    end
+  end
+  
+  # now, remove all leaf+parent nodes, as each of these are covered by grand-parent node
+  # or 2 iterations of leaf removal and tree update
+  2.times do
+    leaves = tree.keys.select{|i| tree[i].size==1 }
+
+    leaves.each do |leaf|
+      delete_leaf.call(leaf)
+      return 0 if tree.size < 2 # only 1 node left, cant remove it
+    end
+  end
+  (tree.size-1)*2 # there are n-1 edges, all have to be traversed twice
+end
+```
+    </CodeGroup>
+  </Expandable>
+  </Tab>
+</Tabs>
